@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>dotBet – Plattform-Übersicht</title>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+  <style>
+    :root {
+      --primary: #5ce0d2;
+      --accent: #e84e8a;
+      --bg: #0f1923;
+      --card: #1a2736;
+      --border: #2a3a4a;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    .slide {
+      min-height: 100vh;
+      padding: 60px 80px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      border-bottom: 2px solid var(--border);
+      position: relative;
+    }
+    .slide::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 80px;
+      right: 80px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+    }
+    h1 {
+      font-size: 3.5rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+      letter-spacing: -1px;
+    }
+    h1 .dot { color: var(--muted); }
+    h1 .bet { color: var(--primary); }
+    h2 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin-bottom: 32px;
+      color: var(--primary);
+    }
+    h3 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: var(--accent);
+    }
+    .subtitle {
+      font-size: 1.4rem;
+      color: var(--muted);
+      margin-bottom: 48px;
+    }
+    .grid { display: grid; gap: 24px; }
+    .grid-2 { grid-template-columns: 1fr 1fr; }
+    .grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+    .grid-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+    }
+    .card.highlight { border-color: var(--primary); }
+    .card.accent-border { border-color: var(--accent); }
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    .badge-done { background: #166534; color: #86efac; }
+    .badge-wip { background: #854d0e; color: #fde047; }
+    .badge-planned { background: #1e3a5f; color: #93c5fd; }
+    .tag {
+      display: inline-block;
+      background: rgba(92,224,210,0.15);
+      color: var(--primary);
+      padding: 3px 10px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      margin: 2px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+    }
+    th, td {
+      padding: 10px 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.95rem;
+    }
+    th {
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .icon { font-size: 2rem; margin-bottom: 12px; }
+    .mermaid {
+      display: flex;
+      justify-content: center;
+      margin: 24px 0;
+    }
+    .number {
+      font-size: 3rem;
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1;
+    }
+    .number-label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+    ul { list-style: none; padding: 0; }
+    ul li {
+      padding: 6px 0;
+      padding-left: 20px;
+      position: relative;
+    }
+    ul li::before {
+      content: '▸';
+      position: absolute;
+      left: 0;
+      color: var(--primary);
+    }
+    .done li::before { content: '✓'; color: #86efac; }
+    .formula {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px 32px;
+      font-family: 'Courier New', monospace;
+      font-size: 1.1rem;
+      text-align: center;
+      margin: 16px 0;
+    }
+    .phase-bar {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 32px;
+    }
+    .phase-segment {
+      flex: 1;
+      height: 8px;
+      border-radius: 4px;
+    }
+    .phase-segment.done { background: #22c55e; }
+    .phase-segment.wip { background: #eab308; }
+    .phase-segment.planned { background: var(--border); }
+    .footer-note {
+      position: absolute;
+      bottom: 24px;
+      right: 80px;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    @media print {
+      .slide { page-break-after: always; min-height: auto; padding: 40px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- SLIDE 1: Title -->
+<section class="slide" style="justify-content: center; align-items: center; text-align: center;">
+  <div style="font-size: 5rem; margin-bottom: 24px;">🎰</div>
+  <h1><span class="dot">dot</span><span class="bet">Bet</span></h1>
+  <p class="subtitle">Wettplattform mit virtuellen Tokens</p>
+  <div style="display: flex; gap: 16px; margin-top: 24px;">
+    <span class="tag">Spring Boot</span>
+    <span class="tag">Next.js</span>
+    <span class="tag">PostgreSQL</span>
+    <span class="tag">WebSocket</span>
+    <span class="tag">JWT</span>
+  </div>
+  <p style="margin-top: 48px; color: var(--muted); font-size: 0.9rem;">April 2026</p>
+</section>
+
+<!-- SLIDE 2: Was ist dotBet? -->
+<section class="slide">
+  <h2>Was ist dotBet?</h2>
+  <div class="grid grid-2" style="align-items: start;">
+    <div>
+      <p style="font-size: 1.2rem; margin-bottom: 24px;">
+        Eine interne Fun-Wettplattform, auf der Mitarbeiter mit <strong style="color: var(--primary);">virtuellen Tokens</strong> auf Events wetten können.
+      </p>
+      <ul>
+        <li><strong>Kein echtes Geld</strong> – nur Spaß & Strategie</li>
+        <li><strong>Dynamische Quoten</strong> – passen sich an Wettverhalten an</li>
+        <li><strong>Ranking & Leaderboard</strong> – wer ist der beste Tipper?</li>
+        <li><strong>Admin-Panel</strong> – Events erstellen, Ergebnisse setzen</li>
+        <li><strong>Mehrsprachig</strong> – Deutsch & Englisch</li>
+        <li><strong>Dark Mode</strong></li>
+      </ul>
+    </div>
+    <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 16px;">
+      <div class="card" style="text-align: center;">
+        <div class="number">1.000</div>
+        <div class="number-label">Start-Tokens pro User</div>
+      </div>
+      <div class="card" style="text-align: center;">
+        <div class="number">+50</div>
+        <div class="number-label">Täglicher Bonus</div>
+      </div>
+      <div class="card" style="text-align: center;">
+        <div class="number">4</div>
+        <div class="number-label">Rollen (Guest → Admin)</div>
+      </div>
+      <div class="card" style="text-align: center;">
+        <div class="number">∞</div>
+        <div class="number-label">Events & Märkte</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 3: Tech-Stack -->
+<section class="slide">
+  <h2>Tech-Stack</h2>
+  <div class="grid grid-2" style="gap: 32px;">
+    <div class="card highlight">
+      <h3 style="color: var(--primary);">⚙️ Backend</h3>
+      <table>
+        <tr><td><strong>Sprache</strong></td><td>Java 17 LTS</td></tr>
+        <tr><td><strong>Framework</strong></td><td>Spring Boot 3.2.5</td></tr>
+        <tr><td><strong>Security</strong></td><td>JWT (stateless)</td></tr>
+        <tr><td><strong>Datenbank</strong></td><td>PostgreSQL 16</td></tr>
+        <tr><td><strong>Cache</strong></td><td>Redis 7</td></tr>
+        <tr><td><strong>Migration</strong></td><td>Flyway 9.x</td></tr>
+        <tr><td><strong>Realtime</strong></td><td>WebSocket (STOMP)</td></tr>
+        <tr><td><strong>API-Docs</strong></td><td>SpringDoc / Swagger</td></tr>
+        <tr><td><strong>Build</strong></td><td>Gradle 8.5</td></tr>
+      </table>
+    </div>
+    <div class="card accent-border">
+      <h3>🎨 Frontend</h3>
+      <table>
+        <tr><td><strong>Framework</strong></td><td>Next.js 16 (App Router)</td></tr>
+        <tr><td><strong>Sprache</strong></td><td>TypeScript 5.x</td></tr>
+        <tr><td><strong>Styling</strong></td><td>TailwindCSS v4</td></tr>
+        <tr><td><strong>UI-Kit</strong></td><td>shadcn/ui v4</td></tr>
+        <tr><td><strong>i18n</strong></td><td>next-intl (DE / EN)</td></tr>
+        <tr><td><strong>Auth</strong></td><td>NextAuth v4</td></tr>
+        <tr><td><strong>State</strong></td><td>Zustand + React Query</td></tr>
+        <tr><td><strong>Charts</strong></td><td>Recharts</td></tr>
+        <tr><td><strong>Icons</strong></td><td>Lucide React</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 4: Architektur -->
+<section class="slide">
+  <h2>Architektur</h2>
+  <div class="mermaid">
+graph TB
+    subgraph Browser["🌐 Browser"]
+        FE["Next.js 16 Frontend\n:3000"]
+    end
+    subgraph Backend["⚙️ Spring Boot Backend :8080"]
+        API["REST API Layer\n/api/auth · /api/events · /api/bets\n/api/users · /api/leaderboard · /api/admin"]
+        WS["WebSocket /ws\n(STOMP)"]
+        SVC["Service Layer\nAuthService · EventService · BetService\nTokenService · OddsEngine · LeaderboardService"]
+        SEC["Security Layer\nJWT Filter → Spring Security → CORS"]
+        DATA["Data Layer (JPA + Flyway)\n10 Entities · 8 Repositories"]
+    end
+    subgraph Infra["🗄️ Infrastruktur"]
+        PG["PostgreSQL 16\n:5432"]
+        RD["Redis 7\n:6379"]
+    end
+    FE -->|"REST (JSON)"| API
+    FE -->|"WebSocket"| WS
+    API --> SEC
+    WS --> SEC
+    SEC --> SVC
+    SVC --> DATA
+    DATA --> PG
+    SVC --> RD
+    style FE fill:#1a2736,stroke:#5ce0d2,color:#e2e8f0
+    style API fill:#1a2736,stroke:#5ce0d2,color:#e2e8f0
+    style WS fill:#1a2736,stroke:#e84e8a,color:#e2e8f0
+    style SVC fill:#1a2736,stroke:#5ce0d2,color:#e2e8f0
+    style SEC fill:#1a2736,stroke:#eab308,color:#e2e8f0
+    style DATA fill:#1a2736,stroke:#5ce0d2,color:#e2e8f0
+    style PG fill:#1a2736,stroke:#5ce0d2,color:#e2e8f0
+    style RD fill:#1a2736,stroke:#e84e8a,color:#e2e8f0
+  </div>
+</section>
+
+<!-- SLIDE 5: Datenbank-Schema -->
+<section class="slide">
+  <h2>Datenbank-Schema</h2>
+  <div class="mermaid">
+erDiagram
+    users ||--o{ bets : places
+    users ||--o{ token_transactions : has
+    users ||--o{ events : creates
+    users ||--o{ admin_audit_log : performs
+    categories ||--o{ events : contains
+    events ||--o{ markets : has
+    markets ||--o{ outcomes : has
+    outcomes ||--o{ bets : receives
+    outcomes ||--o{ odds_history : tracks
+
+    users {
+        UUID id PK
+        string username UK
+        string email UK
+        string password
+        enum role
+        decimal token_balance
+        string locale
+    }
+    events {
+        UUID id PK
+        string title
+        enum status
+        timestamp start_time
+        boolean is_featured
+        UUID category_id FK
+        UUID created_by FK
+    }
+    markets {
+        UUID id PK
+        string name
+        enum type
+        enum status
+        decimal margin_factor
+        UUID event_id FK
+    }
+    outcomes {
+        UUID id PK
+        string name
+        decimal initial_odds
+        decimal current_odds
+        decimal total_staked
+        enum result_status
+        UUID market_id FK
+    }
+    bets {
+        UUID id PK
+        decimal stake
+        decimal odds_at_placement
+        decimal potential_win
+        enum status
+        UUID user_id FK
+        UUID outcome_id FK
+    }
+  </div>
+</section>
+
+<!-- SLIDE 6: Dynamische Quoten -->
+<section class="slide">
+  <h2>Dynamische Quoten</h2>
+  <div class="grid grid-2" style="gap: 32px; align-items: start;">
+    <div>
+      <div class="formula">
+        currentOdds = (totalPool / stakeOnOutcome) × marginFactor
+      </div>
+      <p style="margin: 24px 0; font-size: 1.05rem;">
+        Quoten passen sich <strong style="color: var(--primary);">automatisch</strong> an das Wettverhalten an.
+        Wird viel auf ein Ergebnis gewettet, sinkt die Quote. Weniger populäre Ergebnisse haben höhere Quoten.
+      </p>
+      <ul>
+        <li><strong>marginFactor</strong> konfigurierbar pro Markt (Standard: 1.05)</li>
+        <li>Alle Änderungen in <strong>odds_history</strong> protokolliert</li>
+        <li>Live-Push via <strong>WebSocket</strong> an alle Clients</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Beispiel (3 Outcomes, Margin 1.05)</h3>
+      <table>
+        <tr><th>Outcome</th><th>Staked</th><th>Quote</th></tr>
+        <tr><td>⚽ Team A</td><td>500 Tokens</td><td style="color: var(--primary); font-weight: 700;">3.15</td></tr>
+        <tr><td>⚽ Team B</td><td>800 Tokens</td><td style="color: var(--primary); font-weight: 700;">1.97</td></tr>
+        <tr><td>🤝 Unentschieden</td><td>200 Tokens</td><td style="color: var(--primary); font-weight: 700;">7.88</td></tr>
+      </table>
+      <p style="margin-top: 16px; font-size: 0.9rem; color: var(--muted);">Total Pool: 1.500 Tokens</p>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 7: Rollen -->
+<section class="slide">
+  <h2>Rollen & Berechtigungen</h2>
+  <div class="grid grid-4" style="gap: 20px;">
+    <div class="card" style="text-align: center;">
+      <div class="icon">👤</div>
+      <h3 style="color: var(--muted);">GUEST</h3>
+      <ul style="font-size: 0.9rem;">
+        <li>Events ansehen</li>
+        <li>Quoten sehen</li>
+        <li>Leaderboard lesen</li>
+      </ul>
+    </div>
+    <div class="card" style="text-align: center;">
+      <div class="icon">🎲</div>
+      <h3>USER</h3>
+      <ul style="font-size: 0.9rem;">
+        <li>Alles von Guest</li>
+        <li>Wetten platzieren</li>
+        <li>Profil verwalten</li>
+        <li>Token-History</li>
+      </ul>
+    </div>
+    <div class="card" style="text-align: center;">
+      <div class="icon">🛡️</div>
+      <h3>MODERATOR</h3>
+      <ul style="font-size: 0.9rem;">
+        <li>Alles von User</li>
+        <li>Events erstellen</li>
+        <li>Märkte verwalten</li>
+        <li>Ergebnisse setzen</li>
+      </ul>
+    </div>
+    <div class="card highlight" style="text-align: center;">
+      <div class="icon">👑</div>
+      <h3 style="color: var(--primary);">ADMIN</h3>
+      <ul style="font-size: 0.9rem;">
+        <li>Alles von Moderator</li>
+        <li>User-Verwaltung</li>
+        <li>Token anpassen</li>
+        <li>System-Settings</li>
+        <li>Audit-Log</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 8: API-Übersicht -->
+<section class="slide">
+  <h2>API-Endpunkte</h2>
+  <div class="grid grid-3" style="gap: 16px;">
+    <div class="card">
+      <h3>🔐 Auth</h3>
+      <table>
+        <tr><td><span class="tag">POST</span></td><td>/auth/register</td></tr>
+        <tr><td><span class="tag">POST</span></td><td>/auth/login</td></tr>
+        <tr><td><span class="tag">POST</span></td><td>/auth/refresh</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <h3>🏆 Events</h3>
+      <table>
+        <tr><td><span class="tag">GET</span></td><td>/events</td></tr>
+        <tr><td><span class="tag">GET</span></td><td>/events/{id}</td></tr>
+        <tr><td><span class="tag">POST</span></td><td>/events</td></tr>
+        <tr><td><span class="tag">PUT</span></td><td>/events/{id}</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <h3>🎯 Markets</h3>
+      <table>
+        <tr><td><span class="tag">POST</span></td><td>/events/{id}/markets</td></tr>
+        <tr><td><span class="tag">PUT</span></td><td>/.../markets/{id}</td></tr>
+        <tr><td><span class="tag">POST</span></td><td>/.../markets/{id}/settle</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <h3>🎲 Bets</h3>
+      <table>
+        <tr><td><span class="tag">POST</span></td><td>/bets</td></tr>
+        <tr><td><span class="tag">GET</span></td><td>/bets/my</td></tr>
+        <tr><td><span class="tag">GET</span></td><td>/bets/my/stats</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <h3>👤 Users</h3>
+      <table>
+        <tr><td><span class="tag">GET</span></td><td>/users/me</td></tr>
+        <tr><td><span class="tag">PUT</span></td><td>/users/me</td></tr>
+        <tr><td><span class="tag">GET</span></td><td>/users/me/transactions</td></tr>
+        <tr><td><span class="tag">GET</span></td><td>/users/me/daily-bonus</td></tr>
+        <tr><td><span class="tag">POST</span></td><td>/users/me/daily-bonus</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <h3>👑 Admin</h3>
+      <table>
+        <tr><td><span class="tag">GET</span></td><td>/admin/users</td></tr>
+        <tr><td><span class="tag">PATCH</span></td><td>/admin/users/{id}/role</td></tr>
+        <tr><td><span class="tag">PATCH</span></td><td>/admin/users/{id}/tokens</td></tr>
+        <tr><td><span class="tag">POST</span></td><td>/admin/markets/{id}/settle</td></tr>
+        <tr><td><span class="tag">GET</span></td><td>/admin/audit-log</td></tr>
+        <tr><td><span class="tag">PUT</span></td><td>/admin/settings/{key}</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 9: Phasenplan -->
+<section class="slide">
+  <h2>Phasenplan</h2>
+  <div class="phase-bar">
+    <div class="phase-segment done"></div>
+    <div class="phase-segment done"></div>
+    <div class="phase-segment done"></div>
+    <div class="phase-segment wip"></div>
+  </div>
+  <div class="grid grid-4" style="gap: 20px;">
+    <div class="card" style="border-color: #22c55e;">
+      <span class="badge badge-done">✓ DONE</span>
+      <h3 style="margin-top: 12px; color: #86efac;">Phase 1 – Fundament</h3>
+      <ul class="done" style="font-size: 0.85rem;">
+        <li>Docker Compose Setup</li>
+        <li>10 Entities + DB-Schema</li>
+        <li>JWT Auth (Register/Login)</li>
+        <li>Token- & Settings-Service</li>
+        <li>Next.js Skeleton</li>
+        <li>i18n (DE/EN)</li>
+        <li>Dark Theme</li>
+        <li>Login/Register Pages</li>
+        <li>Landing Page</li>
+        <li>Bruno Collection</li>
+      </ul>
+    </div>
+    <div class="card" style="border-color: #22c55e;">
+      <span class="badge badge-done">✓ DONE</span>
+      <h3 style="margin-top: 12px; color: #86efac;">Phase 2 – Kern</h3>
+      <ul class="done" style="font-size: 0.85rem;">
+        <li>Event/Market CRUD</li>
+        <li>BetService + Quoten</li>
+        <li>OddsEngine + History</li>
+        <li>Leaderboard</li>
+        <li>User-Profil</li>
+        <li>WebSocket Live-Push</li>
+        <li>Events + Detail-Seite</li>
+        <li>Wettschein-UI</li>
+        <li>Leaderboard-Seite</li>
+        <li>Profil + Admin (Basis)</li>
+      </ul>
+    </div>
+    <div class="card" style="border-color: #22c55e;">
+      <span class="badge badge-done">✓ DONE</span>
+      <h3 style="margin-top: 12px; color: #86efac;">Phase 3 – Admin</h3>
+      <ul class="done" style="font-size: 0.85rem;">
+        <li>Events CRUD + Status</li>
+        <li>Settlement UI</li>
+        <li>Token-Anpassung</li>
+        <li>Audit-Log + Settings</li>
+        <li>Quoten-Chart (Recharts)</li>
+        <li>Daily Bonus</li>
+        <li>i18n + Responsive</li>
+      </ul>
+    </div>
+    <div class="card" style="border-color: #eab308;">
+      <span class="badge badge-wip">� IN ARBEIT</span>
+      <h3 style="margin-top: 12px; color: #fde047;">Phase 4 – Go-Live</h3>
+      <ul class="done" style="font-size: 0.85rem;">
+        <li>E2E-Tests (Playwright)</li>
+        <li>Redis-Caching</li>
+        <li>Error-Handling</li>
+        <li>Docker Deployment</li>
+        <li>Favicon + OG-Meta</li>
+      </ul>
+      <ul style="font-size: 0.85rem; margin-top: 4px;">
+        <li>Team-Review</li>
+        <li>Go-Live intern</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 10: Seiten-Übersicht -->
+<section class="slide">
+  <h2>Frontend – Seiten</h2>
+  <div class="mermaid">
+graph LR
+    subgraph Public["🌐 Öffentlich"]
+        LP["🏠 Landing Page"]
+        EV["🏆 Events-Liste"]
+        ED["📋 Event-Detail"]
+        LB["📊 Leaderboard"]
+    end
+    subgraph Auth["🔐 Authentifizierung"]
+        LI["🔑 Login"]
+        RE["📝 Register"]
+    end
+    subgraph User["👤 Eingeloggt"]
+        PR["👤 Profil"]
+        BH["🎲 Wetten-History"]
+        TX["💰 Transaktionen"]
+    end
+    subgraph Admin["👑 Admin"]
+        AE["📝 Events verwalten"]
+        AS["⚖️ Ergebnisse setzen"]
+        AU["👥 User-Verwaltung"]
+        AL["📜 Audit-Log"]
+    end
+    LP --> EV
+    EV --> ED
+    LI --> EV
+    RE --> EV
+    ED -->|"Wette platzieren"| BH
+    style LP fill:#1a2736,stroke:#5ce0d2,color:#e2e8f0
+    style EV fill:#1a2736,stroke:#5ce0d2,color:#e2e8f0
+    style ED fill:#1a2736,stroke:#5ce0d2,color:#e2e8f0
+    style LB fill:#1a2736,stroke:#5ce0d2,color:#e2e8f0
+    style LI fill:#1a2736,stroke:#e84e8a,color:#e2e8f0
+    style RE fill:#1a2736,stroke:#e84e8a,color:#e2e8f0
+    style PR fill:#1a2736,stroke:#eab308,color:#e2e8f0
+    style BH fill:#1a2736,stroke:#eab308,color:#e2e8f0
+    style TX fill:#1a2736,stroke:#eab308,color:#e2e8f0
+    style AE fill:#1a2736,stroke:#ef4444,color:#e2e8f0
+    style AS fill:#1a2736,stroke:#ef4444,color:#e2e8f0
+    style AU fill:#1a2736,stroke:#ef4444,color:#e2e8f0
+    style AL fill:#1a2736,stroke:#ef4444,color:#e2e8f0
+  </div>
+</section>
+
+<!-- SLIDE 11: Danke -->
+<section class="slide" style="justify-content: center; align-items: center; text-align: center;">
+  <div style="font-size: 5rem; margin-bottom: 24px;">🚀</div>
+  <h1><span class="dot">dot</span><span class="bet">Bet</span></h1>
+  <p class="subtitle">Let's build it.</p>
+  <div style="margin-top: 48px; display: flex; gap: 32px;">
+    <div class="card" style="text-align: center; min-width: 160px;">
+      <div class="number" style="font-size: 2rem;">:3000</div>
+      <div class="number-label">Frontend</div>
+    </div>
+    <div class="card" style="text-align: center; min-width: 160px;">
+      <div class="number" style="font-size: 2rem;">:8080</div>
+      <div class="number-label">Backend</div>
+    </div>
+    <div class="card" style="text-align: center; min-width: 160px;">
+      <div class="number" style="font-size: 2rem;">:5050</div>
+      <div class="number-label">pgAdmin</div>
+    </div>
+  </div>
+  <p style="margin-top: 48px; color: var(--muted); font-size: 0.9rem;">April 2026</p>
+</section>
+
+<script>
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'dark',
+    themeVariables: {
+      primaryColor: '#1a2736',
+      primaryTextColor: '#e2e8f0',
+      primaryBorderColor: '#5ce0d2',
+      lineColor: '#5ce0d2',
+      secondaryColor: '#1a2736',
+      tertiaryColor: '#1a2736',
+      fontSize: '14px'
+    }
+  });
+</script>
+
+</body>
+</html>

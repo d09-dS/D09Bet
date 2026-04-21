@@ -1,0 +1,42 @@
+meta {
+  name: Add Market
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/events/:id/markets
+  body: json
+  auth: bearer
+}
+
+params:path {
+  id: {{eventId}}
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "name": "Gewinner",
+    "nameEn": "Winner",
+    "type": "WINNER",
+    "marginFactor": 0.95,
+    "outcomes": [
+      {
+        "name": "Team A",
+        "initialOdds": 2.10
+      },
+      {
+        "name": "Team B",
+        "initialOdds": 3.50
+      },
+      {
+        "name": "Unentschieden",
+        "initialOdds": 3.20
+      }
+    ]
+  }
+}

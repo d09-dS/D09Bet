@@ -1,0 +1,25 @@
+meta {
+  name: Create Event
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/events
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "title": "Champions League Finale",
+    "titleEn": "Champions League Final",
+    "description": "Wer gewinnt das CL Finale?",
+    "descriptionEn": "Who wins the CL Final?",
+    "startTime": "2025-06-01T20:00:00Z"
+  }
+}

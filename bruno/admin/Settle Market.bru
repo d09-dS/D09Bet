@@ -1,0 +1,25 @@
+meta {
+  name: Settle Market
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/admin/markets/:marketId/settle
+  body: json
+  auth: bearer
+}
+
+params:path {
+  marketId: {{marketId}}
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "winningOutcomeId": "{{outcomeId}}"
+  }
+}

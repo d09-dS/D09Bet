@@ -1,0 +1,25 @@
+meta {
+  name: Change Role
+  type: http
+  seq: 3
+}
+
+patch {
+  url: {{baseUrl}}/admin/users/:id/role
+  body: json
+  auth: bearer
+}
+
+params:path {
+  id: {{userId}}
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "role": "MODERATOR"
+  }
+}
