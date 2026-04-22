@@ -4,11 +4,22 @@ import { serialize, errorResponse } from "@/lib/api-utils";
 
 export async function GET(_req: NextRequest) {
   try {
-    const events = await prisma.event.findMany({
+    let events = await prisma.event.findMany({
       where: { isFeatured: true, status: "OPEN", deletedAt: null },
       include: { category: true },
       orderBy: { createdAt: "desc" },
+      take: 3,
     });
+
+    // Fallback: show latest open events when no featured ones exist
+    if (events.length === 0) {
+      events = await prisma.event.findMany({
+        where: { status: "OPEN", deletedAt: null },
+        include: { category: true },
+        orderBy: { createdAt: "desc" },
+        take: 3,
+      });
+    }
 
     const mapped = events.map((e) => ({
       id: e.id, title: e.title, titleEn: e.titleEn, description: e.description,
