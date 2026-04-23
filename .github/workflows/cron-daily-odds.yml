@@ -1,0 +1,22 @@
+name: Daily Odds Update
+
+on:
+  schedule:
+    # Every day at midnight UTC
+    - cron: "0 0 * * *"
+  workflow_dispatch: # Allow manual trigger from GitHub UI
+
+jobs:
+  update-odds:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call daily-odds endpoint
+        run: |
+          response=$(curl -s -o /dev/null -w "%{http_code}" -X GET \
+            "${{ secrets.APP_URL }}/api/cron/daily-odds" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}")
+          echo "HTTP status: $response"
+          if [ "$response" -ne 200 ]; then
+            echo "Cron job failed with status $response"
+            exit 1
+          fi

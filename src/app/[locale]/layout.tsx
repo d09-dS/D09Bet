@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
+import { getServerSession } from "next-auth";
 import { routing } from "@/i18n/routing";
+import { authOptions } from "@/lib/auth";
 import { Providers } from "@/components/providers";
 import { Header } from "@/components/layout/Header";
 import { Toaster } from "@/components/ui/sonner";
@@ -38,14 +40,16 @@ export default async function LocaleLayout({
   }
 
   const messages = await getMessages();
+  const session = await getServerSession(authOptions);
+  const isLoggedIn = !!session?.user;
 
   return (
     <NextIntlClientProvider messages={messages}>
       <Providers>
         <div className="flex min-h-screen flex-col">
-          <Header />
+          {isLoggedIn && <Header />}
           <main className="flex-1">{children}</main>
-          <Footer />
+          {isLoggedIn && <Footer />}
         </div>
         <BetSlip />
         <SettlementListener />

@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { serialize, errorResponse, ApiError, requireRole, getDecimalSetting } from "@/lib/api-utils";
+import { logAction } from "@/lib/audit";
 
 export async function POST(req: NextRequest) {
   try {
-    const user = await requireRole(req, "USER", "MODERATOR", "ADMIN");
+    const user = await requireRole(req, "USER", "ADMIN");
     if (!user.isActive) throw new ApiError(403, "Account is deactivated");
 
     const body = await req.json();
@@ -60,44 +61,15 @@ export async function POST(req: NextRequest) {
       return bal;
     });
 
-    // Odds Engine: log-weighted recalculation (inside transaction for atomicity)
-    const logWeight = Math.log(1 + stake);
-    const minBets = await getDecimalSetting("min_bets_for_dynamic_odds", 5);
+    // Update totalStaked + betCount for display/statistics (odds are now updated daily via cron)
+    await prisma.outcome.update({
+      where: { id: outcomeId },
+      data: { totalStaked: { increment: stake }, betCount: { increment: 1 } },
+    });
 
-    await prisma.$transaction(async (tx) => {
-      // Update totalStaked (for display) + logWeightSum + betCount
-      await tx.outcome.update({
-        where: { id: outcomeId },
-        data: { totalStaked: { increment: stake }, logWeightSum: { increment: logWeight }, betCount: { increment: 1 } },
-      });
-
-      const allOutcomes = await tx.outcome.findMany({ where: { marketId: outcome.marketId } });
-      const totalBetCount = allOutcomes.reduce((sum, o) => sum + o.betCount, 0);
-
-      // Only recalculate odds once enough bets exist for meaningful data
-      if (totalBetCount >= minBets) {
-        const scaleFactor = Number(outcome.market.oddsScaleFactor);
-
-        // effectiveStaked = virtualStaked + logWeightSum
-        const effectivePool = allOutcomes.reduce(
-          (sum, o) => sum + Number(o.virtualStaked) + Number(o.logWeightSum), 0,
-        );
-
-        for (const o of allOutcomes) {
-          const effective = Number(o.virtualStaked) + Number(o.logWeightSum);
-          let newOdds = effective <= 0 ? 100.0 : scaleFactor * effectivePool / effective;
-          newOdds = Math.round(Math.min(100.0, Math.max(1.01, newOdds)) * 100) / 100;
-          const oldOdds = Number(o.currentOdds);
-
-          if (newOdds !== oldOdds) {
-            await tx.outcome.update({ where: { id: o.id }, data: { currentOdds: newOdds } });
-            await tx.oddsHistory.create({
-              data: { outcomeId: o.id, oldOdds, newOdds, triggerType: "BET_PLACED", changedById: user.id },
-            });
-          }
-        }
-      }
-      // Before threshold: odds stay at initialOdds (no recalculation)
+    logAction(user.id, "PLACE_BET", "Bet", bet.id, {
+      eventTitle: outcome.market.event.title, outcomeName: outcome.name,
+      stake, odds: Number(outcome.currentOdds), potentialWin,
     });
 
     return NextResponse.json(

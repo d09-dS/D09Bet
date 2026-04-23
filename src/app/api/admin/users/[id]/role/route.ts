@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { serialize, errorResponse, ApiError, requireRole } from "@/lib/api-utils";
+import { logAction } from "@/lib/audit";
 
-const VALID_ROLES = ["GUEST", "USER", "MODERATOR", "ADMIN"] as const;
+const VALID_ROLES = ["GUEST", "USER", "ADMIN"] as const;
 type RoleValue = (typeof VALID_ROLES)[number];
 
 export async function PATCH(
@@ -27,9 +28,7 @@ export async function PATCH(
       select: { id: true, username: true, email: true, role: true, tokenBalance: true, avatarUrl: true, bio: true, locale: true, createdAt: true },
     });
 
-    await prisma.adminAuditLog.create({
-      data: { adminId: admin.id, action: "CHANGE_ROLE", entityType: "User", entityId: id, details: { newRole: role } },
-    });
+    logAction(admin.id, "CHANGE_ROLE", "User", id, { newRole: role });
 
     return NextResponse.json(serialize(updated));
   } catch (err) {

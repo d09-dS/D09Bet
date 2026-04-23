@@ -2,9 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { serialize, errorResponse, ApiError } from "@/lib/api-utils";
 import { generateAccessToken, generateRefreshToken, verifyToken } from "@/lib/jwt";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 export async function POST(req: NextRequest) {
   try {
+    const rateLimited = await checkRateLimit(req, "refresh");
+    if (rateLimited) return rateLimited;
+
     const body = await req.json();
     const { refreshToken: token } = body;
 

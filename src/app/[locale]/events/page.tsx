@@ -15,7 +15,6 @@ import { useFavoritesStore } from "@/stores/favoritesStore";
 
 const statusColors: Record<string, string> = {
   DRAFT: "bg-gray-500/15 text-gray-400 border-gray-500/20",
-  SCHEDULED: "bg-blue-500/15 text-blue-400 border-blue-500/20",
   OPEN: "bg-emerald-500/15 text-emerald-400 border-emerald-500/20",
   CLOSED: "bg-amber-500/15 text-amber-400 border-amber-500/20",
   SETTLED: "bg-purple-500/15 text-purple-400 border-purple-500/20",
@@ -112,7 +111,7 @@ export default function EventsPage() {
           >
             {tCommon("all")}
           </Button>
-          {["OPEN", "SCHEDULED", "CLOSED", "SETTLED"].map((s) => (
+          {["OPEN", "CLOSED", "SETTLED"].map((s) => (
             <Button
               key={s}
               variant={selectedStatus === s ? "default" : "outline"}
@@ -180,7 +179,7 @@ export default function EventsPage() {
             >
               <div className="p-5">
                 <div className="flex items-start justify-between gap-2 mb-2">
-                  <h3 className="font-bold text-lg leading-tight group-hover:text-primary transition-colors">{event.title}</h3>
+                  <h3 className="font-bold text-lg leading-tight group-hover:text-primary transition-colors line-clamp-2">{event.title}</h3>
                   <div className="flex items-center gap-1 shrink-0">
                     <button
                       onClick={(e) => { e.stopPropagation(); toggleFavorite(event.id); }}

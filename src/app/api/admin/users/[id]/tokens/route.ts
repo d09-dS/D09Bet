@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { serialize, errorResponse, ApiError, requireRole } from "@/lib/api-utils";
+import { logAction } from "@/lib/audit";
 
 export async function PATCH(
   req: NextRequest,
@@ -28,11 +29,10 @@ export async function PATCH(
       await tx.tokenTransaction.create({
         data: { userId: id, type: "ADMIN_ADJUSTMENT", amount, balanceAfter: newBalance, referenceType: "USER", referenceId: admin.id, description: reason ?? null, createdById: admin.id },
       });
-      await tx.adminAuditLog.create({
-        data: { adminId: admin.id, action: "ADJUST_TOKENS", entityType: "User", entityId: id, details: { amount, reason: reason ?? null } },
-      });
       return u;
     });
+
+    logAction(admin.id, "ADJUST_TOKENS", "User", id, { amount, reason: reason ?? null });
 
     return NextResponse.json(serialize(updated));
   } catch (err) {

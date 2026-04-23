@@ -1,13 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import { useBetSlipStore } from "@/stores/betSlipStore";
 import { api } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { X, Trash2, ShoppingCart, Loader2 } from "lucide-react";
+import { X, Trash2, Ticket, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import { useBalance } from "@/hooks/useBalance";
@@ -20,6 +20,19 @@ export default function BetSlip() {
   const { items, isOpen, removeItem, updateStake, clearSlip, toggleOpen, setOpen } = useBetSlipStore();
   const { balance, setBalance } = useBalance();
   const [placing, setPlacing] = useState<string | null>(null);
+  const [buzz, setBuzz] = useState(false);
+
+  // Reminder buzz every 15 seconds when there are unplaced bets
+  const triggerBuzz = useCallback(() => {
+    setBuzz(true);
+    setTimeout(() => setBuzz(false), 600);
+  }, []);
+
+  useEffect(() => {
+    if (items.length === 0 || isOpen) return;
+    const interval = setInterval(triggerBuzz, 15_000);
+    return () => clearInterval(interval);
+  }, [items.length, isOpen, triggerBuzz]);
 
   const totalStake = items.reduce((sum, item) => sum + item.stake, 0);
   const totalPotentialWin = items.reduce((sum, item) => sum + item.stake * item.odds, 0);
@@ -33,6 +46,7 @@ export default function BetSlip() {
       setBalance(res.newBalance);
       removeItem(outcomeId);
       toast.success(tBets("betPlaced"), { description: `${stake} ${tCommon("tokens")}` });
+      window.dispatchEvent(new Event("bet-placed"));
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : tCommon("error");
       toast.error(tCommon("error"), { description: message });
@@ -56,12 +70,17 @@ export default function BetSlip() {
         {!isOpen && items.length > 0 && (
           <motion.button
             initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
+            animate={{
+              scale: 1,
+              opacity: 1,
+              ...(buzz ? { rotate: [0, -8, 8, -8, 8, 0], scale: [1, 1.12, 1] } : {}),
+            }}
             exit={{ scale: 0, opacity: 0 }}
+            transition={buzz ? { duration: 0.5, ease: "easeInOut" } : undefined}
             onClick={toggleOpen}
             className="fixed bottom-6 right-6 z-50 flex items-center gap-2 rounded-full bg-primary px-5 py-3 text-primary-foreground font-semibold transition-transform hover:scale-105"
           >
-            <ShoppingCart className="h-5 w-5" />
+            <Ticket className="h-5 w-5" />
             <span className="font-bold">{items.length}</span>
           </motion.button>
         )}
@@ -88,9 +107,7 @@ export default function BetSlip() {
               {/* Header */}
               <div className="flex items-center justify-between border-b border-border/30 px-5 py-4">
                 <div className="flex items-center gap-2.5">
-                  <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                    <ShoppingCart className="h-4 w-4 text-primary" />
-                  </div>
+                  <Ticket className="h-5 w-5 text-primary" />
                   <h2 className="font-bold">{t("placeBet")} ({items.length})</h2>
                 </div>
                 <Button variant="ghost" size="icon" onClick={() => setOpen(false)} className="h-8 w-8 rounded-lg" aria-label="Close bet slip">

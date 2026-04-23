@@ -2,10 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { serialize, errorResponse, ApiError, requireRole } from "@/lib/api-utils";
 import { EventStatus } from "@/generated/prisma/client";
+import { logAction } from "@/lib/audit";
 
 const VALID_TRANSITIONS: Record<string, EventStatus[]> = {
-  DRAFT: ["SCHEDULED", "CANCELED"],
-  SCHEDULED: ["OPEN", "CANCELED"],
+  DRAFT: ["OPEN", "CANCELED"],
   OPEN: ["CLOSED", "CANCELED"],
   CLOSED: ["SETTLED", "CANCELED"],
 };
@@ -16,12 +16,15 @@ export async function PATCH(
 ) {
   try {
     const { id } = await params;
-    await requireRole(req, "MODERATOR", "ADMIN");
+    const admin = await requireRole(req, "ADMIN");
 
     const { status } = (await req.json()) as { status: string };
     if (!status) throw new ApiError(400, "status is required");
 
-    const event = await prisma.event.findFirst({ where: { id, deletedAt: null } });
+    const event = await prisma.event.findFirst({
+      where: { id, deletedAt: null },
+      include: { category: { select: { name: true } } },
+    });
     if (!event) throw new ApiError(404, "Event not found");
 
     const allowed = VALID_TRANSITIONS[event.status];
@@ -48,12 +51,25 @@ export async function PATCH(
           include: { category: true, markets: { include: { outcomes: true } } },
         });
       });
+      logAction(admin.id, "CHANGE_EVENT_STATUS", "Event", id, {
+        title: event.title, from: event.status, to: newStatus,
+        categoryName: (event.category as { name: string } | null)?.name ?? null,
+      });
       return NextResponse.json(serialize(updated));
     }
 
     const updated = await prisma.event.update({
-      where: { id }, data: { status: newStatus },
+      where: { id },
+      data: {
+        status: newStatus,
+        // Automatically set startTime to now when the event is opened
+        ...(newStatus === "OPEN" && !event.startTime ? { startTime: new Date() } : {}),
+      },
       include: { category: true, markets: { include: { outcomes: true } } },
+    });
+    logAction(admin.id, "CHANGE_EVENT_STATUS", "Event", id, {
+      title: event.title, from: event.status, to: newStatus,
+      categoryName: (event.category as { name: string } | null)?.name ?? null,
     });
     return NextResponse.json(serialize(updated));
   } catch (err) {

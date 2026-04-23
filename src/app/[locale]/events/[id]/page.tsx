@@ -26,7 +26,6 @@ import { useStompClient } from "@/hooks/useStompClient";
 
 const statusColors: Record<string, string> = {
   DRAFT: "bg-gray-500/15 text-gray-400 border-gray-500/20",
-  SCHEDULED: "bg-blue-500/15 text-blue-400 border-blue-500/20",
   OPEN: "bg-emerald-500/15 text-emerald-400 border-emerald-500/20",
   CLOSED: "bg-amber-500/15 text-amber-400 border-amber-500/20",
   SETTLED: "bg-purple-500/15 text-purple-400 border-purple-500/20",
@@ -51,6 +50,15 @@ export default function EventDetailPage() {
     if (params.id) {
       loadEvent(params.id as string);
     }
+  }, [params.id]);
+
+  /* Re-fetch event data when a bet is placed */
+  useEffect(() => {
+    function handleBetPlaced() {
+      if (params.id) loadEvent(params.id as string);
+    }
+    window.addEventListener("bet-placed", handleBetPlaced);
+    return () => window.removeEventListener("bet-placed", handleBetPlaced);
   }, [params.id]);
 
   /* Subscribe to live odds updates for each market */

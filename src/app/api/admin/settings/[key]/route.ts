@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { serialize, errorResponse, ApiError, requireRole } from "@/lib/api-utils";
+import { logAction } from "@/lib/audit";
 
 export async function PUT(
   req: NextRequest,
@@ -21,9 +22,7 @@ export async function PUT(
       where: { key }, data: { value, updatedBy: admin.id },
     });
 
-    await prisma.adminAuditLog.create({
-      data: { adminId: admin.id, action: "UPDATE_SETTING", entityType: "SystemSetting", entityId: null, details: { key, value } },
-    });
+    logAction(admin.id, "UPDATE_SETTING", "SystemSetting", null, { key, value });
 
     return NextResponse.json(serialize(updated));
   } catch (err) {

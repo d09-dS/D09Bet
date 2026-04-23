@@ -44,7 +44,7 @@ export async function PUT(
 ) {
   try {
     const { id } = await params;
-    await requireRole(req, "MODERATOR", "ADMIN");
+    await requireRole(req, "ADMIN");
     const body = await req.json();
 
     const data: Record<string, unknown> = {};

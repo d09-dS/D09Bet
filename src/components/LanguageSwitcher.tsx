@@ -2,6 +2,7 @@
 
 import { useLocale } from "next-intl";
 import { useRouter, usePathname } from "@/i18n/navigation";
+import { useSearchParams } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import { Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -15,10 +16,13 @@ export function LanguageSwitcher() {
   const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   function switchLocale(next: string) {
     if (next === locale) return;
-    router.replace(pathname, { locale: next });
+    const params = searchParams.toString();
+    const target = params ? `${pathname}?${params}` : pathname;
+    router.replace(target, { locale: next });
   }
 
   return (

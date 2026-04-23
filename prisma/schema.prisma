@@ -12,7 +12,6 @@ datasource db {
 enum Role {
   GUEST
   USER
-  MODERATOR
   ADMIN
 }
 
@@ -74,11 +73,20 @@ enum OddsChangeTrigger {
   BET_PLACED
   ADMIN_CHANGE
   RECALCULATION
+  DAILY_CRON
 }
 
 enum Visibility {
   PUBLIC
   RESTRICTED
+}
+
+enum NotificationType {
+  USER_REGISTERED
+  BET_PLACED
+  EVENT_CREATED
+  EVENT_SETTLED
+  SYSTEM
 }
 
 // ─── Models ──────────────────────────────────────────────
@@ -107,6 +115,7 @@ model User {
   createdTransactions TokenTransaction[] @relation("TransactionCreator")
   oddsHistory         OddsHistory[]
   adminAuditLogs      AdminAuditLog[]
+  notifications       Notification[]
 
   @@index([username])
   @@index([email])
@@ -287,4 +296,23 @@ model SystemSetting {
   updatedBy   String?   @map("updated_by") @db.Uuid
 
   @@map("system_settings")
+}
+
+model Notification {
+  id         Int              @id @default(autoincrement())
+  type       NotificationType
+  title      String           @db.VarChar(255)
+  message    String           @db.VarChar(500)
+  entityType String?          @map("entity_type") @db.VarChar(50)
+  entityId   String?          @map("entity_id") @db.Uuid
+  isRead     Boolean          @default(false) @map("is_read")
+  adminId    String?          @map("admin_id") @db.Uuid
+  createdAt  DateTime         @default(now()) @map("created_at") @db.Timestamptz()
+
+  admin User? @relation(fields: [adminId], references: [id])
+
+  @@index([adminId])
+  @@index([isRead])
+  @@index([createdAt(sort: Desc)])
+  @@map("notifications")
 }

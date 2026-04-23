@@ -2,7 +2,7 @@ export interface User {
   id: string;
   username: string;
   email: string;
-  role: "GUEST" | "USER" | "MODERATOR" | "ADMIN";
+  role: "GUEST" | "USER" | "ADMIN";
   tokenBalance: number;
   avatarUrl?: string;
   bio?: string;
@@ -33,7 +33,6 @@ export interface Category {
 
 export type EventStatus =
   | "DRAFT"
-  | "SCHEDULED"
   | "OPEN"
   | "CLOSED"
   | "SETTLED"

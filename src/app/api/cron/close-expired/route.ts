@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { logAction } from "@/lib/audit";
 
 /**
  * Cron endpoint that automatically closes expired events.
  *
- * - Finds all OPEN or SCHEDULED events whose endTime has passed.
+ * - Finds all OPEN events whose endTime has passed.
  * - Sets their status to CLOSED.
  * - Locks all associated open markets so no new bets can be placed.
  *
@@ -13,11 +14,13 @@ import { prisma } from "@/lib/prisma";
  */
 export async function GET(req: NextRequest) {
   const cronSecret = process.env.CRON_SECRET;
-  if (cronSecret) {
-    const authHeader = req.headers.get("authorization");
-    if (authHeader !== `Bearer ${cronSecret}`) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+  if (!cronSecret) {
+    console.error("[cron/close-expired] CRON_SECRET not configured");
+    return NextResponse.json({ error: "Cron not configured" }, { status: 503 });
+  }
+  const authHeader = req.headers.get("authorization");
+  if (authHeader !== `Bearer ${cronSecret}`) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
@@ -25,7 +28,7 @@ export async function GET(req: NextRequest) {
 
     const expiredEvents = await prisma.event.findMany({
       where: {
-        status: { in: ["OPEN", "SCHEDULED"] },
+        status: { in: ["OPEN"] },
         endTime: { lte: now },
         deletedAt: null,
       },
@@ -56,6 +59,14 @@ export async function GET(req: NextRequest) {
     });
 
     console.log(`[cron/close-expired] Closed ${expiredEvents.length} events: ${expiredEvents.map((e) => e.title).join(", ")}`);
+
+    // Audit log for each closed event
+    for (const event of expiredEvents) {
+      logAction(null, "AUTO_CLOSE_EVENT", "Event", event.id, {
+        title: event.title,
+        reason: "endTime expired",
+      });
+    }
 
     return NextResponse.json({
       closed: expiredEvents.length,

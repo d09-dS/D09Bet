@@ -1,8 +1,12 @@
 import { SignJWT, jwtVerify, type JWTPayload } from "jose";
 
-const secret = new TextEncoder().encode(
-  process.env.JWT_SECRET || process.env.NEXTAUTH_SECRET || "dotbet-jwt-secret-key-change-in-production-min-32-chars!!"
-);
+function getJwtSecret() {
+  const raw = process.env.JWT_SECRET || process.env.NEXTAUTH_SECRET;
+  if (!raw) throw new Error("JWT_SECRET or NEXTAUTH_SECRET environment variable must be set");
+  return new TextEncoder().encode(raw);
+}
+
+const secret = getJwtSecret();
 
 const ACCESS_TOKEN_EXP = "8h";
 const REFRESH_TOKEN_EXP = "7d";

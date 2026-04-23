@@ -1,9 +1,9 @@
 "use client";
 
 import { SessionProvider } from "next-auth/react";
-import { ThemeProvider } from "@/lib/theme";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";
+import { SplashScreen } from "@/components/SplashScreen";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
@@ -19,10 +19,10 @@ export function Providers({ children }: { children: React.ReactNode }) {
   );
 
   return (
-    <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
-      <SessionProvider>
-        <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-      </SessionProvider>
-    </ThemeProvider>
+    <SessionProvider>
+      <QueryClientProvider client={queryClient}>
+        <SplashScreen>{children}</SplashScreen>
+      </QueryClientProvider>
+    </SessionProvider>
   );
 }

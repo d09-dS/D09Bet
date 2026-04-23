@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Flame, Loader2, CheckCircle } from "lucide-react";
 import { useState } from "react";
 import { api, ApiError } from "@/lib/api";
+import { useSplash } from "@/components/SplashScreen";
 
 export default function RegisterPage() {
   const t = useTranslations("auth");
@@ -15,6 +16,7 @@ export default function RegisterPage() {
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const { triggerSplash } = useSplash();
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -30,6 +32,7 @@ export default function RegisterPage() {
     try {
       await api.post("/auth/register", { username, email, password });
       setLoading(false);
+      triggerSplash();
       setSuccess(true);
     } catch (err) {
       setLoading(false);
@@ -47,7 +50,7 @@ export default function RegisterPage() {
     }
   }
 
-  const inputClass = "h-11 rounded-xl bg-secondary/50 border-border/50 focus:border-primary/50 focus:ring-primary/20 transition-all";
+  const inputClass = "h-11 rounded-xl bg-secondary/50 border-border/50 focus:border-primary/50 focus:ring-primary/20 transition-all [&:not(:placeholder-shown)]:bg-white [&:not(:placeholder-shown)]:text-[#0A0E13] [&:not(:placeholder-shown)]:border-white/30";
 
   if (success) {
     return (
@@ -77,13 +80,13 @@ export default function RegisterPage() {
       <div className="w-full max-w-md">
         <div className="rounded-lg border border-border bg-card p-8">
           <div className="mb-8 flex flex-col items-center">
-            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
-              <Flame className="h-6 w-6 text-primary" />
+            <div className="mb-4">
+              <Flame className="h-10 w-10 text-primary" />
             </div>
             <h1 className="text-2xl font-extrabold">{t("registerTitle")}</h1>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-2">
               <Label htmlFor="username" className="text-sm font-medium">{t("username")}</Label>
               <Input id="username" name="username" type="text" required autoComplete="username" placeholder={t("username")} className={inputClass} />

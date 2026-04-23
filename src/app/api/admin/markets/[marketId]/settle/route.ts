@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { errorResponse, ApiError, requireRole } from "@/lib/api-utils";
+import { logAction } from "@/lib/audit";
 
 export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ marketId: string }> },
 ) {
   try {
-    const admin = await requireRole(req, "MODERATOR", "ADMIN");
+    const admin = await requireRole(req, "ADMIN");
     const { marketId } = await params;
     const body = await req.json();
     const { winningOutcomeId } = body as { winningOutcomeId: string };
@@ -58,10 +59,9 @@ export async function POST(
         }
       }
 
-      await tx.adminAuditLog.create({
-        data: { adminId: admin.id, action: "SETTLE_MARKET", entityType: "Market", entityId: marketId, details: { winningOutcomeId } },
-      });
     });
+
+    logAction(admin.id, "SETTLE_MARKET", "Market", marketId, { winningOutcomeId });
 
     return new NextResponse(null, { status: 204 });
   } catch (err) {

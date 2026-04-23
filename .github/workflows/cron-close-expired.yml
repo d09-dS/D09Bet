@@ -1,0 +1,22 @@
+name: Close Expired Events
+
+on:
+  schedule:
+    # Every 15 minutes
+    - cron: "*/15 * * * *"
+  workflow_dispatch: # Allow manual trigger from GitHub UI
+
+jobs:
+  close-expired:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call close-expired endpoint
+        run: |
+          response=$(curl -s -o /dev/null -w "%{http_code}" -X GET \
+            "${{ secrets.APP_URL }}/api/cron/close-expired" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}")
+          echo "HTTP status: $response"
+          if [ "$response" -ne 200 ]; then
+            echo "Cron job failed with status $response"
+            exit 1
+          fi

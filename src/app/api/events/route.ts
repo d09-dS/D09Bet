@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { serialize, errorResponse, ApiError, requireRole, parsePagination, pageResponse } from "@/lib/api-utils";
 import { EventStatus, Prisma } from "@/generated/prisma/client";
+import { notifyAdmins } from "@/lib/notifications";
+import { logAction } from "@/lib/audit";
 
 export async function GET(req: NextRequest) {
   try {
@@ -55,17 +57,13 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const user = await requireRole(req, "MODERATOR", "ADMIN");
+    const user = await requireRole(req, "USER", "ADMIN");
     const body = await req.json();
-    const { title, titleEn, description, descriptionEn, categoryId, startTime, endTime, imageUrl, isFeatured } = body;
+    const { title, titleEn, description, descriptionEn, categoryId, endTime, imageUrl, isFeatured } = body;
 
     if (!title) throw new ApiError(400, "title is required");
 
-    const parsedStart = startTime ? new Date(startTime) : null;
     const parsedEnd = endTime ? new Date(endTime) : null;
-    if (parsedStart && parsedEnd && parsedEnd <= parsedStart) {
-      throw new ApiError(400, "endTime must be after startTime");
-    }
 
     const event = await prisma.event.create({
       data: {
@@ -73,12 +71,29 @@ export async function POST(req: NextRequest) {
         descriptionEn: descriptionEn ?? null,
         categoryId: categoryId ? Number(categoryId) : null,
         status: "DRAFT", visibility: "PUBLIC",
-        startTime: parsedStart,
+        startTime: null,
         endTime: parsedEnd,
         imageUrl: imageUrl ?? null, isFeatured: isFeatured ?? false,
         createdById: user.id,
       },
       include: { category: true, markets: { include: { outcomes: true } } },
+    });
+
+    // Notify admins when a non-admin user creates an event
+    if (user.role !== "ADMIN") {
+      notifyAdmins({
+        type: "EVENT_CREATED",
+        title: "Neue Wette zur Prüfung",
+        message: `Benutzer "${user.username}" hat eine Wette erstellt: "${event.title}" — bitte prüfen und freigeben.`,
+        entityType: "EVENT",
+        entityId: event.id,
+      }).catch((err) => console.error("[Event] Notification error:", err));
+    }
+
+    logAction(user.id, "CREATE_EVENT", "Event", event.id, {
+      title: event.title,
+      status: "DRAFT",
+      categoryName: (event.category as { name: string } | null)?.name ?? null,
     });
 
     return NextResponse.json(serialize(event), { status: 201 });

@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { serialize, errorResponse, requireRole } from "@/lib/api-utils";
 import { prisma } from "@/lib/prisma";
+import { logAction } from "@/lib/audit";
 
 export async function GET(req: NextRequest) {
   try {
-    const user = await requireRole(req, "USER", "MODERATOR", "ADMIN");
+    const user = await requireRole(req, "USER", "ADMIN");
     return NextResponse.json(
       serialize({
         id: user.id,
@@ -25,7 +26,7 @@ export async function GET(req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
   try {
-    const user = await requireRole(req, "USER", "MODERATOR", "ADMIN");
+    const user = await requireRole(req, "USER", "ADMIN");
     const body = await req.json();
     const { bio, avatarUrl, locale } = body;
 
@@ -35,6 +36,8 @@ export async function PUT(req: NextRequest) {
     if (locale !== undefined) data.locale = locale;
 
     const updated = await prisma.user.update({ where: { id: user.id }, data });
+
+    logAction(user.id, "UPDATE_PROFILE", "User", user.id, data);
 
     return NextResponse.json(
       serialize({

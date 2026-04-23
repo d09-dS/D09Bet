@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { serialize, errorResponse, ApiError, requireRole } from "@/lib/api-utils";
 import { MarketType } from "@/generated/prisma/client";
+import { logAction } from "@/lib/audit";
 
 export async function POST(
   req: NextRequest,
@@ -9,11 +10,11 @@ export async function POST(
 ) {
   try {
     const { id: eventId } = await params;
-    await requireRole(req, "MODERATOR", "ADMIN");
+    const user = await requireRole(req, "USER", "ADMIN");
 
     const event = await prisma.event.findFirst({ where: { id: eventId, deletedAt: null } });
     if (!event) throw new ApiError(404, "Event not found");
-    if (!["DRAFT", "SCHEDULED", "OPEN"].includes(event.status)) {
+    if (!["DRAFT", "OPEN"].includes(event.status)) {
       throw new ApiError(400, `Cannot add markets to event with status ${event.status}`);
     }
 
@@ -55,6 +56,8 @@ export async function POST(
       },
       include: { outcomes: true },
     });
+
+    logAction(user.id, "CREATE_MARKET", "Market", market.id, { eventId, name, type, outcomeCount: outcomes.length });
 
     return NextResponse.json(serialize(market), { status: 201 });
   } catch (err) {

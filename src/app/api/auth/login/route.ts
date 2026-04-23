@@ -9,9 +9,14 @@ import {
   getBooleanSetting,
 } from "@/lib/api-utils";
 import { generateAccessToken, generateRefreshToken } from "@/lib/jwt";
+import { logAction } from "@/lib/audit";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 export async function POST(req: NextRequest) {
   try {
+    const rateLimited = await checkRateLimit(req, "login");
+    if (rateLimited) return rateLimited;
+
     const body = await req.json();
     const { username, password } = body;
 
@@ -63,6 +68,8 @@ export async function POST(req: NextRequest) {
 
     const freshUser = await prisma.user.findUnique({ where: { id: user.id } });
     if (!freshUser) throw new ApiError(404, "User not found");
+
+    logAction(freshUser.id, "USER_LOGIN", "User", freshUser.id, { username: freshUser.username });
 
     const [accessToken, refreshToken] = await Promise.all([
       generateAccessToken(freshUser.id, freshUser.username, freshUser.role),

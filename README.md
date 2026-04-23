@@ -59,11 +59,10 @@ npm run dev
 
 ### Verfügbare Dev-Accounts (nach Seed)
 
-| User      | Passwort   | Rolle     |
-| --------- | ---------- | --------- |
-| admin     | dotbet_dev | ADMIN     |
-| moderator | dotbet_dev | MODERATOR |
-| user      | dotbet_dev | USER      |
+| User      | Passwort   | Rolle |
+| --------- | ---------- | ----- |
+| admin     | dotbet_dev | ADMIN |
+| user      | dotbet_dev | USER  |
 
 ## Nützliche Befehle
 
@@ -86,7 +85,10 @@ npm run dev
 - Virtuelle Token-Economy (Starttokens, Daily Bonus, Gewinne)
 - Dynamische Quoten (passen sich an Wettverhalten an)
 - Leaderboards (All-Time, Weekly, Monthly)
-- Rollen: Guest, User, Moderator, Admin
+- Chip-Roll Splash Animation (Branding-Animation beim Start, Login, Registrierung & Logout)
+- Admin-Benachrichtigungen (In-App + E-Mail) bei Registrierungen & Wettanfragen
+- User-erstellte Wetten mit Admin-Review-Workflow
+- Rollen: Guest, User, Admin
 - Zweisprachig (Deutsch / English)
 - Dark Mode (Default)
 

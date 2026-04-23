@@ -46,6 +46,7 @@ async function main() {
     { key: "default_virtual_pool", value: "100", description: "Default virtual liquidity pool for new markets (higher = more stable odds)", dataType: "DECIMAL" },
     { key: "min_bets_for_dynamic_odds", value: "5", description: "Minimum total bets on a market before odds start adjusting dynamically", dataType: "INTEGER" },
     { key: "leaderboard_enabled", value: "true", description: "Whether leaderboards are visible", dataType: "BOOLEAN" },
+    { key: "daily_odds_change_percent", value: "5", description: "Daily percentage change applied to odds by the cron job (favourite decreases, others increase)", dataType: "DECIMAL" },
   ];
 
   for (const s of settings) {
@@ -61,7 +62,6 @@ async function main() {
   const passwordHash = await bcrypt.hash("dotbet_dev", 10);
   const devUsers = [
     { id: "00000000-0000-0000-0000-000000000001", username: "admin", email: "admin@dotbet.dev", role: "ADMIN" as const, tokenBalance: 1000 },
-    { id: "00000000-0000-0000-0000-000000000002", username: "moderator", email: "moderator@dotbet.dev", role: "MODERATOR" as const, tokenBalance: 1000 },
     { id: "00000000-0000-0000-0000-000000000003", username: "user", email: "user@dotbet.dev", role: "USER" as const, tokenBalance: 1000 },
   ];
 

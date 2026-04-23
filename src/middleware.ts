@@ -39,8 +39,8 @@ export default async function middleware(req: NextRequest) {
   if (token && isPublicPath(pathname)) {
     // Already logged in → redirect away from login/register
     const locale = pathname.match(/^\/(de|en)/)?.[1] || "de";
-    const eventsUrl = new URL(`/${locale}/events`, req.url);
-    return NextResponse.redirect(eventsUrl);
+    const homeUrl = new URL(`/${locale}`, req.url);
+    return NextResponse.redirect(homeUrl);
   }
 
   // Run i18n middleware for locale routing

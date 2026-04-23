@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { useRouter, Link } from "@/i18n/navigation";
+import { motion } from "framer-motion";
 import { api } from "@/lib/api";
 import { BetEvent, LeaderboardEntry } from "@/types";
 import { Button } from "@/components/ui/button";
@@ -21,6 +22,7 @@ import {
   ArrowRight,
   Shield,
   BarChart3,
+  PlusCircle,
 } from "lucide-react";
 
 export default function HomePage() {
@@ -104,44 +106,53 @@ export default function HomePage() {
       </section>
 
       {/* ── How it works ── */}
-      <section className="pt-14 pb-4 border-t border-border/50">
+      <section className="pt-14 pb-4 border-t border-border/50 overflow-hidden">
         <div className="mx-auto max-w-5xl px-4">
-          <div className="text-center mb-14">
-            <p className="text-sm font-medium text-muted-foreground tracking-wide mb-2">
+          <motion.div
+            className="text-center mb-14"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.5 }}
+          >
+            <p className="text-sm font-medium text-primary tracking-wide mb-2">
               {t("howItWorksSub")}
             </p>
             <h2 className="text-2xl font-bold md:text-4xl">
               {t("howItWorks")}
             </h2>
-          </div>
+          </motion.div>
 
-          <div className="grid gap-6 md:grid-cols-3">
+          <div className="grid gap-6 md:grid-cols-2">
             {[
               { icon: UserPlus, title: t("step1Title"), desc: t("step1Desc") },
               { icon: Target, title: t("step2Title"), desc: t("step2Desc") },
-              {
-                icon: TrendingUp,
-                title: t("step3Title"),
-                desc: t("step3Desc"),
-              },
+              { icon: PlusCircle, title: t("step3Title"), desc: t("step3Desc") },
+              { icon: TrendingUp, title: t("step4Title"), desc: t("step4Desc") },
             ].map((step, i) => (
-              <div
+              <motion.div
                 key={i}
-                className="rounded-lg border border-border bg-card p-6"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-60px" }}
+                transition={{ duration: 0.45, delay: i * 0.1 }}
+                className="group rounded-xl border border-border bg-card p-6 hover:border-primary/30 transition-colors"
               >
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
-                    <step.icon className="h-4 w-4 text-primary" />
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+                    <step.icon className="h-5 w-5 text-primary" />
                   </div>
-                  <span className="text-xs font-bold text-muted-foreground">
-                    {t("stepLabel", { number: i + 1 })}
+                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-muted text-xs font-bold text-muted-foreground">
+                    {i + 1}
                   </span>
                 </div>
-                <h3 className="font-semibold mb-2">{step.title}</h3>
+                <h3 className="font-semibold mb-2 group-hover:text-primary transition-colors">
+                  {step.title}
+                </h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">
                   {step.desc}
                 </p>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -282,8 +293,8 @@ export default function HomePage() {
                 key={i}
                 className="rounded-lg border border-border bg-card p-5"
               >
-                <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
-                  <feat.icon className="h-4 w-4 text-primary" />
+                <div className="mb-3">
+                  <feat.icon className="h-5 w-5 text-primary" />
                 </div>
                 <h3 className="font-semibold text-sm mb-1">{feat.title}</h3>
                 <p className="text-xs text-muted-foreground leading-relaxed">

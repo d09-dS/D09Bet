@@ -18,14 +18,14 @@ import {
   LogOut,
   Settings,
   TicketCheck,
+  PlusCircle,
   X,
 } from "lucide-react";
-import Image from "next/image";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
-import { ThemeToggle } from "@/components/ThemeToggle";
 import { useBalance } from "@/hooks/useBalance";
+import { NotificationBell } from "@/components/NotificationBell";
 
 export function Header() {
   const t = useTranslations("nav");
@@ -47,13 +47,10 @@ export function Header() {
           href="/"
           className="flex items-center opacity-90 hover:opacity-100 transition-opacity"
         >
-          <Image
-            src="/dotbet_logo.png"
+          <img
+            src="/dotbet_logo.svg"
             alt="dotBet"
-            width={110}
-            height={36}
             className="h-9 w-auto min-w-27.5 object-contain"
-            priority
           />
         </Link>
 
@@ -74,16 +71,20 @@ export function Header() {
         <div className="flex items-center gap-2">
           <div className="hidden sm:flex items-center gap-1">
             <LanguageSwitcher />
-            <ThemeToggle />
           </div>
           {session?.user ? (
             <>
               {/* Token Balance */}
-              <div className="hidden items-center gap-1.5 rounded-full bg-primary/[0.08] border border-primary/20 px-3.5 py-1.5 sm:flex">
+              <div className="hidden items-center gap-1.5 rounded-full border border-primary px-3.5 py-1.5 sm:flex">
                 <Coins className="h-3.5 w-3.5 text-primary" />
                 <span className="text-sm font-bold text-primary">
                   {balance?.toFixed(0)}
                 </span>
+              </div>
+
+              {/* Admin Notifications */}
+              <div className="hidden sm:flex">
+                <NotificationBell />
               </div>
 
               {/* User Menu */}
@@ -112,12 +113,15 @@ export function Header() {
                     <User className="mr-2 h-4 w-4" />
                     {t("profile")}
                   </DropdownMenuItem>
+                  <DropdownMenuItem render={<Link href="/create-bet" />}>
+                    <PlusCircle className="mr-2 h-4 w-4" />
+                    {t("createBet")}
+                  </DropdownMenuItem>
                   <DropdownMenuItem render={<Link href="/settings" />}>
                     <Settings className="mr-2 h-4 w-4" />
                     {t("settings")}
                   </DropdownMenuItem>
-                  {(session.user.role === "ADMIN" ||
-                    session.user.role === "MODERATOR") && (
+                  {session.user.role === "ADMIN" && (
                     <>
                       <DropdownMenuSeparator />
                       <DropdownMenuItem render={<Link href="/admin" />}>
@@ -128,8 +132,11 @@ export function Header() {
                   )}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
-                    onClick={() => signOut()}
-                    className="text-red-400 focus:text-red-400"
+                    onClick={() => {
+                      sessionStorage.setItem("dotbet_logout_splash", "1");
+                      signOut();
+                    }}
+                    className="text-red-400 focus:text-red-400 focus:bg-transparent focus:**:text-red-400"
                   >
                     <LogOut className="mr-2 h-4 w-4" />
                     {t("logout")}
@@ -186,7 +193,7 @@ export function Header() {
             <nav className="flex flex-col gap-1 p-4">
               {session?.user && (
                 <div className="flex items-center gap-3 rounded-lg bg-secondary px-4 py-3 mb-2">
-                  <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xs font-bold">
+                  <div className="h-8 w-8 rounded-full border border-primary/30 flex items-center justify-center text-primary text-xs font-bold">
                     {session.user.name?.charAt(0).toUpperCase()}
                   </div>
                   <div className="flex-1 min-w-0">
@@ -229,6 +236,14 @@ export function Header() {
                     {t("myBets")}
                   </Link>
                   <Link
+                    href="/create-bet"
+                    onClick={() => setMobileOpen(false)}
+                    className="flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium hover:bg-white/[0.04]"
+                  >
+                    <PlusCircle className="h-4 w-4 text-muted-foreground" />
+                    {t("createBet")}
+                  </Link>
+                  <Link
                     href="/settings"
                     onClick={() => setMobileOpen(false)}
                     className="flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium hover:bg-white/[0.04]"
@@ -236,8 +251,7 @@ export function Header() {
                     <Settings className="h-4 w-4 text-muted-foreground" />
                     {t("settings")}
                   </Link>
-                  {(session.user.role === "ADMIN" ||
-                    session.user.role === "MODERATOR") && (
+                  {session.user.role === "ADMIN" && (
                     <Link
                       href="/admin"
                       onClick={() => setMobileOpen(false)}
@@ -247,9 +261,15 @@ export function Header() {
                       {t("admin")}
                     </Link>
                   )}
+                  {session.user.role === "ADMIN" && (
+                    <div className="px-4 py-2">
+                      <NotificationBell />
+                    </div>
+                  )}
                   <div className="my-1 h-px bg-border/30" />
                   <button
                     onClick={() => {
+                      sessionStorage.setItem("dotbet_logout_splash", "1");
                       signOut();
                       setMobileOpen(false);
                     }}
@@ -281,7 +301,6 @@ export function Header() {
               )}
               <div className="mt-3 flex justify-center items-center gap-2">
                 <LanguageSwitcher />
-                <ThemeToggle />
               </div>
             </nav>
           </motion.div>

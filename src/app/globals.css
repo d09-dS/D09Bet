@@ -2,14 +2,12 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
-@custom-variant dark (&:is(.dark *));
-
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
+  --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-sans);
+  --font-heading: var(--font-geist-sans);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -46,89 +44,48 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
-  --color-ds-lime: #97bf0d;
-  --color-ds-blue: #0085cd;
-  --color-ds-navy: #004272;
   --color-emerald: #10B981;
 }
 
-/* Light Theme */
+/* GGBET-inspired dark theme — single theme, no light mode */
 :root {
-  --background: #F4F7FA;
-  --foreground: #0B1929;
-  --card: #FFFFFF;
-  --card-foreground: #0B1929;
-  --popover: #FFFFFF;
-  --popover-foreground: #0B1929;
-  --primary: #97bf0d;
-  --primary-foreground: #0B1929;
-  --secondary: #E5ECF0;
-  --secondary-foreground: #0B1929;
-  --muted: #E5ECF0;
-  --muted-foreground: #5A6A7A;
-  --accent: #0085cd;
+  color-scheme: dark;
+  --background: #0A0E13;
+  --foreground: #E2E8F0;
+  --card: #111821;
+  --card-foreground: #E2E8F0;
+  --popover: #111821;
+  --popover-foreground: #E2E8F0;
+  --primary: #F59E0B;
+  --primary-foreground: #0A0E13;
+  --secondary: #151C27;
+  --secondary-foreground: #E2E8F0;
+  --muted: #151C27;
+  --muted-foreground: #94A3B8;
+  --accent: #D97706;
   --accent-foreground: #FFFFFF;
-  --destructive: #DC2626;
-  --border: #D5DDE5;
-  --input: #D5DDE5;
-  --ring: #97bf0d;
-  --chart-1: #97bf0d;
-  --chart-2: #0085cd;
+  --destructive: #EF4444;
+  --border: #1E2A3A;
+  --input: #151C27;
+  --ring: #F59E0B;
+  --chart-1: #F59E0B;
+  --chart-2: #3B82F6;
   --chart-3: #10B981;
-  --chart-4: #004272;
-  --chart-5: #cbdf86;
+  --chart-4: #8B5CF6;
+  --chart-5: #F97316;
   --radius: 0.625rem;
-  --sidebar: #FFFFFF;
-  --sidebar-foreground: #0B1929;
-  --sidebar-primary: #97bf0d;
-  --sidebar-primary-foreground: #0B1929;
-  --sidebar-accent: #F4F7FA;
-  --sidebar-accent-foreground: #0B1929;
-  --sidebar-border: #D5DDE5;
-  --sidebar-ring: #97bf0d;
+  --sidebar: #111821;
+  --sidebar-foreground: #E2E8F0;
+  --sidebar-primary: #F59E0B;
+  --sidebar-primary-foreground: #0A0E13;
+  --sidebar-accent: #151C27;
+  --sidebar-accent-foreground: #E2E8F0;
+  --sidebar-border: #1E2A3A;
+  --sidebar-ring: #F59E0B;
   --success: #10B981;
   --success-foreground: #FFFFFF;
-  --warning: #E5A100;
-  --warning-foreground: #0B1929;
-}
-
-/* Dark Theme (default) — deep navy, restrained accents */
-.dark {
-  --background: #080D16;
-  --foreground: #D5DDE5;
-  --card: #0D1520;
-  --card-foreground: #D5DDE5;
-  --popover: #0D1520;
-  --popover-foreground: #D5DDE5;
-  --primary: #97bf0d;
-  --primary-foreground: #0B1929;
-  --secondary: #111C2E;
-  --secondary-foreground: #D5DDE5;
-  --muted: #111C2E;
-  --muted-foreground: #7A8FA3;
-  --accent: #0085cd;
-  --accent-foreground: #FFFFFF;
-  --destructive: #DC2626;
-  --border: #1C2C42;
-  --input: #111C2E;
-  --ring: #97bf0d;
-  --chart-1: #97bf0d;
-  --chart-2: #0085cd;
-  --chart-3: #10B981;
-  --chart-4: #4DA6DB;
-  --chart-5: #cbdf86;
-  --sidebar: #0D1520;
-  --sidebar-foreground: #D5DDE5;
-  --sidebar-primary: #97bf0d;
-  --sidebar-primary-foreground: #0B1929;
-  --sidebar-accent: #111C2E;
-  --sidebar-accent-foreground: #D5DDE5;
-  --sidebar-border: #1C2C42;
-  --sidebar-ring: #97bf0d;
-  --success: #10B981;
-  --success-foreground: #FFFFFF;
-  --warning: #E5A100;
-  --warning-foreground: #0B1929;
+  --warning: #F59E0B;
+  --warning-foreground: #0A0E13;
 }
 
 @layer base {
@@ -151,6 +108,26 @@
 
 /* ── Utility classes ── */
 
+/* Date/time picker styling for dark theme */
+input[type="date"],
+input[type="datetime-local"],
+input[type="time"] {
+  color-scheme: dark;
+}
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="datetime-local"]::-webkit-calendar-picker-indicator,
+input[type="time"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.15s ease;
+}
+input[type="date"]::-webkit-calendar-picker-indicator:hover,
+input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover,
+input[type="time"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}
+
 /* Skeleton shimmer for loading states */
 @keyframes shimmer {
   0% { background-position: -200% 0; }
@@ -167,11 +144,8 @@
   transition: box-shadow 0.15s ease, border-color 0.15s ease;
 }
 .card-hover:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  border-color: var(--primary);
-}
-.dark .card-hover:hover {
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  border-color: var(--primary);
 }
 
 /* Odds button */

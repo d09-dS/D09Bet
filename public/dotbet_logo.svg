@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 80" fill="none">
+  <defs>
+    <linearGradient id="textGrad" x1="0" y1="0" x2="320" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#4DD9C0"/>
+      <stop offset="100%" stop-color="#5CE8D5"/>
+    </linearGradient>
+    <linearGradient id="chipCenter" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#D4E157"/>
+      <stop offset="100%" stop-color="#C0CA33"/>
+    </linearGradient>
+  </defs>
+
+  <!-- "d" letter -->
+  <text x="10" y="60" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="62" font-weight="800" fill="url(#textGrad)" letter-spacing="-1">d</text>
+
+  <!-- Casino chip as "o" -->
+  <g transform="translate(68, 38)">
+    <!-- Outer chip ring -->
+    <circle cx="0" cy="0" r="22" fill="#5B3D7A"/>
+    <!-- Pink/magenta segments -->
+    <g>
+      <rect x="-3" y="-22" width="6" height="8" rx="1.5" fill="#E84D8A" transform="rotate(0 0 0)"/>
+      <rect x="-3" y="-22" width="6" height="8" rx="1.5" fill="#E84D8A" transform="rotate(45 0 0)"/>
+      <rect x="-3" y="-22" width="6" height="8" rx="1.5" fill="#E84D8A" transform="rotate(90 0 0)"/>
+      <rect x="-3" y="-22" width="6" height="8" rx="1.5" fill="#E84D8A" transform="rotate(135 0 0)"/>
+      <rect x="-3" y="-22" width="6" height="8" rx="1.5" fill="#E84D8A" transform="rotate(180 0 0)"/>
+      <rect x="-3" y="-22" width="6" height="8" rx="1.5" fill="#E84D8A" transform="rotate(225 0 0)"/>
+      <rect x="-3" y="-22" width="6" height="8" rx="1.5" fill="#E84D8A" transform="rotate(270 0 0)"/>
+      <rect x="-3" y="-22" width="6" height="8" rx="1.5" fill="#E84D8A" transform="rotate(315 0 0)"/>
+    </g>
+    <!-- Inner ring -->
+    <circle cx="0" cy="0" r="15" fill="#6B4D8A"/>
+    <!-- Yellow-green inner dots -->
+    <circle cx="0" cy="-12" r="2" fill="#C8D94A" transform="rotate(0 0 0)"/>
+    <circle cx="0" cy="-12" r="2" fill="#C8D94A" transform="rotate(45 0 0)"/>
+    <circle cx="0" cy="-12" r="2" fill="#C8D94A" transform="rotate(90 0 0)"/>
+    <circle cx="0" cy="-12" r="2" fill="#C8D94A" transform="rotate(135 0 0)"/>
+    <circle cx="0" cy="-12" r="2" fill="#C8D94A" transform="rotate(180 0 0)"/>
+    <circle cx="0" cy="-12" r="2" fill="#C8D94A" transform="rotate(225 0 0)"/>
+    <circle cx="0" cy="-12" r="2" fill="#C8D94A" transform="rotate(270 0 0)"/>
+    <circle cx="0" cy="-12" r="2" fill="#C8D94A" transform="rotate(315 0 0)"/>
+    <!-- Center circle -->
+    <circle cx="0" cy="0" r="8" fill="url(#chipCenter)"/>
+    <circle cx="0" cy="0" r="6" fill="none" stroke="#5B3D7A" stroke-width="0.8" opacity="0.3"/>
+  </g>
+
+  <!-- "tBet" letters -->
+  <text x="92" y="60" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="62" font-weight="800" fill="url(#textGrad)" letter-spacing="-1">tBet</text>
+
+  <!-- Small dot accent (like in the original) -->
+  <circle cx="7" cy="18" r="3" fill="#E84D8A"/>
+</svg>

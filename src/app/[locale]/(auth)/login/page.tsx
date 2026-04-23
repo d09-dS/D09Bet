@@ -1,9 +1,8 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { signIn } from "next-auth/react";
 import { Link } from "@/i18n/navigation";
-import { useRouter } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,7 +12,7 @@ import { toast } from "sonner";
 
 export default function LoginPage() {
   const t = useTranslations("auth");
-  const router = useRouter();
+  const locale = useLocale();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -63,7 +62,9 @@ export default function LoginPage() {
       if (session?.user?.bonusAwarded && session.user.bonusAwarded > 0) {
         toast.success(t("dailyBonusToast", { amount: session.user.bonusAwarded }));
       }
-      router.push("/events");
+      // Hard navigation to ensure SessionProvider initializes with the new session
+      sessionStorage.setItem("dotbet_login_splash", "1");
+      window.location.href = `/${locale}`;
     }
   }
 
@@ -72,8 +73,8 @@ export default function LoginPage() {
       <div className="w-full max-w-md">
         <div className="rounded-lg border border-border bg-card p-8">
           <div className="mb-8 flex flex-col items-center">
-            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
-              <Flame className="h-6 w-6 text-primary" />
+            <div className="mb-4">
+              <Flame className="h-10 w-10 text-primary" />
             </div>
             <h1 className="text-2xl font-extrabold">{t("loginTitle")}</h1>
             <p className="text-sm text-muted-foreground mt-1">{t("welcomeBack")}</p>
@@ -89,7 +90,7 @@ export default function LoginPage() {
                 required
                 autoComplete="username"
                 placeholder={t("username")}
-                className="h-11 rounded-xl bg-secondary/50 border-border/50 focus:border-primary/50 focus:ring-primary/20 transition-all"
+                className="h-11 rounded-xl bg-secondary/50 border-border/50 focus:border-primary/50 focus:ring-primary/20 transition-all [&:not(:placeholder-shown)]:bg-white [&:not(:placeholder-shown)]:text-[#0A0E13] [&:not(:placeholder-shown)]:border-white/30"
               />
             </div>
 
@@ -102,7 +103,7 @@ export default function LoginPage() {
                 required
                 autoComplete="current-password"
                 placeholder={t("password")}
-                className="h-11 rounded-xl bg-secondary/50 border-border/50 focus:border-primary/50 focus:ring-primary/20 transition-all"
+                className="h-11 rounded-xl bg-secondary/50 border-border/50 focus:border-primary/50 focus:ring-primary/20 transition-all [&:not(:placeholder-shown)]:bg-white [&:not(:placeholder-shown)]:text-[#0A0E13] [&:not(:placeholder-shown)]:border-white/30"
               />
             </div>
 
