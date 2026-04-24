@@ -15,7 +15,8 @@ import { DateTimeInput } from "@/components/ui/date-time-input";
 import { toast } from "sonner";
 import { Plus, Loader2, XCircle, PlusCircle } from "lucide-react";
 
-const inputClass = "h-11 rounded-xl bg-secondary/50 border-border/50 focus:border-primary/50 focus:ring-primary/20 transition-all [&:not(:placeholder-shown)]:bg-white [&:not(:placeholder-shown)]:text-[#0A0E13] [&:not(:placeholder-shown)]:border-white/30";
+const inputClass =
+  "h-11 rounded-xl bg-secondary/50 border-border/50 focus:border-primary/50 focus:ring-primary/20 transition-all [&:not(:placeholder-shown)]:bg-white [&:not(:placeholder-shown)]:text-[#0A0E13] [&:not(:placeholder-shown)]:border-white/30";
 
 export default function CreateBetPage() {
   const tAdmin = useTranslations("admin");
@@ -112,7 +113,7 @@ export default function CreateBetPage() {
   }
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-8">
+    <div className="mx-auto max-w-2xl px-4 py-20">
       <div className="flex items-center gap-3 mb-6">
         <PlusCircle className="h-6 w-6 text-primary" />
         <h1 className="text-3xl font-bold">{tAdmin("createNewBet")}</h1>
@@ -126,7 +127,9 @@ export default function CreateBetPage() {
           {/* Category selection */}
           {categories.length > 0 && (
             <div className="space-y-2">
-              <Label className="text-sm font-medium">{tAdmin("marketCategory")} *</Label>
+              <Label className="text-sm font-medium">
+                {tAdmin("marketCategory")} *
+              </Label>
               <select
                 className="h-11 w-full rounded-xl bg-secondary/50 border border-border/50 px-3 py-2 text-sm focus:border-primary/50 focus:ring-primary/20 transition-all"
                 value={newEvent.categoryId}
@@ -147,7 +150,9 @@ export default function CreateBetPage() {
           {/* Event details */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label className="text-sm font-medium">{tAdmin("betTitleDe")} *</Label>
+              <Label className="text-sm font-medium">
+                {tAdmin("betTitleDe")} *
+              </Label>
               <Input
                 value={newEvent.title}
                 onChange={(e) =>
@@ -158,7 +163,9 @@ export default function CreateBetPage() {
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-sm font-medium">{tAdmin("betTitleEn")}</Label>
+              <Label className="text-sm font-medium">
+                {tAdmin("betTitleEn")}
+              </Label>
               <Input
                 value={newEvent.titleEn}
                 onChange={(e) =>
@@ -169,7 +176,9 @@ export default function CreateBetPage() {
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-sm font-medium">{tAdmin("descriptionDe")}</Label>
+              <Label className="text-sm font-medium">
+                {tAdmin("descriptionDe")}
+              </Label>
               <Input
                 value={newEvent.description}
                 onChange={(e) =>
@@ -180,7 +189,9 @@ export default function CreateBetPage() {
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-sm font-medium">{tAdmin("descriptionEn")}</Label>
+              <Label className="text-sm font-medium">
+                {tAdmin("descriptionEn")}
+              </Label>
               <Input
                 value={newEvent.descriptionEn}
                 onChange={(e) =>
@@ -191,7 +202,9 @@ export default function CreateBetPage() {
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-sm font-medium">{tAdmin("endTime")} *</Label>
+              <Label className="text-sm font-medium">
+                {tAdmin("endTime")} *
+              </Label>
               <DateTimeInput
                 required
                 value={newEvent.endTime}
@@ -206,7 +219,9 @@ export default function CreateBetPage() {
 
           {/* Outcomes with odds */}
           <div className="space-y-2">
-            <Label className="text-sm font-medium">{tAdmin("outcomesAndOdds")}</Label>
+            <Label className="text-sm font-medium">
+              {tAdmin("outcomesAndOdds")}
+            </Label>
             <p className="text-xs text-muted-foreground">
               {tAdmin("oddsMultiplierHint")}
             </p>
