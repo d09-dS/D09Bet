@@ -17,16 +17,16 @@ export async function POST(req: NextRequest) {
     const fieldErrors: Record<string, string> = {};
 
     if (!username || typeof username !== "string" || username.length < 3 || username.length > 50) {
-      fieldErrors.username = "Username must be between 3 and 50 characters";
+      fieldErrors.username = "usernameLengthError";
     }
     if (!email || typeof email !== "string" || !email.includes("@")) {
-      fieldErrors.email = "A valid email is required";
+      fieldErrors.email = "emailRequired";
     }
     if (!password || typeof password !== "string" || password.length < 6 || password.length > 100) {
-      fieldErrors.password = "Password must be between 6 and 100 characters";
+      fieldErrors.password = "passwordLengthError";
     }
     if (Object.keys(fieldErrors).length > 0) {
-      throw new ApiError(400, "Validation failed", fieldErrors);
+      throw new ApiError(400, "validationFailed", fieldErrors);
     }
 
     const existing = await prisma.user.findFirst({
@@ -34,9 +34,9 @@ export async function POST(req: NextRequest) {
     });
     if (existing) {
       if (existing.username === username.trim()) {
-        throw new ApiError(400, "Username already exists", { username: "Username already exists" });
+        throw new ApiError(400, "usernameExists", { username: "usernameExists" });
       }
-      throw new ApiError(400, "Email already exists", { email: "Email already exists" });
+      throw new ApiError(400, "emailExists", { email: "emailExists" });
     }
 
     const passwordHash = await bcrypt.hash(password, 10);

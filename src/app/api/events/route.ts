@@ -61,7 +61,7 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const { title, titleEn, description, descriptionEn, categoryId, endTime, imageUrl, isFeatured } = body;
 
-    if (!title) throw new ApiError(400, "title is required");
+    if (!title) throw new ApiError(400, "titleRequired");
 
     const parsedEnd = endTime ? new Date(endTime) : null;
 

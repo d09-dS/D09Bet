@@ -23,7 +23,7 @@ async function request<T>(endpoint: string, options: RequestOptions = {}): Promi
 
   if (!res.ok) {
     const error = await res.json().catch(() => ({ error: res.statusText }));
-    throw new ApiError(res.status, error.error || "Request failed", error.fieldErrors);
+    throw new ApiError(res.status, error.error || "requestFailed", error.fieldErrors, error.errorParams);
   }
 
   if (res.status === 204) return undefined as T;
@@ -34,7 +34,8 @@ export class ApiError extends Error {
   constructor(
     public status: number,
     message: string,
-    public fieldErrors?: Record<string, string>
+    public fieldErrors?: Record<string, string>,
+    public errorParams?: Record<string, string | number>
   ) {
     super(message);
     this.name = "ApiError";

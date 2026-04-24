@@ -21,15 +21,15 @@ export async function POST(req: NextRequest) {
     const { username, password } = body;
 
     if (!username || !password) {
-      throw new ApiError(400, "Username and password are required");
+      throw new ApiError(400, "usernameAndPasswordRequired");
     }
 
     const user = await prisma.user.findUnique({ where: { username } });
     if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
-      throw new ApiError(401, "Invalid username or password");
+      throw new ApiError(401, "invalidCredentials");
     }
     if (!user.isActive) {
-      throw new ApiError(403, "Your account is pending approval. An admin needs to activate your account.");
+      throw new ApiError(403, "accountPendingApproval");
     }
 
     // Daily bonus
@@ -67,7 +67,7 @@ export async function POST(req: NextRequest) {
     }
 
     const freshUser = await prisma.user.findUnique({ where: { id: user.id } });
-    if (!freshUser) throw new ApiError(404, "User not found");
+    if (!freshUser) throw new ApiError(404, "userNotFound");
 
     logAction(freshUser.id, "USER_LOGIN", "User", freshUser.id, { username: freshUser.username });
 

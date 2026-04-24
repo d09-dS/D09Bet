@@ -16,7 +16,7 @@ export async function GET(
         markets: { include: { outcomes: { orderBy: { sortOrder: "asc" } } }, orderBy: { sortOrder: "asc" } },
       },
     });
-    if (!event) throw new ApiError(404, "Event not found");
+    if (!event) throw new ApiError(404, "eventNotFound");
 
     const mapped = {
       id: event.id, title: event.title, titleEn: event.titleEn,
@@ -60,11 +60,11 @@ export async function PUT(
 
     // Validate endTime > startTime (considering both new and existing values)
     const existing = await prisma.event.findFirst({ where: { id, deletedAt: null } });
-    if (!existing) throw new ApiError(404, "Event not found");
+    if (!existing) throw new ApiError(404, "eventNotFound");
     const effectiveStart = data.startTime !== undefined ? data.startTime as Date | null : existing.startTime;
     const effectiveEnd = data.endTime !== undefined ? data.endTime as Date | null : existing.endTime;
     if (effectiveStart && effectiveEnd && effectiveEnd <= effectiveStart) {
-      throw new ApiError(400, "endTime must be after startTime");
+      throw new ApiError(400, "endTimeAfterStart");
     }
 
     const event = await prisma.event.update({
