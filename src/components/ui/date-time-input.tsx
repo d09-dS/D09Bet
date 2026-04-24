@@ -5,7 +5,14 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { DayPicker } from "react-day-picker";
 import { de, enUS } from "react-day-picker/locale";
-import { Calendar, ChevronLeft, ChevronRight, Clock, ChevronUp, ChevronDown } from "lucide-react";
+import {
+  Calendar,
+  ChevronLeft,
+  ChevronRight,
+  Clock,
+  ChevronUp,
+  ChevronDown,
+} from "lucide-react";
 import { useLocale } from "next-intl";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
@@ -30,7 +37,8 @@ function TimeSpinner({
 }) {
   const num = parseInt(value, 10);
   const inc = () => onChange(String((num + 1) % (max + 1)).padStart(2, "0"));
-  const dec = () => onChange(String((num - 1 + max + 1) % (max + 1)).padStart(2, "0"));
+  const dec = () =>
+    onChange(String((num - 1 + max + 1) % (max + 1)).padStart(2, "0"));
 
   return (
     <div className="flex flex-col items-center">
@@ -65,8 +73,12 @@ export function DateTimeInput({
   const containerRef = useRef<HTMLDivElement>(null);
 
   const selectedDate = value ? new Date(value) : undefined;
-  const [hour, setHour] = useState(selectedDate ? String(selectedDate.getHours()).padStart(2, "0") : "12");
-  const [minute, setMinute] = useState(selectedDate ? String(selectedDate.getMinutes()).padStart(2, "0") : "00");
+  const [hour, setHour] = useState(
+    selectedDate ? String(selectedDate.getHours()).padStart(2, "0") : "12",
+  );
+  const [minute, setMinute] = useState(
+    selectedDate ? String(selectedDate.getMinutes()).padStart(2, "0") : "00",
+  );
 
   useEffect(() => {
     if (value) {
@@ -136,8 +148,10 @@ export function DateTimeInput({
     function handleClick(e: MouseEvent) {
       const target = e.target as Node;
       if (
-        containerRef.current && !containerRef.current.contains(target) &&
-        popupRef.current && !popupRef.current.contains(target)
+        containerRef.current &&
+        !containerRef.current.contains(target) &&
+        popupRef.current &&
+        !popupRef.current.contains(target)
       ) {
         setOpen(false);
       }
@@ -161,24 +175,35 @@ export function DateTimeInput({
           !displayValue && "text-muted-foreground",
         )}
       >
-        <Calendar className={cn("h-4 w-4 shrink-0", displayValue ? "text-[#0A0E13]" : open ? "text-primary" : "text-muted-foreground")} />
+        <Calendar
+          className={cn(
+            "h-4 w-4 shrink-0",
+            displayValue
+              ? "text-[#0A0E13]"
+              : open
+                ? "text-primary"
+                : "text-muted-foreground",
+          )}
+        />
         <span className="flex-1 truncate">
-          {displayValue || (locale === "de" ? "Datum & Uhrzeit wählen" : "Select date & time")}
+          {displayValue ||
+            (locale === "de" ? "Datum & Uhrzeit wählen" : "Select date & time")}
         </span>
       </button>
 
-      {open && createPortal(
-        <AnimatePresence>
-          <motion.div
-            ref={popupRef}
-            initial={{ opacity: 0, y: -8, scale: 0.96 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -8, scale: 0.96 }}
-            transition={{ duration: 0.15 }}
-            className="fixed z-[9998] rounded-xl border border-border bg-popover shadow-xl"
-            style={{ top: pos.top, left: pos.left }}
-          >
-            <style>{`
+      {open &&
+        createPortal(
+          <AnimatePresence>
+            <motion.div
+              ref={popupRef}
+              initial={{ opacity: 0, y: -8, scale: 0.96 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -8, scale: 0.96 }}
+              transition={{ duration: 0.15 }}
+              className="fixed z-[9998] rounded-xl border border-chart-5 bg-popover"
+              style={{ top: pos.top, left: pos.left, boxShadow: "0 4px 24px rgba(245,158,11,0.25), 0 1px 6px rgba(245,158,11,0.15)" }}
+            >
+              <style>{`
               .dotbet-cal .rdp-day { padding: 2px; }
               .dotbet-cal .rdp-day_button {
                 width: 36px; height: 36px; border-radius: 8px;
@@ -207,59 +232,66 @@ export function DateTimeInput({
               .dotbet-cal .rdp-chevron { display: none; }
             `}</style>
 
-            <DayPicker
-              className="dotbet-cal"
-              mode="single"
-              selected={selectedDate}
-              onSelect={handleDaySelect}
-              locale={locale === "de" ? de : enUS}
-              disabled={{ before: today }}
-              showOutsideDays
-              classNames={{
-                root: "p-3",
-                months: "flex flex-col",
-                month_caption: "flex items-center justify-center mb-2",
-                caption_label: "text-sm font-semibold",
-                nav: "flex items-center justify-between absolute top-3 left-3 right-3",
-                button_previous: "h-7 w-7 flex items-center justify-center rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-foreground",
-                button_next: "h-7 w-7 flex items-center justify-center rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-foreground",
-                month_grid: "w-full border-collapse",
-                weekdays: "flex",
-                weekday: "w-10 text-center text-xs font-medium text-muted-foreground py-1",
-                week: "flex",
-              }}
-              components={{
-                Chevron: ({ orientation }) =>
-                  orientation === "left" ? (
-                    <ChevronLeft className="h-4 w-4" />
-                  ) : (
-                    <ChevronRight className="h-4 w-4" />
-                  ),
-              }}
-            />
+              <div className="flex">
+                <DayPicker
+                  className="dotbet-cal"
+                  mode="single"
+                  selected={selectedDate}
+                  onSelect={handleDaySelect}
+                  locale={locale === "de" ? de : enUS}
+                  disabled={{ before: today }}
+                  showOutsideDays
+                  classNames={{
+                    root: "p-3 relative",
+                    months: "flex flex-col",
+                    month_caption: "flex items-center justify-center mb-2",
+                    caption_label: "text-sm font-semibold",
+                    nav: "flex items-center justify-between absolute top-3 left-3 right-3",
+                    button_previous:
+                      "h-7 w-7 flex items-center justify-center rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-foreground",
+                    button_next:
+                      "h-7 w-7 flex items-center justify-center rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-foreground",
+                    month_grid: "w-full border-collapse",
+                    weekdays: "flex",
+                    weekday:
+                      "w-10 text-center text-xs font-medium text-muted-foreground py-1",
+                    week: "flex",
+                  }}
+                  components={{
+                    Chevron: ({ orientation }) =>
+                      orientation === "left" ? (
+                        <ChevronLeft className="h-4 w-4" />
+                      ) : (
+                        <ChevronRight className="h-4 w-4" />
+                      ),
+                  }}
+                />
 
-            {/* Time picker with spinners */}
-            <div className="border-t border-border px-4 py-3 flex items-center justify-center gap-3">
-              <Clock className="h-4 w-4 text-white shrink-0" />
-              <TimeSpinner
-                value={hour}
-                onChange={(h) => handleTimeChange(h, minute)}
-                max={23}
-              />
-              <span className="text-lg font-bold text-white">:</span>
-              <TimeSpinner
-                value={minute}
-                onChange={(m) => handleTimeChange(hour, m)}
-                max={59}
-              />
-              <span className="text-xs text-white ml-1">
-                {locale === "de" ? "Uhr" : "h"}
-              </span>
-            </div>
-          </motion.div>
-        </AnimatePresence>,
-        document.body,
-      )}
+                {/* Time picker with spinners – right side */}
+                <div className="border-l border-chart-5 px-4 py-3 flex flex-col items-center justify-center gap-1">
+                  <Clock className="h-6 w-6 text-white shrink-0" />
+                  <div className="flex items-center gap-1">
+                    <TimeSpinner
+                      value={hour}
+                      onChange={(h) => handleTimeChange(h, minute)}
+                      max={23}
+                    />
+                    <span className="text-lg font-bold text-white">:</span>
+                    <TimeSpinner
+                      value={minute}
+                      onChange={(m) => handleTimeChange(hour, m)}
+                      max={59}
+                    />
+                  </div>
+                  <span className="text-md text-white">
+                    {locale === "de" ? "Uhr" : "h"}
+                  </span>
+                </div>
+              </div>
+            </motion.div>
+          </AnimatePresence>,
+          document.body,
+        )}
     </div>
   );
 }
