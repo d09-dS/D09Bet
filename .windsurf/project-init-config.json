@@ -1,0 +1,56 @@
+{
+  "version": 2,
+  "generatedAt": "2026-04-24T09:14:41.723Z",
+  "frontend": {
+    "framework": "nextjs",
+    "styling": "tailwind",
+    "stateManagement": "zustand",
+    "uiLibrary": "shadcn",
+    "bundler": "none",
+    "formLibrary": "react-hook-form",
+    "dataFetching": "tanstack-query"
+  },
+  "backend": {
+    "framework": "none",
+    "database": "postgres",
+    "orm": "prisma",
+    "validation": "zod",
+    "caching": "none",
+    "messageQueue": "none",
+    "realtime": "none"
+  },
+  "architecture": {
+    "i18n": true,
+    "languages": [
+      "DE",
+      "EN"
+    ],
+    "auth": "none",
+    "apiStyle": "none",
+    "multiTenancy": "none",
+    "monorepo": "none",
+    "typescript": true
+  },
+  "meta": {
+    "programmingLanguages": [
+      "JavaScript",
+      "TypeScript"
+    ]
+  },
+  "devops": {
+    "deployment": "unknown",
+    "cicd": "github_actions",
+    "testing": "playwright",
+    "quality": "eslint",
+    "packageManager": "npm"
+  },
+  "_progress": {
+    "phase1_detection": true,
+    "phase2_generation": true,
+    "phase2_completed_at": "2026-04-24T09:15:00.000Z",
+    "phase3_enhancement": true,
+    "phase3_completed_at": "2026-04-24T09:16:00.000Z",
+    "phase4_quality": true,
+    "phase4_completed_at": "2026-04-24T09:17:00.000Z"
+  }
+}

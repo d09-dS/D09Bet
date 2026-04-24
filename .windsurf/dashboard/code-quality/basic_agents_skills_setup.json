@@ -1,0 +1,22 @@
+{
+  "project": "basic_agents_skills_setup",
+  "scannedAt": "2026-04-17T09:06:18.948Z",
+  "score": 100,
+  "summary": {
+    "critical": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0
+  },
+  "findings": [],
+  "metrics": {
+    "totalFiles": 0,
+    "totalLines": 0,
+    "avgFunctionLength": 0,
+    "maxFunctionLength": 0,
+    "anyUsageCount": 0,
+    "todoCount": 0,
+    "emptyCatchCount": 0,
+    "consoleLogCount": 0
+  }
+}

@@ -1,0 +1,1227 @@
+{
+  "npm": {
+    "frontend.framework": [
+      { "dep": "next", "value": "nextjs", "priority": 10 },
+      { "dep": "@angular/core", "value": "angular", "priority": 10 },
+      { "dep": "nuxt", "value": "nuxt", "priority": 10 },
+      { "dep": "svelte", "value": "svelte", "priority": 10 },
+      { "dep": "solid-js", "value": "solid", "priority": 10 },
+      { "dep": "@builder.io/qwik", "value": "qwik", "priority": 10 },
+      { "dep": "astro", "value": "astro", "priority": 10 },
+      { "dep": "gatsby", "value": "gatsby", "priority": 10 },
+      { "dep": "@remix-run/react", "value": "remix", "priority": 10 },
+      { "dep": "@remix-run/node", "value": "remix", "priority": 9 },
+      { "dep": "react-native", "value": "react-native", "priority": 10 },
+      { "dep": "expo", "value": "expo", "priority": 10 },
+      { "dep": "@ionic/react", "value": "ionic", "priority": 10 },
+      { "dep": "@ionic/angular", "value": "ionic", "priority": 10 },
+      { "dep": "@ionic/vue", "value": "ionic", "priority": 10 },
+      { "dep": "@capacitorjs/core", "value": "capacitor", "priority": 9 },
+      { "dep": "@nativescript/core", "value": "nativescript", "priority": 10 },
+      { "dep": "@tauri-apps/api", "value": "tauri", "priority": 10 },
+      { "dep": "electron", "value": "electron", "priority": 10 },
+      { "dep": "vue", "value": "vue", "priority": 5 },
+      { "dep": "react", "value": "react", "priority": 1 }
+    ],
+    "frontend.styling": [
+      { "dep": "tailwindcss", "value": "tailwind", "priority": 10 },
+      { "dep": "@nuxtjs/tailwindcss", "value": "tailwind", "priority": 10 },
+      { "dep": "@tailwindcss/nuxt", "value": "tailwind", "priority": 10 },
+      { "dep": "@mui/material", "value": "material", "priority": 10 },
+      { "dep": "@chakra-ui/react", "value": "chakra", "priority": 10 },
+      { "dep": "@chakra-ui/vue-next", "value": "chakra", "priority": 10 },
+      { "dep": "antd", "value": "antd", "priority": 10 },
+      { "dep": "@ant-design/icons", "value": "antd", "priority": 8 },
+      { "dep": "@emotion/react", "value": "emotion", "priority": 7 },
+      { "dep": "@emotion/styled", "value": "emotion", "priority": 7 },
+      { "dep": "@mantine/core", "value": "mantine", "priority": 10 },
+      { "dep": "bootstrap", "value": "bootstrap", "priority": 5 },
+      { "dep": "styled-components", "value": "cssinjs", "priority": 5 },
+      { "dep": "vanilla-extract", "value": "vanilla-extract", "priority": 8 },
+      {
+        "dep": "@vanilla-extract/css",
+        "value": "vanilla-extract",
+        "priority": 8
+      },
+      { "dep": "@stitches/react", "value": "stitches", "priority": 7 },
+      { "dep": "unocss", "value": "unocss", "priority": 9 },
+      { "dep": "@unocss/nuxt", "value": "unocss", "priority": 9 },
+      { "dep": "windicss", "value": "windicss", "priority": 8 },
+      { "dep": "linaria", "value": "linaria", "priority": 6 },
+      { "dep": "@linaria/core", "value": "linaria", "priority": 6 },
+      { "dep": "sass", "value": "scss", "priority": 3 },
+      { "dep": "node-sass", "value": "scss", "priority": 3 },
+      { "dep": "less", "value": "less", "priority": 3 },
+      { "dep": "stylus", "value": "stylus", "priority": 3 }
+    ],
+    "frontend.stateManagement": [
+      { "dep": "@ngrx/store", "value": "ngrx", "priority": 10 },
+      { "dep": "@reduxjs/toolkit", "value": "redux", "priority": 10 },
+      { "dep": "zustand", "value": "zustand", "priority": 10 },
+      { "dep": "pinia", "value": "pinia", "priority": 10 },
+      { "dep": "jotai", "value": "jotai", "priority": 10 },
+      { "dep": "mobx", "value": "mobx", "priority": 10 }
+    ],
+    "frontend.uiLibrary": [
+      { "dep": "@radix-ui/react-dialog", "value": "radix", "priority": 10 },
+      { "dep": "@radix-ui/react-popover", "value": "radix", "priority": 10 },
+      { "dep": "@radix-ui/react-select", "value": "radix", "priority": 10 },
+      { "dep": "@radix-ui/themes", "value": "radix", "priority": 10 },
+      { "dep": "@headlessui/react", "value": "headlessui", "priority": 10 },
+      { "dep": "@headlessui/vue", "value": "headlessui", "priority": 10 },
+      { "dep": "daisyui", "value": "daisyui", "priority": 10 },
+      { "dep": "primeng", "value": "primeng", "priority": 10 },
+      { "dep": "primereact", "value": "primereact", "priority": 10 },
+      { "dep": "primevue", "value": "primevue", "priority": 10 },
+      { "dep": "@nextui-org/react", "value": "nextui", "priority": 10 },
+      { "dep": "@tremor/react", "value": "tremor", "priority": 10 },
+      { "dep": "flowbite", "value": "flowbite", "priority": 8 },
+      { "dep": "flowbite-react", "value": "flowbite", "priority": 8 },
+      { "dep": "@shadcn/ui", "value": "shadcn", "priority": 10 },
+      { "dep": "cmdk", "value": "shadcn", "priority": 5 },
+      { "dep": "vaul", "value": "shadcn", "priority": 5 },
+      { "dep": "sonner", "value": "shadcn", "priority": 4 },
+      { "dep": "@ark-ui/react", "value": "ark", "priority": 10 },
+      { "dep": "@park-ui/panda-preset", "value": "park", "priority": 10 },
+      { "dep": "vuetify", "value": "vuetify", "priority": 10 },
+      { "dep": "quasar", "value": "quasar", "priority": 10 },
+      { "dep": "element-plus", "value": "element-plus", "priority": 10 },
+      { "dep": "naive-ui", "value": "naive-ui", "priority": 10 },
+      {
+        "dep": "@angular/material",
+        "value": "angular-material",
+        "priority": 10
+      },
+      {
+        "dep": "@ng-bootstrap/ng-bootstrap",
+        "value": "ng-bootstrap",
+        "priority": 10
+      },
+      { "dep": "ng-zorro-antd", "value": "ng-zorro", "priority": 10 }
+    ],
+    "frontend.bundler": [
+      { "dep": "vite", "value": "vite", "priority": 10 },
+      { "dep": "webpack", "value": "webpack", "priority": 8 },
+      { "dep": "esbuild", "value": "esbuild", "priority": 7 },
+      { "dep": "parcel", "value": "parcel", "priority": 7 },
+      { "dep": "rollup", "value": "rollup", "priority": 6 },
+      { "dep": "@swc/core", "value": "swc", "priority": 7 },
+      { "dep": "tsup", "value": "tsup", "priority": 6 },
+      { "dep": "turbopack", "value": "turbopack", "priority": 9 }
+    ],
+    "frontend.formLibrary": [
+      { "dep": "react-hook-form", "value": "react-hook-form", "priority": 10 },
+      { "dep": "formik", "value": "formik", "priority": 10 },
+      {
+        "dep": "@tanstack/react-form",
+        "value": "tanstack-form",
+        "priority": 10
+      },
+      { "dep": "@angular/forms", "value": "angular-forms", "priority": 10 },
+      { "dep": "vee-validate", "value": "vee-validate", "priority": 10 },
+      { "dep": "@vuelidate/core", "value": "vuelidate", "priority": 10 },
+      { "dep": "formsnap", "value": "formsnap", "priority": 10 },
+      { "dep": "superforms", "value": "superforms", "priority": 10 }
+    ],
+    "frontend.dataFetching": [
+      {
+        "dep": "@tanstack/react-query",
+        "value": "tanstack-query",
+        "priority": 10
+      },
+      {
+        "dep": "@tanstack/vue-query",
+        "value": "tanstack-query",
+        "priority": 10
+      },
+      {
+        "dep": "@tanstack/svelte-query",
+        "value": "tanstack-query",
+        "priority": 10
+      },
+      {
+        "dep": "@tanstack/angular-query-experimental",
+        "value": "tanstack-query",
+        "priority": 10
+      },
+      { "dep": "swr", "value": "swr", "priority": 10 },
+      { "dep": "axios", "value": "axios", "priority": 5 },
+      { "dep": "ky", "value": "ky", "priority": 5 },
+      { "dep": "ofetch", "value": "ofetch", "priority": 5 },
+      { "dep": "got", "value": "got", "priority": 4 }
+    ],
+    "backend.framework": [
+      { "dep": "@nestjs/core", "value": "nestjs", "priority": 10 },
+      { "dep": "fastify", "value": "fastify", "priority": 8 },
+      { "dep": "hono", "value": "hono", "priority": 8 },
+      { "dep": "express", "value": "express", "priority": 5 },
+      { "dep": "koa", "value": "koa", "priority": 7 },
+      { "dep": "@adonisjs/core", "value": "adonisjs", "priority": 10 },
+      { "dep": "@feathersjs/feathers", "value": "feathers", "priority": 8 }
+    ],
+    "backend.orm": [
+      { "dep": "@prisma/client", "value": "prisma", "priority": 10 },
+      { "dep": "prisma", "value": "prisma", "priority": 9 },
+      { "dep": "drizzle-orm", "value": "drizzle", "priority": 10 },
+      { "dep": "typeorm", "value": "typeorm", "priority": 10 },
+      { "dep": "sequelize", "value": "sequelize", "priority": 10 }
+    ],
+    "backend.database": [
+      { "dep": "pg", "value": "postgres", "priority": 10 },
+      { "dep": "mysql2", "value": "mysql", "priority": 10 },
+      { "dep": "mongodb", "value": "mongo", "priority": 10 },
+      { "dep": "mongoose", "value": "mongo", "priority": 10 },
+      { "dep": "better-sqlite3", "value": "sqlite", "priority": 10 },
+      { "dep": "@supabase/supabase-js", "value": "supabase", "priority": 10 },
+      { "dep": "firebase", "value": "firebase", "priority": 10 },
+      { "dep": "firebase-admin", "value": "firebase", "priority": 10 },
+      {
+        "dep": "@planetscale/database",
+        "value": "planetscale",
+        "priority": 10
+      },
+      { "dep": "@libsql/client", "value": "turso", "priority": 10 },
+      { "dep": "@neondatabase/serverless", "value": "neon", "priority": 10 },
+      { "dep": "redis", "value": "redis", "priority": 8 },
+      { "dep": "ioredis", "value": "redis", "priority": 8 }
+    ],
+    "backend.validation": [
+      { "dep": "zod", "value": "zod", "priority": 10 },
+      { "dep": "yup", "value": "yup", "priority": 8 },
+      { "dep": "joi", "value": "joi", "priority": 8 },
+      { "dep": "class-validator", "value": "class-validator", "priority": 8 },
+      { "dep": "@sinclair/typebox", "value": "typebox", "priority": 8 },
+      { "dep": "valibot", "value": "valibot", "priority": 8 },
+      { "dep": "arktype", "value": "arktype", "priority": 8 }
+    ],
+    "backend.caching": [
+      { "dep": "ioredis", "value": "redis", "priority": 10 },
+      { "dep": "redis", "value": "redis", "priority": 10 },
+      {
+        "dep": "@nestjs/cache-manager",
+        "value": "cache-manager",
+        "priority": 9
+      },
+      { "dep": "cache-manager", "value": "cache-manager", "priority": 8 },
+      { "dep": "keyv", "value": "keyv", "priority": 6 },
+      { "dep": "lru-cache", "value": "lru-cache", "priority": 5 }
+    ],
+    "backend.messageQueue": [
+      { "dep": "bullmq", "value": "bullmq", "priority": 10 },
+      { "dep": "bull", "value": "bull", "priority": 8 },
+      { "dep": "amqplib", "value": "rabbitmq", "priority": 10 },
+      { "dep": "kafkajs", "value": "kafka", "priority": 10 },
+      { "dep": "@nestjs/bull", "value": "bullmq", "priority": 9 },
+      { "dep": "@nestjs/bullmq", "value": "bullmq", "priority": 10 },
+      { "dep": "bee-queue", "value": "bee-queue", "priority": 7 }
+    ],
+    "backend.realtime": [
+      { "dep": "socket.io", "value": "socketio", "priority": 10 },
+      { "dep": "socket.io-client", "value": "socketio", "priority": 8 },
+      { "dep": "ws", "value": "websocket", "priority": 7 },
+      { "dep": "@nestjs/websockets", "value": "socketio", "priority": 9 },
+      { "dep": "pusher", "value": "pusher", "priority": 10 },
+      { "dep": "pusher-js", "value": "pusher", "priority": 8 },
+      {
+        "dep": "@supabase/realtime-js",
+        "value": "supabase-realtime",
+        "priority": 10
+      },
+      { "dep": "ably", "value": "ably", "priority": 10 },
+      { "dep": "@ably/spaces", "value": "ably", "priority": 8 },
+      { "dep": "@soketi/soketi", "value": "soketi", "priority": 10 }
+    ],
+    "devops.testing": [
+      { "dep": "vitest", "value": "vitest", "priority": 10 },
+      { "dep": "@vitest/coverage-v8", "value": "vitest", "priority": 8 },
+      { "dep": "@vitest/coverage-istanbul", "value": "vitest", "priority": 8 },
+      { "dep": "@vitest/ui", "value": "vitest", "priority": 7 },
+      { "dep": "jest", "value": "jest", "priority": 9 },
+      { "dep": "@jest/core", "value": "jest", "priority": 8 },
+      { "dep": "ts-jest", "value": "jest", "priority": 7 },
+      { "dep": "babel-jest", "value": "jest", "priority": 6 },
+      { "dep": "mocha", "value": "mocha", "priority": 8 },
+      { "dep": "ava", "value": "ava", "priority": 8 },
+      { "dep": "uvu", "value": "uvu", "priority": 7 },
+      { "dep": "jasmine", "value": "jasmine", "priority": 7 },
+      { "dep": "jasmine-core", "value": "jasmine", "priority": 6 },
+      { "dep": "karma", "value": "karma", "priority": 6 },
+      { "dep": "tap", "value": "tap", "priority": 6 },
+      { "dep": "cypress", "value": "cypress", "priority": 9 },
+      { "dep": "@playwright/test", "value": "playwright", "priority": 9 },
+      { "dep": "playwright", "value": "playwright", "priority": 8 },
+      { "dep": "nightwatch", "value": "nightwatch", "priority": 7 },
+      { "dep": "webdriverio", "value": "webdriverio", "priority": 7 },
+      { "dep": "@wdio/cli", "value": "webdriverio", "priority": 7 },
+      { "dep": "testcafe", "value": "testcafe", "priority": 7 },
+      { "dep": "puppeteer", "value": "puppeteer", "priority": 5 }
+    ]
+  },
+  "python": {
+    "backend.framework": [
+      { "dep": "django", "value": "django" },
+      { "dep": "fastapi", "value": "fastapi" },
+      { "dep": "flask", "value": "flask" },
+      { "dep": "starlette", "value": "starlette" },
+      { "dep": "litestar", "value": "litestar" },
+      { "dep": "sanic", "value": "sanic" },
+      { "dep": "tornado", "value": "tornado" },
+      { "dep": "aiohttp", "value": "aiohttp" },
+      { "dep": "django-ninja", "value": "django" },
+      { "dep": "djangorestframework", "value": "django" }
+    ],
+    "backend.orm": [
+      { "dep": "sqlalchemy", "value": "sqlalchemy" },
+      { "dep": "tortoise-orm", "value": "tortoise" },
+      { "dep": "peewee", "value": "peewee" },
+      { "dep": "sqlmodel", "value": "sqlmodel" },
+      { "dep": "django-orm", "value": "django-orm" },
+      { "dep": "mongoengine", "value": "mongoengine" },
+      { "dep": "beanie", "value": "beanie" }
+    ],
+    "backend.database": [
+      { "dep": "psycopg2", "value": "postgres" },
+      { "dep": "psycopg2-binary", "value": "postgres" },
+      { "dep": "psycopg", "value": "postgres" },
+      { "dep": "asyncpg", "value": "postgres" },
+      { "dep": "mysqlclient", "value": "mysql" },
+      { "dep": "pymysql", "value": "mysql" },
+      { "dep": "aiomysql", "value": "mysql" },
+      { "dep": "pymongo", "value": "mongo" },
+      { "dep": "motor", "value": "mongo" },
+      { "dep": "aiosqlite", "value": "sqlite" }
+    ],
+    "backend.caching": [
+      { "dep": "redis", "value": "redis" },
+      { "dep": "aioredis", "value": "redis" },
+      { "dep": "django-redis", "value": "redis" },
+      { "dep": "django-cacheops", "value": "redis" },
+      { "dep": "diskcache", "value": "diskcache" }
+    ],
+    "backend.messageQueue": [
+      { "dep": "celery", "value": "celery" },
+      { "dep": "rq", "value": "rq" },
+      { "dep": "dramatiq", "value": "dramatiq" },
+      { "dep": "huey", "value": "huey" },
+      { "dep": "arq", "value": "arq" },
+      { "dep": "aiokafka", "value": "kafka" },
+      { "dep": "pika", "value": "rabbitmq" },
+      { "dep": "aio-pika", "value": "rabbitmq" },
+      { "dep": "kombu", "value": "rabbitmq" }
+    ],
+    "backend.validation": [
+      { "dep": "pydantic", "value": "pydantic" },
+      { "dep": "marshmallow", "value": "marshmallow" },
+      { "dep": "cerberus", "value": "cerberus" },
+      { "dep": "attrs", "value": "attrs" }
+    ],
+    "backend.realtime": [
+      { "dep": "channels", "value": "django-channels" },
+      { "dep": "django-channels", "value": "django-channels" },
+      { "dep": "websockets", "value": "websockets" },
+      { "dep": "python-socketio", "value": "socketio" }
+    ],
+    "devops.testing": [
+      { "dep": "pytest", "value": "pytest" },
+      { "dep": "pytest-asyncio", "value": "pytest" },
+      { "dep": "pytest-django", "value": "pytest" },
+      { "dep": "pytest-cov", "value": "pytest" },
+      { "dep": "unittest", "value": "unittest" },
+      { "dep": "nose2", "value": "nose2" },
+      { "dep": "hypothesis", "value": "hypothesis" },
+      { "dep": "factory-boy", "value": "pytest" },
+      { "dep": "faker", "value": "pytest" }
+    ],
+    "architecture.apiStyle": [
+      { "dep": "graphene", "value": "graphql" },
+      { "dep": "strawberry-graphql", "value": "graphql" },
+      { "dep": "ariadne", "value": "graphql" },
+      { "dep": "grpcio", "value": "grpc" },
+      { "dep": "grpclib", "value": "grpc" }
+    ],
+    "devops.quality": [
+      { "dep": "ruff", "value": "ruff" },
+      { "dep": "black", "value": "black" },
+      { "dep": "flake8", "value": "flake8" },
+      { "dep": "pylint", "value": "pylint" },
+      { "dep": "mypy", "value": "mypy" },
+      { "dep": "isort", "value": "isort" },
+      { "dep": "pre-commit", "value": "pre-commit" }
+    ]
+  },
+  "architecture": {
+    "i18n": [
+      { "dep": "@nuxtjs/i18n", "value": true },
+      { "dep": "next-i18next", "value": true },
+      { "dep": "next-intl", "value": true },
+      { "dep": "next-translate", "value": true },
+      { "dep": "vue-i18n", "value": true },
+      { "dep": "@intlify/unplugin-vue-i18n", "value": true },
+      { "dep": "react-intl", "value": true },
+      { "dep": "react-i18next", "value": true },
+      { "dep": "@formatjs/intl", "value": true },
+      { "dep": "svelte-i18n", "value": true },
+      { "dep": "@inlang/paraglide-js", "value": true },
+      { "dep": "paraglide-sveltekit", "value": true },
+      { "dep": "@angular/localize", "value": true },
+      { "dep": "@ngx-translate/core", "value": true },
+      { "dep": "transloco", "value": true },
+      { "dep": "@ngneat/transloco", "value": true },
+      { "dep": "i18next", "value": true },
+      { "dep": "typesafe-i18n", "value": true },
+      { "dep": "@lingui/core", "value": true },
+      { "dep": "rosetta", "value": true },
+      { "dep": "messageformat", "value": true }
+    ],
+    "auth": [
+      { "dep": "@auth/core", "value": "session" },
+      { "dep": "@auth/nextjs", "value": "session" },
+      { "dep": "next-auth", "value": "session" },
+      { "dep": "@auth/sveltekit", "value": "session" },
+      { "dep": "@sidebase/nuxt-auth", "value": "session" },
+      { "dep": "lucia", "value": "session" },
+      { "dep": "lucia-auth", "value": "session" },
+      { "dep": "arctic", "value": "oauth" },
+      { "dep": "better-auth", "value": "session" },
+      { "dep": "passport", "value": "session" },
+      { "dep": "passport-jwt", "value": "jwt" },
+      { "dep": "passport-local", "value": "session" },
+      { "dep": "passport-google-oauth20", "value": "oauth" },
+      { "dep": "@clerk/nextjs", "value": "clerk" },
+      { "dep": "@clerk/vue", "value": "clerk" },
+      { "dep": "@clerk/clerk-react", "value": "clerk" },
+      { "dep": "@clerk/express", "value": "clerk" },
+      { "dep": "@supabase/auth-helpers-nextjs", "value": "supabase_auth" },
+      { "dep": "@supabase/auth-helpers-sveltekit", "value": "supabase_auth" },
+      { "dep": "@supabase/ssr", "value": "supabase_auth" },
+      { "dep": "@supabase/auth-ui-react", "value": "supabase_auth" },
+      { "dep": "keycloak-js", "value": "keycloak" },
+      { "dep": "keycloak-connect", "value": "keycloak" },
+      { "dep": "@react-keycloak/web", "value": "keycloak" },
+      { "dep": "@auth0/nextjs-auth0", "value": "auth0" },
+      { "dep": "@auth0/auth0-vue", "value": "auth0" },
+      { "dep": "@auth0/auth0-react", "value": "auth0" },
+      { "dep": "@auth0/auth0-angular", "value": "auth0" },
+      { "dep": "auth0-js", "value": "auth0" },
+      { "dep": "@aws-amplify/auth", "value": "oauth" },
+      { "dep": "amazon-cognito-identity-js", "value": "oauth" },
+      { "dep": "@azure/msal-browser", "value": "oauth" },
+      { "dep": "@azure/msal-node", "value": "oauth" },
+      { "dep": "@azure/msal-angular", "value": "oauth" },
+      { "dep": "@azure/msal-react", "value": "oauth" },
+      { "dep": "firebase", "value": "session" },
+      { "dep": "firebase-admin", "value": "session" },
+      { "dep": "oidc-client-ts", "value": "oauth" },
+      { "dep": "openid-client", "value": "oauth" },
+      { "dep": "angular-auth-oidc-client", "value": "oauth" },
+      { "dep": "@nestjs/passport", "value": "session" },
+      { "dep": "@nestjs/jwt", "value": "jwt" },
+      { "dep": "jsonwebtoken", "value": "jwt" },
+      { "dep": "jose", "value": "jwt" },
+      { "dep": "express-session", "value": "session" },
+      { "dep": "iron-session", "value": "session" },
+      { "dep": "cookie-session", "value": "session" },
+      { "dep": "@simplewebauthn/server", "value": "custom" },
+      { "dep": "@simplewebauthn/browser", "value": "custom" }
+    ],
+    "apiStyle": [
+      { "dep": "@apollo/client", "value": "graphql" },
+      { "dep": "urql", "value": "graphql" },
+      { "dep": "graphql-request", "value": "graphql" },
+      { "dep": "graphql-tag", "value": "graphql" },
+      { "dep": "relay-runtime", "value": "graphql" },
+      { "dep": "react-relay", "value": "graphql" },
+      { "dep": "graphql", "value": "graphql" },
+      { "dep": "@apollo/server", "value": "graphql" },
+      { "dep": "apollo-server-express", "value": "graphql" },
+      { "dep": "graphql-yoga", "value": "graphql" },
+      { "dep": "mercurius", "value": "graphql" },
+      { "dep": "@nestjs/graphql", "value": "graphql" },
+      { "dep": "type-graphql", "value": "graphql" },
+      { "dep": "@pothos/core", "value": "graphql" },
+      { "dep": "nexus", "value": "graphql" },
+      { "dep": "@trpc/client", "value": "trpc" },
+      { "dep": "@trpc/server", "value": "trpc" },
+      { "dep": "@trpc/react-query", "value": "trpc" },
+      { "dep": "@trpc/next", "value": "trpc" },
+      { "dep": "trpc-nuxt", "value": "trpc" },
+      { "dep": "@grpc/grpc-js", "value": "grpc" },
+      { "dep": "@grpc/proto-loader", "value": "grpc" },
+      { "dep": "@connectrpc/connect", "value": "grpc" },
+      { "dep": "@bufbuild/protobuf", "value": "grpc" },
+      { "dep": "socket.io", "value": "rest" },
+      { "dep": "socket.io-client", "value": "rest" },
+      { "dep": "ws", "value": "rest" }
+    ]
+  },
+  "java": {
+    "backend.framework": [
+      { "dep": "spring-boot-starter-web", "value": "spring" },
+      { "dep": "spring-boot-starter-webflux", "value": "spring" },
+      { "dep": "spring-boot", "value": "spring" },
+      { "dep": "quarkus-core", "value": "quarkus" },
+      { "dep": "quarkus-resteasy", "value": "quarkus" },
+      { "dep": "quarkus-resteasy-reactive", "value": "quarkus" },
+      { "dep": "micronaut-core", "value": "micronaut" },
+      { "dep": "micronaut-http-server-netty", "value": "micronaut" },
+      { "dep": "ktor-server-core", "value": "ktor" },
+      { "dep": "vertx-core", "value": "vertx" },
+      { "dep": "vertx-web", "value": "vertx" },
+      { "dep": "dropwizard-core", "value": "dropwizard" },
+      { "dep": "jersey-server", "value": "jersey" },
+      { "dep": "spark-core", "value": "spark-java" },
+      { "dep": "javalin", "value": "javalin" }
+    ],
+    "backend.orm": [
+      { "dep": "spring-boot-starter-data-jpa", "value": "jpa" },
+      { "dep": "hibernate-core", "value": "hibernate" },
+      { "dep": "hibernate-entitymanager", "value": "hibernate" },
+      { "dep": "jakarta.persistence-api", "value": "jpa" },
+      { "dep": "javax.persistence-api", "value": "jpa" },
+      { "dep": "mybatis-spring-boot-starter", "value": "mybatis" },
+      { "dep": "mybatis", "value": "mybatis" },
+      { "dep": "jooq", "value": "jooq" },
+      {
+        "dep": "spring-boot-starter-data-mongodb",
+        "value": "spring-data-mongo"
+      },
+      { "dep": "spring-boot-starter-data-r2dbc", "value": "r2dbc" },
+      { "dep": "quarkus-hibernate-orm-panache", "value": "hibernate" },
+      { "dep": "micronaut-data-hibernate-jpa", "value": "hibernate" },
+      { "dep": "exposed-core", "value": "exposed" }
+    ],
+    "backend.database": [
+      { "dep": "postgresql", "value": "postgres" },
+      { "dep": "mysql-connector-java", "value": "mysql" },
+      { "dep": "mysql-connector-j", "value": "mysql" },
+      { "dep": "mariadb-java-client", "value": "mysql" },
+      { "dep": "mongodb-driver-sync", "value": "mongo" },
+      { "dep": "mongodb-driver-reactivestreams", "value": "mongo" },
+      { "dep": "spring-boot-starter-data-mongodb", "value": "mongo" },
+      { "dep": "h2", "value": "h2" },
+      { "dep": "sqlite-jdbc", "value": "sqlite" },
+      { "dep": "ojdbc11", "value": "oracle" },
+      { "dep": "ojdbc8", "value": "oracle" },
+      { "dep": "mssql-jdbc", "value": "mssql" }
+    ],
+    "backend.validation": [
+      { "dep": "spring-boot-starter-validation", "value": "bean-validation" },
+      { "dep": "hibernate-validator", "value": "bean-validation" },
+      { "dep": "jakarta.validation-api", "value": "bean-validation" },
+      { "dep": "javax.validation-api", "value": "bean-validation" }
+    ],
+    "backend.caching": [
+      { "dep": "spring-boot-starter-cache", "value": "spring-cache" },
+      { "dep": "spring-boot-starter-data-redis", "value": "redis" },
+      { "dep": "caffeine", "value": "caffeine" },
+      { "dep": "ehcache", "value": "ehcache" },
+      { "dep": "hazelcast", "value": "hazelcast" },
+      { "dep": "redisson", "value": "redis" },
+      { "dep": "jedis", "value": "redis" },
+      { "dep": "lettuce-core", "value": "redis" },
+      { "dep": "quarkus-cache", "value": "quarkus-cache" }
+    ],
+    "backend.messageQueue": [
+      { "dep": "spring-boot-starter-amqp", "value": "rabbitmq" },
+      { "dep": "spring-kafka", "value": "kafka" },
+      { "dep": "spring-boot-starter-activemq", "value": "activemq" },
+      { "dep": "amqp-client", "value": "rabbitmq" },
+      { "dep": "kafka-clients", "value": "kafka" },
+      { "dep": "quarkus-smallrye-reactive-messaging-kafka", "value": "kafka" },
+      { "dep": "quarkus-smallrye-reactive-messaging-amqp", "value": "rabbitmq" }
+    ],
+    "backend.realtime": [
+      { "dep": "spring-boot-starter-websocket", "value": "websocket" },
+      { "dep": "spring-messaging", "value": "websocket" },
+      { "dep": "quarkus-websockets", "value": "websocket" }
+    ],
+    "architecture.auth": [
+      { "dep": "spring-boot-starter-security", "value": "spring-security" },
+      { "dep": "spring-boot-starter-oauth2-client", "value": "oauth" },
+      { "dep": "spring-boot-starter-oauth2-resource-server", "value": "jwt" },
+      { "dep": "spring-security-oauth2-jose", "value": "jwt" },
+      { "dep": "keycloak-spring-boot-starter", "value": "keycloak" },
+      { "dep": "quarkus-oidc", "value": "oauth" },
+      { "dep": "quarkus-smallrye-jwt", "value": "jwt" },
+      { "dep": "micronaut-security-jwt", "value": "jwt" },
+      { "dep": "micronaut-security-oauth2", "value": "oauth" },
+      { "dep": "java-jwt", "value": "jwt" },
+      { "dep": "jjwt-api", "value": "jwt" },
+      { "dep": "nimbus-jose-jwt", "value": "jwt" }
+    ],
+    "devops.testing": [
+      { "dep": "junit-jupiter", "value": "junit5" },
+      { "dep": "junit-jupiter-api", "value": "junit5" },
+      { "dep": "junit-jupiter-engine", "value": "junit5" },
+      { "dep": "spring-boot-starter-test", "value": "junit5" },
+      { "dep": "mockito-core", "value": "junit5" },
+      { "dep": "mockito-junit-jupiter", "value": "junit5" },
+      { "dep": "testcontainers", "value": "junit5" },
+      { "dep": "assertj-core", "value": "junit5" },
+      { "dep": "rest-assured", "value": "junit5" },
+      { "dep": "quarkus-junit5", "value": "junit5" },
+      { "dep": "micronaut-test-junit5", "value": "junit5" },
+      { "dep": "kotest-runner-junit5", "value": "kotest" },
+      { "dep": "spock-core", "value": "spock" }
+    ],
+    "architecture.apiStyle": [
+      { "dep": "spring-boot-starter-graphql", "value": "graphql" },
+      { "dep": "graphql-java", "value": "graphql" },
+      { "dep": "graphql-java-kickstart", "value": "graphql" },
+      { "dep": "netflix-dgs-spring-boot-starter", "value": "graphql" },
+      { "dep": "grpc-spring-boot-starter", "value": "grpc" },
+      { "dep": "net.devh:grpc-server-spring-boot-starter", "value": "grpc" }
+    ],
+    "devops.quality": [
+      { "dep": "spotless-plugin-gradle", "value": "spotless" },
+      { "dep": "spotbugs", "value": "spotbugs" },
+      { "dep": "checkstyle", "value": "checkstyle" },
+      { "dep": "pmd", "value": "pmd" },
+      { "dep": "jacoco-maven-plugin", "value": "jacoco" },
+      { "dep": "ktlint", "value": "ktlint" },
+      { "dep": "detekt-cli", "value": "detekt" }
+    ]
+  },
+  "dotnet": {
+    "backend.framework": [
+      { "dep": "Microsoft.AspNetCore", "value": "dotnet" },
+      { "dep": "Microsoft.AspNetCore.App", "value": "dotnet" },
+      { "dep": "Microsoft.AspNetCore.Mvc", "value": "dotnet" },
+      { "dep": "Microsoft.AspNetCore.Components", "value": "blazor" },
+      {
+        "dep": "Microsoft.AspNetCore.Components.WebAssembly",
+        "value": "blazor"
+      },
+      { "dep": "Microsoft.NET.Sdk.Web", "value": "dotnet" },
+      { "dep": "Swashbuckle.AspNetCore", "value": "dotnet" }
+    ],
+    "backend.orm": [
+      { "dep": "Microsoft.EntityFrameworkCore", "value": "efcore" },
+      { "dep": "Microsoft.EntityFrameworkCore.SqlServer", "value": "efcore" },
+      { "dep": "Microsoft.EntityFrameworkCore.Design", "value": "efcore" },
+      { "dep": "Dapper", "value": "dapper" },
+      { "dep": "NHibernate", "value": "nhibernate" },
+      { "dep": "Npgsql.EntityFrameworkCore.PostgreSQL", "value": "efcore" },
+      { "dep": "Pomelo.EntityFrameworkCore.MySql", "value": "efcore" },
+      { "dep": "MongoDB.EntityFrameworkCore", "value": "efcore" },
+      { "dep": "linq2db", "value": "linq2db" },
+      { "dep": "RepoDB", "value": "repodb" }
+    ],
+    "backend.database": [
+      { "dep": "Npgsql", "value": "postgres" },
+      { "dep": "Npgsql.EntityFrameworkCore.PostgreSQL", "value": "postgres" },
+      { "dep": "MySqlConnector", "value": "mysql" },
+      { "dep": "Pomelo.EntityFrameworkCore.MySql", "value": "mysql" },
+      { "dep": "MongoDB.Driver", "value": "mongo" },
+      { "dep": "Microsoft.Data.SqlClient", "value": "mssql" },
+      { "dep": "System.Data.SqlClient", "value": "mssql" },
+      { "dep": "Microsoft.Data.Sqlite", "value": "sqlite" },
+      { "dep": "Microsoft.EntityFrameworkCore.Sqlite", "value": "sqlite" },
+      { "dep": "Oracle.ManagedDataAccess.Core", "value": "oracle" }
+    ],
+    "backend.validation": [
+      { "dep": "FluentValidation", "value": "fluentvalidation" },
+      { "dep": "FluentValidation.AspNetCore", "value": "fluentvalidation" },
+      {
+        "dep": "System.ComponentModel.Annotations",
+        "value": "data-annotations"
+      }
+    ],
+    "backend.caching": [
+      {
+        "dep": "Microsoft.Extensions.Caching.StackExchangeRedis",
+        "value": "redis"
+      },
+      { "dep": "StackExchange.Redis", "value": "redis" },
+      { "dep": "Microsoft.Extensions.Caching.Memory", "value": "memory-cache" },
+      { "dep": "EasyCaching.Core", "value": "easycaching" },
+      { "dep": "CacheManager.Core", "value": "cache-manager" },
+      { "dep": "LazyCache", "value": "lazycache" }
+    ],
+    "backend.messageQueue": [
+      { "dep": "MassTransit", "value": "masstransit" },
+      { "dep": "MassTransit.RabbitMQ", "value": "rabbitmq" },
+      { "dep": "MassTransit.Azure.ServiceBus", "value": "azure-servicebus" },
+      { "dep": "NServiceBus", "value": "nservicebus" },
+      { "dep": "RabbitMQ.Client", "value": "rabbitmq" },
+      { "dep": "Confluent.Kafka", "value": "kafka" },
+      { "dep": "MediatR", "value": "mediatr" },
+      { "dep": "Rebus", "value": "rebus" },
+      { "dep": "Wolverine", "value": "wolverine" },
+      { "dep": "Hangfire.Core", "value": "hangfire" }
+    ],
+    "backend.realtime": [
+      { "dep": "Microsoft.AspNetCore.SignalR", "value": "signalr" },
+      { "dep": "Microsoft.AspNetCore.SignalR.Client", "value": "signalr" }
+    ],
+    "architecture.auth": [
+      {
+        "dep": "Microsoft.AspNetCore.Identity.EntityFrameworkCore",
+        "value": "identity"
+      },
+      {
+        "dep": "Microsoft.AspNetCore.Authentication.JwtBearer",
+        "value": "jwt"
+      },
+      {
+        "dep": "Microsoft.AspNetCore.Authentication.OpenIdConnect",
+        "value": "oauth"
+      },
+      { "dep": "Microsoft.Identity.Web", "value": "oauth" },
+      { "dep": "IdentityServer4", "value": "identityserver" },
+      { "dep": "Duende.IdentityServer", "value": "identityserver" },
+      { "dep": "Microsoft.AspNetCore.Identity", "value": "identity" }
+    ],
+    "devops.testing": [
+      { "dep": "xunit", "value": "xunit" },
+      { "dep": "xunit.runner.visualstudio", "value": "xunit" },
+      { "dep": "NUnit", "value": "nunit" },
+      { "dep": "NUnit3TestAdapter", "value": "nunit" },
+      { "dep": "MSTest.TestFramework", "value": "mstest" },
+      { "dep": "Moq", "value": "xunit" },
+      { "dep": "NSubstitute", "value": "xunit" },
+      { "dep": "FluentAssertions", "value": "xunit" },
+      { "dep": "Shouldly", "value": "xunit" },
+      { "dep": "Bogus", "value": "xunit" },
+      { "dep": "Testcontainers", "value": "xunit" },
+      { "dep": "Microsoft.AspNetCore.Mvc.Testing", "value": "xunit" },
+      { "dep": "Verify.Xunit", "value": "xunit" },
+      { "dep": "bunit", "value": "bunit" }
+    ],
+    "devops.quality": [
+      { "dep": "StyleCop.Analyzers", "value": "stylecop" },
+      { "dep": "SonarAnalyzer.CSharp", "value": "sonar" },
+      { "dep": "Roslynator.Analyzers", "value": "roslynator" },
+      { "dep": "Microsoft.CodeAnalysis.NetAnalyzers", "value": "netanalyzers" },
+      { "dep": "coverlet.collector", "value": "coverlet" }
+    ]
+  },
+  "go": {
+    "backend.framework": [
+      { "dep": "github.com/gin-gonic/gin", "value": "gin" },
+      { "dep": "github.com/labstack/echo", "value": "echo" },
+      { "dep": "github.com/gofiber/fiber", "value": "fiber" },
+      { "dep": "github.com/gorilla/mux", "value": "gorilla" },
+      { "dep": "github.com/go-chi/chi", "value": "chi" },
+      { "dep": "github.com/julienschmidt/httprouter", "value": "httprouter" },
+      { "dep": "github.com/valyala/fasthttp", "value": "fasthttp" },
+      { "dep": "google.golang.org/grpc", "value": "grpc-go" },
+      { "dep": "connectrpc.com/connect", "value": "connect-go" },
+      { "dep": "github.com/bufbuild/connect-go", "value": "connect-go" }
+    ],
+    "backend.orm": [
+      { "dep": "gorm.io/gorm", "value": "gorm" },
+      { "dep": "github.com/jmoiron/sqlx", "value": "sqlx" },
+      { "dep": "entgo.io/ent", "value": "ent" },
+      { "dep": "github.com/uptrace/bun", "value": "bun-go" },
+      { "dep": "github.com/go-pg/pg", "value": "go-pg" },
+      { "dep": "github.com/volatiletech/sqlboiler", "value": "sqlboiler" },
+      { "dep": "github.com/jackc/pgx", "value": "pgx" }
+    ],
+    "backend.database": [
+      { "dep": "github.com/lib/pq", "value": "postgres" },
+      { "dep": "github.com/jackc/pgx", "value": "postgres" },
+      { "dep": "gorm.io/driver/postgres", "value": "postgres" },
+      { "dep": "github.com/go-sql-driver/mysql", "value": "mysql" },
+      { "dep": "gorm.io/driver/mysql", "value": "mysql" },
+      { "dep": "go.mongodb.org/mongo-driver", "value": "mongo" },
+      { "dep": "gorm.io/driver/sqlite", "value": "sqlite" },
+      { "dep": "github.com/mattn/go-sqlite3", "value": "sqlite" },
+      { "dep": "github.com/go-redis/redis", "value": "redis" },
+      { "dep": "github.com/redis/go-redis", "value": "redis" }
+    ],
+    "backend.validation": [
+      { "dep": "github.com/go-playground/validator", "value": "go-playground" },
+      { "dep": "github.com/go-ozzo/ozzo-validation", "value": "ozzo" },
+      { "dep": "github.com/asaskevich/govalidator", "value": "govalidator" }
+    ],
+    "backend.caching": [
+      { "dep": "github.com/go-redis/redis", "value": "redis" },
+      { "dep": "github.com/redis/go-redis", "value": "redis" },
+      { "dep": "github.com/dgraph-io/ristretto", "value": "ristretto" },
+      { "dep": "github.com/allegro/bigcache", "value": "bigcache" },
+      { "dep": "github.com/eko/gocache", "value": "gocache" },
+      { "dep": "github.com/patrickmn/go-cache", "value": "go-cache" }
+    ],
+    "backend.messageQueue": [
+      { "dep": "github.com/rabbitmq/amqp091-go", "value": "rabbitmq" },
+      { "dep": "github.com/streadway/amqp", "value": "rabbitmq" },
+      { "dep": "github.com/segmentio/kafka-go", "value": "kafka" },
+      { "dep": "github.com/IBM/sarama", "value": "kafka" },
+      { "dep": "github.com/Shopify/sarama", "value": "kafka" },
+      { "dep": "github.com/nats-io/nats.go", "value": "nats" },
+      { "dep": "github.com/hibiken/asynq", "value": "asynq" },
+      { "dep": "github.com/ThreeDotsLabs/watermill", "value": "watermill" }
+    ],
+    "backend.realtime": [
+      { "dep": "github.com/gorilla/websocket", "value": "websocket" },
+      { "dep": "nhooyr.io/websocket", "value": "websocket" },
+      { "dep": "github.com/olahol/melody", "value": "websocket" },
+      { "dep": "github.com/centrifugal/centrifuge", "value": "centrifuge" }
+    ],
+    "architecture.auth": [
+      { "dep": "github.com/golang-jwt/jwt", "value": "jwt" },
+      { "dep": "github.com/dgrijalva/jwt-go", "value": "jwt" },
+      { "dep": "github.com/coreos/go-oidc", "value": "oauth" },
+      { "dep": "golang.org/x/oauth2", "value": "oauth" },
+      { "dep": "github.com/markbates/goth", "value": "oauth" },
+      { "dep": "github.com/casbin/casbin", "value": "casbin" }
+    ],
+    "devops.testing": [
+      { "dep": "github.com/stretchr/testify", "value": "go-test" },
+      { "dep": "github.com/onsi/ginkgo", "value": "ginkgo" },
+      { "dep": "github.com/onsi/gomega", "value": "ginkgo" },
+      { "dep": "github.com/gavv/httpexpect", "value": "go-test" },
+      {
+        "dep": "github.com/testcontainers/testcontainers-go",
+        "value": "go-test"
+      },
+      { "dep": "go.uber.org/mock", "value": "go-test" },
+      { "dep": "github.com/golang/mock", "value": "go-test" },
+      { "dep": "github.com/jarcoal/httpmock", "value": "go-test" }
+    ],
+    "architecture.apiStyle": [
+      { "dep": "github.com/99designs/gqlgen", "value": "graphql" },
+      { "dep": "github.com/graphql-go/graphql", "value": "graphql" },
+      { "dep": "github.com/graph-gophers/graphql-go", "value": "graphql" },
+      { "dep": "google.golang.org/grpc", "value": "grpc" },
+      { "dep": "connectrpc.com/connect", "value": "grpc" }
+    ],
+    "devops.quality": [
+      { "dep": "github.com/golangci/golangci-lint", "value": "golangci-lint" },
+      { "dep": "honnef.co/go/tools", "value": "staticcheck" },
+      { "dep": "golang.org/x/lint", "value": "golint" }
+    ]
+  },
+  "rust": {
+    "backend.framework": [
+      { "dep": "actix-web", "value": "actix" },
+      { "dep": "actix-rt", "value": "actix" },
+      { "dep": "axum", "value": "axum" },
+      { "dep": "rocket", "value": "rocket" },
+      { "dep": "warp", "value": "warp" },
+      { "dep": "poem", "value": "poem" },
+      { "dep": "tide", "value": "tide" },
+      { "dep": "tonic", "value": "tonic" },
+      { "dep": "hyper", "value": "hyper" }
+    ],
+    "backend.orm": [
+      { "dep": "diesel", "value": "diesel" },
+      { "dep": "sea-orm", "value": "sea-orm" },
+      { "dep": "sqlx", "value": "sqlx" },
+      { "dep": "rbatis", "value": "rbatis" },
+      { "dep": "surrealdb", "value": "surrealdb" }
+    ],
+    "backend.database": [
+      { "dep": "tokio-postgres", "value": "postgres" },
+      { "dep": "deadpool-postgres", "value": "postgres" },
+      { "dep": "sqlx-postgres", "value": "postgres" },
+      { "dep": "mysql_async", "value": "mysql" },
+      { "dep": "mongodb", "value": "mongo" },
+      { "dep": "rusqlite", "value": "sqlite" },
+      { "dep": "redis", "value": "redis" },
+      { "dep": "fred", "value": "redis" }
+    ],
+    "backend.validation": [
+      { "dep": "validator", "value": "validator" },
+      { "dep": "garde", "value": "garde" }
+    ],
+    "backend.caching": [
+      { "dep": "redis", "value": "redis" },
+      { "dep": "fred", "value": "redis" },
+      { "dep": "moka", "value": "moka" },
+      { "dep": "cached", "value": "cached" }
+    ],
+    "backend.messageQueue": [
+      { "dep": "lapin", "value": "rabbitmq" },
+      { "dep": "rdkafka", "value": "kafka" },
+      { "dep": "kafka", "value": "kafka" },
+      { "dep": "async-nats", "value": "nats" },
+      { "dep": "nats", "value": "nats" }
+    ],
+    "backend.realtime": [
+      { "dep": "tokio-tungstenite", "value": "websocket" },
+      { "dep": "tungstenite", "value": "websocket" },
+      { "dep": "axum-extra", "value": "websocket" }
+    ],
+    "architecture.auth": [
+      { "dep": "jsonwebtoken", "value": "jwt" },
+      { "dep": "oauth2", "value": "oauth" },
+      { "dep": "openidconnect", "value": "oauth" },
+      { "dep": "argon2", "value": "custom" },
+      { "dep": "bcrypt", "value": "custom" }
+    ],
+    "devops.testing": [
+      { "dep": "tokio-test", "value": "cargo-test" },
+      { "dep": "mockall", "value": "cargo-test" },
+      { "dep": "wiremock", "value": "cargo-test" },
+      { "dep": "httpmock", "value": "cargo-test" },
+      { "dep": "assert_cmd", "value": "cargo-test" },
+      { "dep": "proptest", "value": "cargo-test" },
+      { "dep": "criterion", "value": "cargo-test" },
+      { "dep": "testcontainers", "value": "cargo-test" }
+    ],
+    "architecture.apiStyle": [
+      { "dep": "async-graphql", "value": "graphql" },
+      { "dep": "juniper", "value": "graphql" },
+      { "dep": "tonic", "value": "grpc" }
+    ],
+    "devops.quality": [{ "dep": "clippy", "value": "clippy" }]
+  },
+  "php": {
+    "backend.framework": [
+      { "dep": "laravel/framework", "value": "laravel" },
+      { "dep": "laravel/lumen-framework", "value": "lumen" },
+      { "dep": "symfony/framework-bundle", "value": "symfony" },
+      { "dep": "symfony/http-kernel", "value": "symfony" },
+      { "dep": "slim/slim", "value": "slim" },
+      { "dep": "cakephp/cakephp", "value": "cakephp" },
+      { "dep": "codeigniter4/framework", "value": "codeigniter" },
+      { "dep": "yiisoft/yii2", "value": "yii" },
+      { "dep": "hyperf/hyperf", "value": "hyperf" },
+      { "dep": "spiral/framework", "value": "spiral" }
+    ],
+    "backend.orm": [
+      { "dep": "doctrine/orm", "value": "doctrine" },
+      { "dep": "doctrine/dbal", "value": "doctrine" },
+      { "dep": "illuminate/database", "value": "eloquent" },
+      { "dep": "cycle/orm", "value": "cycle" },
+      { "dep": "propel/propel", "value": "propel" }
+    ],
+    "backend.database": [
+      { "dep": "ext-pgsql", "value": "postgres" },
+      { "dep": "ext-mysqli", "value": "mysql" },
+      { "dep": "ext-pdo_pgsql", "value": "postgres" },
+      { "dep": "ext-pdo_mysql", "value": "mysql" },
+      { "dep": "mongodb/mongodb", "value": "mongo" },
+      { "dep": "ext-mongodb", "value": "mongo" },
+      { "dep": "ext-sqlite3", "value": "sqlite" },
+      { "dep": "predis/predis", "value": "redis" },
+      { "dep": "ext-redis", "value": "redis" },
+      { "dep": "phpredis/phpredis", "value": "redis" }
+    ],
+    "backend.validation": [
+      { "dep": "illuminate/validation", "value": "laravel-validation" },
+      { "dep": "symfony/validator", "value": "symfony-validator" },
+      { "dep": "respect/validation", "value": "respect" },
+      { "dep": "rakit/validation", "value": "rakit" }
+    ],
+    "backend.caching": [
+      { "dep": "predis/predis", "value": "redis" },
+      { "dep": "ext-redis", "value": "redis" },
+      { "dep": "symfony/cache", "value": "symfony-cache" },
+      { "dep": "illuminate/cache", "value": "laravel-cache" },
+      { "dep": "phpfastcache/phpfastcache", "value": "phpfastcache" }
+    ],
+    "backend.messageQueue": [
+      { "dep": "php-amqplib/php-amqplib", "value": "rabbitmq" },
+      { "dep": "enqueue/rdkafka", "value": "kafka" },
+      { "dep": "laravel/horizon", "value": "horizon" },
+      { "dep": "symfony/messenger", "value": "symfony-messenger" },
+      { "dep": "illuminate/queue", "value": "laravel-queue" }
+    ],
+    "backend.realtime": [
+      { "dep": "beyondcode/laravel-websockets", "value": "websocket" },
+      { "dep": "pusher/pusher-php-server", "value": "pusher" },
+      { "dep": "ratchet/pawl", "value": "websocket" },
+      { "dep": "cboden/ratchet", "value": "websocket" },
+      { "dep": "soketi/soketi-php", "value": "soketi" }
+    ],
+    "architecture.auth": [
+      { "dep": "laravel/sanctum", "value": "session" },
+      { "dep": "laravel/passport", "value": "oauth" },
+      { "dep": "laravel/fortify", "value": "session" },
+      { "dep": "laravel/breeze", "value": "session" },
+      { "dep": "laravel/jetstream", "value": "session" },
+      { "dep": "tymon/jwt-auth", "value": "jwt" },
+      { "dep": "lcobucci/jwt", "value": "jwt" },
+      { "dep": "firebase/php-jwt", "value": "jwt" },
+      { "dep": "lexik/jwt-authentication-bundle", "value": "jwt" },
+      { "dep": "symfony/security-bundle", "value": "session" },
+      { "dep": "knpuniversity/oauth2-client-bundle", "value": "oauth" }
+    ],
+    "architecture.apiStyle": [
+      { "dep": "webonyx/graphql-php", "value": "graphql" },
+      { "dep": "nuwave/lighthouse", "value": "graphql" },
+      { "dep": "rebing/graphql-laravel", "value": "graphql" }
+    ],
+    "devops.testing": [
+      { "dep": "phpunit/phpunit", "value": "phpunit" },
+      { "dep": "pestphp/pest", "value": "pest" },
+      { "dep": "mockery/mockery", "value": "phpunit" },
+      { "dep": "phpspec/phpspec", "value": "phpspec" },
+      { "dep": "codeception/codeception", "value": "codeception" },
+      { "dep": "laravel/dusk", "value": "dusk" },
+      { "dep": "symfony/phpunit-bridge", "value": "phpunit" },
+      { "dep": "fakerphp/faker", "value": "phpunit" }
+    ],
+    "devops.quality": [
+      { "dep": "friendsofphp/php-cs-fixer", "value": "php-cs-fixer" },
+      { "dep": "squizlabs/php_codesniffer", "value": "phpcs" },
+      { "dep": "phpstan/phpstan", "value": "phpstan" },
+      { "dep": "vimeo/psalm", "value": "psalm" },
+      { "dep": "nunomaduro/larastan", "value": "larastan" },
+      { "dep": "rector/rector", "value": "rector" },
+      { "dep": "phpmd/phpmd", "value": "phpmd" }
+    ]
+  },
+  "ruby": {
+    "backend.framework": [
+      { "dep": "rails", "value": "rails" },
+      { "dep": "sinatra", "value": "sinatra" },
+      { "dep": "hanami", "value": "hanami" },
+      { "dep": "grape", "value": "grape" },
+      { "dep": "roda", "value": "roda" },
+      { "dep": "padrino", "value": "padrino" }
+    ],
+    "backend.orm": [
+      { "dep": "activerecord", "value": "activerecord" },
+      { "dep": "sequel", "value": "sequel" },
+      { "dep": "rom-rb", "value": "rom" },
+      { "dep": "mongoid", "value": "mongoid" },
+      { "dep": "hanami-model", "value": "hanami-model" }
+    ],
+    "backend.database": [
+      { "dep": "pg", "value": "postgres" },
+      { "dep": "mysql2", "value": "mysql" },
+      { "dep": "sqlite3", "value": "sqlite" },
+      { "dep": "mongoid", "value": "mongo" },
+      { "dep": "mongo", "value": "mongo" },
+      { "dep": "redis", "value": "redis" },
+      { "dep": "hiredis", "value": "redis" }
+    ],
+    "backend.validation": [
+      { "dep": "dry-validation", "value": "dry-validation" },
+      { "dep": "dry-schema", "value": "dry-schema" },
+      { "dep": "activemodel", "value": "activemodel" }
+    ],
+    "backend.caching": [
+      { "dep": "redis", "value": "redis" },
+      { "dep": "hiredis", "value": "redis" },
+      { "dep": "dalli", "value": "memcached" },
+      { "dep": "identity_cache", "value": "identity-cache" },
+      { "dep": "solid_cache", "value": "solid-cache" }
+    ],
+    "backend.messageQueue": [
+      { "dep": "sidekiq", "value": "sidekiq" },
+      { "dep": "resque", "value": "resque" },
+      { "dep": "delayed_job", "value": "delayed-job" },
+      { "dep": "good_job", "value": "good-job" },
+      { "dep": "solid_queue", "value": "solid-queue" },
+      { "dep": "bunny", "value": "rabbitmq" },
+      { "dep": "karafka", "value": "kafka" },
+      { "dep": "sneakers", "value": "rabbitmq" }
+    ],
+    "backend.realtime": [
+      { "dep": "actioncable", "value": "actioncable" },
+      { "dep": "anycable", "value": "anycable" },
+      { "dep": "faye-websocket", "value": "websocket" },
+      { "dep": "websocket-driver", "value": "websocket" }
+    ],
+    "architecture.auth": [
+      { "dep": "devise", "value": "session" },
+      { "dep": "devise-jwt", "value": "jwt" },
+      { "dep": "omniauth", "value": "oauth" },
+      { "dep": "doorkeeper", "value": "oauth" },
+      { "dep": "rodauth", "value": "session" },
+      { "dep": "jwt", "value": "jwt" },
+      { "dep": "sorcery", "value": "session" },
+      { "dep": "clearance", "value": "session" },
+      { "dep": "authlogic", "value": "session" },
+      { "dep": "warden", "value": "session" }
+    ],
+    "architecture.apiStyle": [
+      { "dep": "graphql-ruby", "value": "graphql" },
+      { "dep": "graphql", "value": "graphql" },
+      { "dep": "grpc", "value": "grpc" }
+    ],
+    "devops.testing": [
+      { "dep": "rspec", "value": "rspec" },
+      { "dep": "rspec-rails", "value": "rspec" },
+      { "dep": "minitest", "value": "minitest" },
+      { "dep": "capybara", "value": "rspec" },
+      { "dep": "factory_bot", "value": "rspec" },
+      { "dep": "factory_bot_rails", "value": "rspec" },
+      { "dep": "faker", "value": "rspec" },
+      { "dep": "shoulda-matchers", "value": "rspec" },
+      { "dep": "vcr", "value": "rspec" },
+      { "dep": "webmock", "value": "rspec" },
+      { "dep": "simplecov", "value": "rspec" },
+      { "dep": "cucumber", "value": "cucumber" }
+    ],
+    "devops.quality": [
+      { "dep": "rubocop", "value": "rubocop" },
+      { "dep": "rubocop-rails", "value": "rubocop" },
+      { "dep": "rubocop-rspec", "value": "rubocop" },
+      { "dep": "rubocop-performance", "value": "rubocop" },
+      { "dep": "brakeman", "value": "brakeman" },
+      { "dep": "reek", "value": "reek" },
+      { "dep": "standard", "value": "standard" }
+    ]
+  },
+  "dart": {
+    "frontend.framework": [{ "dep": "flutter", "value": "flutter" }],
+    "frontend.stateManagement": [
+      { "dep": "flutter_bloc", "value": "bloc" },
+      { "dep": "bloc", "value": "bloc" },
+      { "dep": "flutter_riverpod", "value": "riverpod" },
+      { "dep": "riverpod", "value": "riverpod" },
+      { "dep": "provider", "value": "provider" },
+      { "dep": "get", "value": "getx" },
+      { "dep": "mobx", "value": "mobx" },
+      { "dep": "redux", "value": "redux" }
+    ],
+    "frontend.dataFetching": [
+      { "dep": "dio", "value": "dio" },
+      { "dep": "http", "value": "http" },
+      { "dep": "chopper", "value": "chopper" },
+      { "dep": "retrofit", "value": "retrofit" },
+      { "dep": "graphql_flutter", "value": "graphql" }
+    ],
+    "backend.database": [
+      { "dep": "sqflite", "value": "sqlite" },
+      { "dep": "hive", "value": "hive" },
+      { "dep": "isar", "value": "isar" },
+      { "dep": "drift", "value": "sqlite" },
+      { "dep": "floor", "value": "sqlite" },
+      { "dep": "cloud_firestore", "value": "firebase" },
+      { "dep": "firebase_core", "value": "firebase" },
+      { "dep": "supabase_flutter", "value": "supabase" },
+      { "dep": "appwrite", "value": "appwrite" }
+    ],
+    "architecture.auth": [
+      { "dep": "firebase_auth", "value": "session" },
+      { "dep": "supabase_auth_ui", "value": "supabase_auth" },
+      { "dep": "google_sign_in", "value": "oauth" },
+      { "dep": "sign_in_with_apple", "value": "oauth" }
+    ],
+    "devops.testing": [
+      { "dep": "flutter_test", "value": "flutter-test" },
+      { "dep": "integration_test", "value": "flutter-test" },
+      { "dep": "mockito", "value": "flutter-test" },
+      { "dep": "bloc_test", "value": "flutter-test" },
+      { "dep": "patrol", "value": "patrol" }
+    ]
+  },
+  "elixir": {
+    "backend.framework": [
+      { "dep": "phoenix", "value": "phoenix" },
+      { "dep": "phoenix_html", "value": "phoenix" },
+      { "dep": "phoenix_live_view", "value": "phoenix" },
+      { "dep": "plug_cowboy", "value": "plug" },
+      { "dep": "plug", "value": "plug" },
+      { "dep": "bandit", "value": "bandit" }
+    ],
+    "backend.orm": [
+      { "dep": "ecto_sql", "value": "ecto" },
+      { "dep": "ecto", "value": "ecto" }
+    ],
+    "backend.database": [
+      { "dep": "postgrex", "value": "postgres" },
+      { "dep": "myxql", "value": "mysql" },
+      { "dep": "ecto_sqlite3", "value": "sqlite" },
+      { "dep": "mongodb_driver", "value": "mongo" },
+      { "dep": "redix", "value": "redis" }
+    ],
+    "backend.messageQueue": [
+      { "dep": "oban", "value": "oban" },
+      { "dep": "broadway", "value": "broadway" },
+      { "dep": "broadway_rabbitmq", "value": "rabbitmq" },
+      { "dep": "broadway_kafka", "value": "kafka" },
+      { "dep": "amqp", "value": "rabbitmq" },
+      { "dep": "gen_rmq", "value": "rabbitmq" }
+    ],
+    "backend.realtime": [
+      { "dep": "phoenix_live_view", "value": "liveview" },
+      { "dep": "phoenix_pubsub", "value": "pubsub" }
+    ],
+    "architecture.auth": [
+      { "dep": "guardian", "value": "jwt" },
+      { "dep": "pow", "value": "session" },
+      { "dep": "ueberauth", "value": "oauth" },
+      { "dep": "phx_gen_auth", "value": "session" },
+      { "dep": "joken", "value": "jwt" },
+      { "dep": "assent", "value": "oauth" }
+    ],
+    "backend.caching": [
+      { "dep": "cachex", "value": "cachex" },
+      { "dep": "nebulex", "value": "nebulex" },
+      { "dep": "con_cache", "value": "con_cache" },
+      { "dep": "redix", "value": "redis" }
+    ],
+    "backend.validation": [{ "dep": "ecto", "value": "ecto-changeset" }],
+    "architecture.apiStyle": [
+      { "dep": "absinthe", "value": "graphql" },
+      { "dep": "absinthe_plug", "value": "graphql" }
+    ],
+    "devops.testing": [
+      { "dep": "ex_unit", "value": "exunit" },
+      { "dep": "mox", "value": "exunit" },
+      { "dep": "ex_machina", "value": "exunit" },
+      { "dep": "wallaby", "value": "wallaby" },
+      { "dep": "bypass", "value": "exunit" },
+      { "dep": "floki", "value": "exunit" }
+    ],
+    "devops.quality": [
+      { "dep": "credo", "value": "credo" },
+      { "dep": "dialyxir", "value": "dialyzer" },
+      { "dep": "sobelow", "value": "sobelow" }
+    ]
+  },
+  "scala": {
+    "backend.framework": [
+      { "dep": "play", "value": "play" },
+      { "dep": "play-server", "value": "play" },
+      { "dep": "akka-http", "value": "akka-http" },
+      { "dep": "pekko-http", "value": "pekko-http" },
+      { "dep": "http4s-dsl", "value": "http4s" },
+      { "dep": "http4s-ember-server", "value": "http4s" },
+      { "dep": "http4s-blaze-server", "value": "http4s" },
+      { "dep": "zio-http", "value": "zio-http" },
+      { "dep": "tapir-core", "value": "tapir" },
+      { "dep": "finch-core", "value": "finch" },
+      { "dep": "cask", "value": "cask" }
+    ],
+    "backend.orm": [
+      { "dep": "slick", "value": "slick" },
+      { "dep": "doobie-core", "value": "doobie" },
+      { "dep": "quill", "value": "quill" },
+      { "dep": "skunk-core", "value": "skunk" },
+      { "dep": "scalikejdbc", "value": "scalikejdbc" }
+    ],
+    "backend.database": [
+      { "dep": "postgresql", "value": "postgres" },
+      { "dep": "mysql-connector-java", "value": "mysql" },
+      { "dep": "reactivemongo", "value": "mongo" },
+      { "dep": "redis4cats-effects", "value": "redis" },
+      { "dep": "jedis", "value": "redis" }
+    ],
+    "backend.messageQueue": [
+      { "dep": "akka-stream-kafka", "value": "kafka" },
+      { "dep": "pekko-connectors-kafka", "value": "kafka" },
+      { "dep": "fs2-kafka", "value": "kafka" },
+      { "dep": "fs2-rabbit", "value": "rabbitmq" },
+      { "dep": "zio-kafka", "value": "kafka" }
+    ],
+    "architecture.auth": [
+      { "dep": "pac4j-core", "value": "oauth" },
+      { "dep": "silhouette", "value": "session" },
+      { "dep": "jwt-core", "value": "jwt" },
+      { "dep": "tsec-jwt-mac", "value": "jwt" }
+    ],
+    "devops.testing": [
+      { "dep": "scalatest", "value": "scalatest" },
+      { "dep": "specs2-core", "value": "specs2" },
+      { "dep": "munit", "value": "munit" },
+      { "dep": "zio-test", "value": "zio-test" },
+      { "dep": "mockito-scala", "value": "scalatest" },
+      { "dep": "testcontainers-scala", "value": "scalatest" },
+      { "dep": "scalacheck", "value": "scalatest" }
+    ],
+    "devops.quality": [
+      { "dep": "wartremover", "value": "wartremover" },
+      { "dep": "scalafix", "value": "scalafix" },
+      { "dep": "scalafmt", "value": "scalafmt" }
+    ]
+  }
+}

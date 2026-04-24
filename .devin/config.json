@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "workflows": {
+      "command": "node",
+      "args": [".windsurf/tools/workflow-server.js"],
+      "description": "Exposes project workflows as MCP tools for automated execution"
+    }
+  }
+}
