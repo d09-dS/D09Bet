@@ -1,0 +1,20 @@
+{
+  "project": "basic_agents_skills_setup",
+  "scannedAt": "2026-04-17T09:06:18.949Z",
+  "score": 100,
+  "summary": {
+    "critical": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0
+  },
+  "findings": [],
+  "codePatterns": {
+    "summary": {
+      "nPlusOne": 0,
+      "fullImports": 0,
+      "missingLazy": 0,
+      "useClientOveruse": 0
+    }
+  }
+}

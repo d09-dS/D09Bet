@@ -1,0 +1,81 @@
+{
+  "projects": [
+    {
+      "project": "basic_agents_skills_setup",
+      "techStack": {
+        "languages": [],
+        "frameworks": [],
+        "packageManager": "unknown"
+      },
+      "sbomSummary": {
+        "directDependencies": 0,
+        "devDependencies": 0,
+        "totalDependencies": 0,
+        "ecosystems": [],
+        "lastGenerated": "2026-04-17T09:06:18.940Z"
+      },
+      "securitySummary": {
+        "critical": 0,
+        "high": 0,
+        "medium": 0,
+        "low": 0,
+        "total": 0,
+        "fixable": 0,
+        "lastScan": "2026-04-17T09:06:18.941Z"
+      },
+      "licenseSummary": {
+        "forbidden": 0,
+        "unknown": 0,
+        "needsReview": 0,
+        "policyStatus": "ok"
+      },
+      "codeQualitySummary": {
+        "score": 100,
+        "critical": 0,
+        "high": 0,
+        "medium": 0,
+        "low": 0,
+        "totalFiles": 0
+      },
+      "a11ySummary": {
+        "score": 100,
+        "critical": 0,
+        "high": 0,
+        "medium": 0,
+        "low": 0,
+        "wcagLevel": "AA"
+      },
+      "performanceSummary": {
+        "score": 100,
+        "critical": 0,
+        "high": 0,
+        "medium": 0,
+        "low": 0,
+        "bundleSizeKb": null
+      },
+      "seoSummary": {
+        "score": 38,
+        "critical": 2,
+        "high": 2,
+        "medium": 5,
+        "low": 1,
+        "hasStructuredData": false
+      },
+      "riskScore": 94,
+      "lastScan": "2026-04-17T09:06:18.956Z"
+    }
+  ],
+  "runs": [],
+  "globalStats": {
+    "totalProjects": 1,
+    "totalVulnerabilities": {
+      "critical": 0,
+      "high": 0,
+      "medium": 0,
+      "low": 0
+    },
+    "totalDependencies": 0,
+    "scanCoverage": 100,
+    "lastUpdated": "2026-04-17T09:06:18.956Z"
+  }
+}

@@ -1,0 +1,2703 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Windsurf Dashboard</title>
+    <style>
+      :root {
+        --bg: #0f1117;
+        --bg-card: #1a1d27;
+        --bg-card-hover: #222633;
+        --bg-input: #252936;
+        --border: #2d3348;
+        --text: #e4e7ef;
+        --text-muted: #8b8fa7;
+        --text-dim: #5d6177;
+        --accent: #6c8aff;
+        --accent-hover: #8aa3ff;
+        --critical: #ff4d6a;
+        --high: #ff8c42;
+        --medium: #ffc542;
+        --low: #54d9a8;
+        --ok: #4ade80;
+        --warning: #fbbf24;
+        --violation: #ef4444;
+        --permissive: #4ade80;
+        --weak-copyleft: #fbbf24;
+        --strong-copyleft: #ef4444;
+        --unknown-lic: #8b8fa7;
+        --radius: 8px;
+        --radius-lg: 12px;
+        --shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+      }
+      a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+      a:hover {
+        color: var(--accent-hover);
+      }
+
+      /* Layout */
+      .app {
+        display: flex;
+        min-height: 100vh;
+      }
+      .sidebar {
+        width: 220px;
+        background: var(--bg-card);
+        border-right: 1px solid var(--border);
+        padding: 20px 0;
+        flex-shrink: 0;
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        overflow-y: auto;
+        z-index: 100;
+      }
+      .main {
+        flex: 1;
+        margin-left: 220px;
+        padding: 24px 32px;
+      }
+
+      /* Sidebar */
+      .sidebar-header {
+        padding: 0 16px 20px;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 12px;
+      }
+      .sidebar-header h1 {
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--text);
+        letter-spacing: -0.3px;
+      }
+      .sidebar-header .subtitle {
+        font-size: 11px;
+        color: var(--text-muted);
+        margin-top: 2px;
+      }
+      .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 16px;
+        cursor: pointer;
+        font-size: 13px;
+        color: var(--text-muted);
+        transition: all 0.15s;
+        border-left: 3px solid transparent;
+      }
+      .nav-item:hover {
+        background: var(--bg-card-hover);
+        color: var(--text);
+      }
+      .nav-item.active {
+        color: var(--accent);
+        border-left-color: var(--accent);
+        background: rgba(108, 138, 255, 0.08);
+      }
+      .nav-item svg {
+        width: 16px;
+        height: 16px;
+        flex-shrink: 0;
+      }
+      .nav-section {
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--text-dim);
+        padding: 16px 16px 6px;
+      }
+      .sidebar-actions {
+        padding: 12px 16px;
+        border-top: 1px solid var(--border);
+        margin-top: auto;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: var(--bg-card);
+      }
+      .btn-scan {
+        width: 100%;
+        padding: 8px 12px;
+        background: var(--accent);
+        color: #fff;
+        border: none;
+        border-radius: var(--radius);
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.15s;
+      }
+      .btn-scan:hover {
+        background: var(--accent-hover);
+      }
+      .btn-scan:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+      .scan-status {
+        font-size: 10px;
+        color: var(--text-muted);
+        margin-top: 6px;
+        text-align: center;
+      }
+
+      /* Page header */
+      .page-header {
+        margin-bottom: 24px;
+      }
+      .page-header h2 {
+        font-size: 22px;
+        font-weight: 700;
+      }
+      .page-header .desc {
+        font-size: 13px;
+        color: var(--text-muted);
+        margin-top: 4px;
+      }
+
+      /* KPI Cards */
+      .kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 16px;
+        margin-bottom: 24px;
+      }
+      .kpi-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 16px 20px;
+      }
+      .kpi-label {
+        font-size: 11px;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 6px;
+      }
+      .kpi-value {
+        font-size: 28px;
+        font-weight: 700;
+        line-height: 1.1;
+      }
+      .kpi-sub {
+        font-size: 11px;
+        color: var(--text-dim);
+        margin-top: 4px;
+      }
+      .kpi-value.critical {
+        color: var(--critical);
+      }
+      .kpi-value.ok {
+        color: var(--ok);
+      }
+      .kpi-value.warning {
+        color: var(--warning);
+      }
+
+      /* Severity badge inline */
+      .sev {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 11px;
+        font-weight: 600;
+        padding: 2px 8px;
+        border-radius: 10px;
+      }
+      .sev.critical {
+        background: rgba(255, 77, 106, 0.15);
+        color: var(--critical);
+      }
+      .sev.high {
+        background: rgba(255, 140, 66, 0.15);
+        color: var(--high);
+      }
+      .sev.medium {
+        background: rgba(255, 197, 66, 0.15);
+        color: var(--medium);
+      }
+      .sev.low {
+        background: rgba(84, 217, 168, 0.15);
+        color: var(--low);
+      }
+
+      /* Ampel */
+      .ampel {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+      }
+      .ampel.green {
+        background: var(--ok);
+      }
+      .ampel.yellow {
+        background: var(--warning);
+      }
+      .ampel.red {
+        background: var(--violation);
+      }
+
+      /* Tables */
+      .table-wrap {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        margin-bottom: 24px;
+      }
+      .table-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--border);
+      }
+      .table-header h3 {
+        font-size: 14px;
+        font-weight: 600;
+      }
+      .table-filter {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+      .table-filter select,
+      .table-filter input {
+        background: var(--bg-input);
+        border: 1px solid var(--border);
+        color: var(--text);
+        padding: 4px 8px;
+        border-radius: var(--radius);
+        font-size: 12px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+      }
+      th {
+        text-align: left;
+        padding: 8px 16px;
+        color: var(--text-muted);
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 600;
+        border-bottom: 1px solid var(--border);
+        background: var(--bg-card);
+        position: sticky;
+        top: 0;
+      }
+      td {
+        padding: 10px 16px;
+        border-bottom: 1px solid var(--border);
+      }
+      tr:hover td {
+        background: var(--bg-card-hover);
+      }
+      .table-scrollable {
+        max-height: 500px;
+        overflow-y: auto;
+      }
+
+      /* Tabs */
+      .tabs {
+        display: flex;
+        gap: 0;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 24px;
+      }
+      .tab {
+        padding: 10px 20px;
+        font-size: 13px;
+        color: var(--text-muted);
+        cursor: pointer;
+        border-bottom: 2px solid transparent;
+        transition: all 0.15s;
+      }
+      .tab:hover {
+        color: var(--text);
+      }
+      .tab.active {
+        color: var(--accent);
+        border-bottom-color: var(--accent);
+      }
+      .tab-content {
+        display: none;
+      }
+      .tab-content.active {
+        display: block;
+      }
+
+      /* Charts */
+      .chart-container {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 16px;
+        margin-bottom: 24px;
+      }
+      .chart-title {
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 12px;
+      }
+      canvas {
+        display: block;
+      }
+
+      /* Risk score */
+      .risk-score {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        font-size: 16px;
+        font-weight: 700;
+        border: 3px solid;
+      }
+      .risk-score.good {
+        border-color: var(--ok);
+        color: var(--ok);
+      }
+      .risk-score.moderate {
+        border-color: var(--warning);
+        color: var(--warning);
+      }
+      .risk-score.bad {
+        border-color: var(--violation);
+        color: var(--violation);
+      }
+
+      /* Tech badges */
+      .badge {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 10px;
+        font-size: 11px;
+        font-weight: 500;
+        background: rgba(108, 138, 255, 0.12);
+        color: var(--accent);
+        margin: 2px 2px;
+      }
+
+      /* Widget grid */
+      .widget-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 16px;
+        margin-bottom: 24px;
+      }
+
+      /* Project cards */
+      .project-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 16px;
+        cursor: pointer;
+        transition: all 0.15s;
+      }
+      .project-card:hover {
+        border-color: var(--accent);
+        background: var(--bg-card-hover);
+      }
+      .project-card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 10px;
+      }
+      .project-card-name {
+        font-size: 15px;
+        font-weight: 600;
+      }
+      .project-card-row {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+        font-size: 12px;
+        color: var(--text-muted);
+        margin-top: 8px;
+      }
+
+      /* Timeline */
+      .timeline-item {
+        display: flex;
+        gap: 16px;
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--border);
+        font-size: 13px;
+        cursor: pointer;
+        transition: background 0.15s;
+      }
+      .timeline-item:hover {
+        background: var(--bg-card-hover);
+      }
+      .timeline-score {
+        font-size: 18px;
+        font-weight: 700;
+        min-width: 40px;
+        text-align: center;
+      }
+      .timeline-meta {
+        flex: 1;
+      }
+      .timeline-workflow {
+        font-weight: 600;
+      }
+      .timeline-time {
+        font-size: 11px;
+        color: var(--text-dim);
+      }
+      .timeline-summary {
+        font-size: 12px;
+        color: var(--text-muted);
+        margin-top: 2px;
+      }
+
+      /* Export btn */
+      .btn {
+        padding: 6px 14px;
+        border-radius: var(--radius);
+        font-size: 12px;
+        font-weight: 500;
+        cursor: pointer;
+        border: 1px solid var(--border);
+        background: var(--bg-input);
+        color: var(--text);
+        transition: all 0.15s;
+      }
+      .btn:hover {
+        border-color: var(--accent);
+      }
+
+      /* Loading */
+      .loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 60px;
+        color: var(--text-muted);
+        font-size: 14px;
+      }
+      .spinner {
+        width: 20px;
+        height: 20px;
+        border: 2px solid var(--border);
+        border-top-color: var(--accent);
+        border-radius: 50%;
+        animation: spin 0.6s linear infinite;
+        margin-right: 10px;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Empty state */
+      .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: var(--text-muted);
+      }
+      .empty-state h3 {
+        font-size: 16px;
+        color: var(--text);
+        margin-bottom: 8px;
+      }
+      .empty-state p {
+        font-size: 13px;
+      }
+
+      /* Skip Navigation */
+      .skip-link {
+        position: absolute;
+        top: -100px;
+        left: 16px;
+        background: var(--accent);
+        color: #fff;
+        padding: 8px 16px;
+        border-radius: var(--radius);
+        font-size: 13px;
+        font-weight: 600;
+        z-index: 200;
+        transition: top 0.2s;
+      }
+      .skip-link:focus {
+        top: 8px;
+      }
+
+      /* Screen-reader only utility */
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+
+      /* Reset button styles for nav-item and tab */
+      button.nav-item,
+      button.tab {
+        background: none;
+        border: none;
+        font-family: inherit;
+        text-align: left;
+        width: 100%;
+      }
+      button.tab {
+        width: auto;
+      }
+
+      /* Responsive */
+      @media (max-width: 900px) {
+        .sidebar {
+          width: 60px;
+        }
+        .sidebar .nav-item span,
+        .sidebar-header .subtitle,
+        .nav-section {
+          display: none;
+        }
+        .sidebar-header h1 {
+          font-size: 12px;
+          text-align: center;
+        }
+        .main {
+          margin-left: 60px;
+          padding: 16px;
+        }
+      }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+  </head>
+  <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <div class="app">
+      <!-- Sidebar -->
+      <nav class="sidebar" aria-label="Main navigation">
+        <div class="sidebar-header">
+          <h1>Windsurf Dashboard</h1>
+          <div class="subtitle">Agent Skills Monitor</div>
+        </div>
+        <div class="nav-section">Views</div>
+        <button
+          class="nav-item active"
+          type="button"
+          data-view="portfolio"
+          onclick="switchView('portfolio')"
+          aria-current="true"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            aria-hidden="true"
+          >
+            <rect x="3" y="3" width="7" height="7" rx="1" />
+            <rect x="14" y="3" width="7" height="7" rx="1" />
+            <rect x="3" y="14" width="7" height="7" rx="1" />
+            <rect x="14" y="14" width="7" height="7" rx="1" />
+          </svg>
+          <span>Portfolio</span>
+        </button>
+        <button
+          class="nav-item"
+          type="button"
+          data-view="project"
+          onclick="switchView('project')"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            aria-hidden="true"
+          >
+            <path
+              d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"
+            />
+            <polyline points="13 2 13 9 20 9" />
+          </svg>
+          <span>Project Detail</span>
+        </button>
+        <button
+          class="nav-item"
+          type="button"
+          data-view="security"
+          onclick="switchView('security')"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            aria-hidden="true"
+          >
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          </svg>
+          <span>Security</span>
+        </button>
+        <button
+          class="nav-item"
+          type="button"
+          data-view="licenses"
+          onclick="switchView('licenses')"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            aria-hidden="true"
+          >
+            <path
+              d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+            />
+            <path d="M14 2v6h6" />
+            <path d="M9 15h6" />
+            <path d="M9 11h6" />
+          </svg>
+          <span>Licenses</span>
+        </button>
+        <button
+          class="nav-item"
+          type="button"
+          data-view="architecture"
+          onclick="switchView('architecture')"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            aria-hidden="true"
+          >
+            <rect x="4" y="12" width="4" height="8" rx="1" />
+            <rect x="10" y="8" width="4" height="12" rx="1" />
+            <rect x="16" y="4" width="4" height="16" rx="1" />
+          </svg>
+          <span>Architecture</span>
+        </button>
+        <div class="nav-section">Analysis</div>
+        <button
+          class="nav-item"
+          type="button"
+          data-view="codequality"
+          onclick="switchView('codequality')"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            aria-hidden="true"
+          >
+            <polyline points="16 18 22 12 16 6" />
+            <polyline points="8 6 2 12 8 18" />
+          </svg>
+          <span>Code Quality</span>
+        </button>
+        <button
+          class="nav-item"
+          type="button"
+          data-view="a11y"
+          onclick="switchView('a11y')"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            aria-hidden="true"
+          >
+            <circle cx="12" cy="4" r="2" />
+            <path d="M12 6v6" />
+            <path d="M6 10l6 2 6-2" />
+            <path d="M8 22l4-8 4 8" />
+          </svg>
+          <span>Accessibility</span>
+        </button>
+        <button
+          class="nav-item"
+          type="button"
+          data-view="performance"
+          onclick="switchView('performance')"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            aria-hidden="true"
+          >
+            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+          </svg>
+          <span>Performance</span>
+        </button>
+        <button
+          class="nav-item"
+          type="button"
+          data-view="seo"
+          onclick="switchView('seo')"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            aria-hidden="true"
+          >
+            <circle cx="11" cy="11" r="8" />
+            <path d="M21 21l-4.35-4.35" />
+          </svg>
+          <span>SEO</span>
+        </button>
+        <div class="nav-section">Automation</div>
+        <button
+          class="nav-item"
+          type="button"
+          data-view="workflows"
+          onclick="switchView('workflows')"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            aria-hidden="true"
+          >
+            <polyline points="16 3 21 3 21 8" />
+            <line x1="4" y1="20" x2="21" y2="3" />
+            <polyline points="21 16 21 21 16 21" />
+            <line x1="15" y1="15" x2="21" y2="21" />
+            <line x1="4" y1="4" x2="9" y2="9" />
+          </svg>
+          <span>Workflows</span>
+        </button>
+        <div class="nav-section">History</div>
+        <button
+          class="nav-item"
+          type="button"
+          data-view="history"
+          onclick="switchView('history')"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            aria-hidden="true"
+          >
+            <circle cx="12" cy="12" r="10" />
+            <polyline points="12 6 12 12 16 14" />
+          </svg>
+          <span>Workflow Runs</span>
+        </button>
+        <div class="sidebar-actions">
+          <button class="btn-scan" id="btnFullScan" onclick="runFullScan()">
+            Reload Data
+          </button>
+          <div class="scan-status" id="scanStatus"></div>
+        </div>
+      </nav>
+
+      <!-- Main Content -->
+      <main class="main" id="main-content">
+        <!-- Portfolio View -->
+        <div id="view-portfolio" class="view active">
+          <div class="page-header">
+            <h2>Portfolio Overview</h2>
+            <div class="desc">
+              Global KPIs and project health across all monitored projects
+            </div>
+          </div>
+          <div class="kpi-grid" id="globalKpis"></div>
+          <div class="table-wrap">
+            <div class="table-header">
+              <h3>Projects</h3>
+              <div class="table-filter">
+                <label for="filterSeverity" class="sr-only">Filter by severity</label>
+                <select id="filterSeverity" onchange="renderPortfolio()">
+                  <option value="">All Severities</option>
+                  <option value="critical">Has Critical</option>
+                  <option value="high">Has High+</option>
+                </select>
+                <label for="sortBy" class="sr-only">Sort projects by</label>
+                <select id="sortBy" onchange="renderPortfolio()">
+                  <option value="risk">Sort: Risk Score</option>
+                  <option value="scan">Sort: Last Scan</option>
+                  <option value="name">Sort: Name</option>
+                </select>
+              </div>
+            </div>
+            <div class="table-scrollable">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Project</th>
+                    <th>Tech Stack</th>
+                    <th>Dependencies</th>
+                    <th>Security</th>
+                    <th>Licenses</th>
+                    <th>Risk Score</th>
+                    <th>Last Scan</th>
+                  </tr>
+                </thead>
+                <tbody id="projectTable"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project Detail View -->
+        <div id="view-project" class="view" style="display: none">
+          <div class="page-header">
+            <h2 id="projectDetailName">Project Detail</h2>
+            <div class="desc" id="projectDetailDesc"></div>
+          </div>
+          <div class="tabs" role="tablist" aria-label="Project detail sections">
+            <button
+              class="tab active"
+              type="button"
+              role="tab"
+              aria-selected="true"
+              aria-controls="tab-overview"
+              data-tab="overview"
+              onclick="switchTab('overview')"
+            >
+              Overview
+            </button>
+            <button
+              class="tab"
+              type="button"
+              role="tab"
+              aria-selected="false"
+              aria-controls="tab-sbom"
+              data-tab="sbom"
+              onclick="switchTab('sbom')"
+            >
+              SBOM
+            </button>
+            <button
+              class="tab"
+              type="button"
+              role="tab"
+              aria-selected="false"
+              aria-controls="tab-sec"
+              data-tab="sec"
+              onclick="switchTab('sec')"
+            >
+              Security
+            </button>
+            <button
+              class="tab"
+              type="button"
+              role="tab"
+              aria-selected="false"
+              aria-controls="tab-lic"
+              data-tab="lic"
+              onclick="switchTab('lic')"
+            >
+              Licenses
+            </button>
+            <button
+              class="tab"
+              type="button"
+              role="tab"
+              aria-selected="false"
+              aria-controls="tab-cq"
+              data-tab="cq"
+              onclick="switchTab('cq')"
+            >
+              Code Quality
+            </button>
+            <button
+              class="tab"
+              type="button"
+              role="tab"
+              aria-selected="false"
+              aria-controls="tab-a11y"
+              data-tab="a11y"
+              onclick="switchTab('a11y')"
+            >
+              Accessibility
+            </button>
+            <button
+              class="tab"
+              type="button"
+              role="tab"
+              aria-selected="false"
+              aria-controls="tab-perf"
+              data-tab="perf"
+              onclick="switchTab('perf')"
+            >
+              Performance
+            </button>
+            <button
+              class="tab"
+              type="button"
+              role="tab"
+              aria-selected="false"
+              aria-controls="tab-seo"
+              data-tab="seo"
+              onclick="switchTab('seo')"
+            >
+              SEO
+            </button>
+            <button
+              class="tab"
+              type="button"
+              role="tab"
+              aria-selected="false"
+              aria-controls="tab-runs"
+              data-tab="runs"
+              onclick="switchTab('runs')"
+            >
+              History
+            </button>
+          </div>
+
+          <!-- Overview Tab -->
+          <div class="tab-content active" id="tab-overview" role="tabpanel" aria-labelledby="tab-overview">
+            <div class="kpi-grid" id="projectKpis"></div>
+            <div class="widget-grid">
+              <div class="chart-container">
+                <div class="chart-title">Security Findings</div>
+                <canvas
+                  id="chartSecurityDonut"
+                  width="280"
+                  height="200"
+                ></canvas>
+              </div>
+              <div class="chart-container">
+                <div class="chart-title">License Distribution</div>
+                <canvas id="chartLicensePie" width="280" height="200"></canvas>
+              </div>
+            </div>
+            <div class="chart-container">
+              <div class="chart-title">Score Trend</div>
+              <canvas id="chartScoreTrend" width="800" height="200"></canvas>
+            </div>
+          </div>
+
+          <!-- SBOM Tab -->
+          <div class="tab-content" id="tab-sbom" role="tabpanel">
+            <div class="table-wrap">
+              <div class="table-header">
+                <h3>Software Bill of Materials</h3>
+                <div class="table-filter">
+                  <label for="sbomFilterCategory" class="sr-only">Filter by category</label>
+                  <select id="sbomFilterCategory" onchange="renderSbom()">
+                    <option value="">All Categories</option>
+                  </select>
+                  <label for="sbomFilterDirect" class="sr-only">Filter by type</label>
+                  <select id="sbomFilterDirect" onchange="renderSbom()">
+                    <option value="">All</option>
+                    <option value="direct">Direct Only</option>
+                    <option value="dev">Dev Only</option>
+                  </select>
+                  <button class="btn" onclick="exportSbom()">
+                    Export JSON
+                  </button>
+                </div>
+              </div>
+              <div class="table-scrollable">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Package</th>
+                      <th>Version</th>
+                      <th>Ecosystem</th>
+                      <th>Category</th>
+                      <th>License</th>
+                      <th>Risk</th>
+                      <th>Type</th>
+                    </tr>
+                  </thead>
+                  <tbody id="sbomTable"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Security Tab -->
+          <div class="tab-content" id="tab-sec" role="tabpanel">
+            <div class="kpi-grid" id="secKpis"></div>
+            <div class="table-wrap">
+              <div class="table-header">
+                <h3>Vulnerabilities</h3>
+                <div class="table-filter">
+                  <label for="secFilterSeverity" class="sr-only">Filter by severity</label>
+                  <select id="secFilterSeverity" onchange="renderSecurityTab()">
+                    <option value="">All Severities</option>
+                    <option value="critical">Critical</option>
+                    <option value="high">High</option>
+                    <option value="medium">Medium</option>
+                    <option value="low">Low</option>
+                  </select>
+                </div>
+              </div>
+              <div class="table-scrollable">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Package</th>
+                      <th>Installed</th>
+                      <th>Fixed In</th>
+                      <th>Severity</th>
+                      <th>Type</th>
+                      <th>CVE / Advisory</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody id="secTable"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Licenses Tab -->
+          <div class="tab-content" id="tab-lic" role="tabpanel">
+            <div class="kpi-grid" id="licKpis"></div>
+            <div class="table-wrap">
+              <div class="table-header">
+                <h3>License Evaluation</h3>
+                <div class="table-filter">
+                  <label for="licFilter" class="sr-only">Filter licenses</label>
+                  <select id="licFilter" onchange="renderLicenseTab()">
+                    <option value="">All</option>
+                    <option value="forbidden">Forbidden</option>
+                    <option value="needs-review">Needs Review</option>
+                    <option value="unknown">Unknown</option>
+                  </select>
+                </div>
+              </div>
+              <div class="table-scrollable">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Package</th>
+                      <th>Version</th>
+                      <th>License</th>
+                      <th>Ecosystem</th>
+                      <th>Policy</th>
+                    </tr>
+                  </thead>
+                  <tbody id="licTable"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Workflow History Tab -->
+          <div class="tab-content" id="tab-runs" role="tabpanel">
+            <div class="chart-container">
+              <div class="chart-title">Score Over Time</div>
+              <canvas id="chartRunsTrend" width="800" height="200"></canvas>
+            </div>
+            <div class="table-wrap">
+              <div class="table-header"><h3>Workflow Runs</h3></div>
+              <div id="runsTimeline"></div>
+            </div>
+          </div>
+
+          <!-- Code Quality Tab -->
+          <div class="tab-content" id="tab-cq" role="tabpanel">
+            <div class="kpi-grid" id="cqKpis"></div>
+            <div class="widget-grid">
+              <div class="chart-container">
+                <div class="chart-title">Findings by Severity</div>
+                <canvas id="chartCqDonut" width="280" height="200"></canvas>
+              </div>
+              <div class="chart-container">
+                <div class="chart-title">Metrics</div>
+                <div id="cqMetrics" style="padding:8px;font-size:13px;color:var(--text-muted)">No data</div>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <div class="table-header"><h3>Code Quality Findings</h3></div>
+              <div class="table-scrollable">
+                <table>
+                  <thead>
+                    <tr><th>File</th><th>Line</th><th>Category</th><th>Severity</th><th>Description</th></tr>
+                  </thead>
+                  <tbody id="cqTable"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Accessibility Tab -->
+          <div class="tab-content" id="tab-a11y" role="tabpanel">
+            <div class="kpi-grid" id="a11yTabKpis"></div>
+            <div class="widget-grid">
+              <div class="chart-container">
+                <div class="chart-title">Findings by Severity</div>
+                <canvas id="chartA11yDonut" width="280" height="200"></canvas>
+              </div>
+              <div class="chart-container">
+                <div class="chart-title">Category Breakdown</div>
+                <div id="a11yCategories" style="padding:8px;font-size:13px;color:var(--text-muted)">No data</div>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <div class="table-header"><h3>Accessibility Findings</h3></div>
+              <div class="table-scrollable">
+                <table>
+                  <thead>
+                    <tr><th>File</th><th>Line</th><th>Rule</th><th>WCAG</th><th>Severity</th><th>Description</th></tr>
+                  </thead>
+                  <tbody id="a11yTabTable"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Performance Tab -->
+          <div class="tab-content" id="tab-perf" role="tabpanel">
+            <div class="kpi-grid" id="perfTabKpis"></div>
+            <div class="widget-grid">
+              <div class="chart-container">
+                <div class="chart-title">Findings by Severity</div>
+                <canvas id="chartPerfDonut" width="280" height="200"></canvas>
+              </div>
+              <div class="chart-container">
+                <div class="chart-title">Pattern Analysis</div>
+                <div id="perfPatterns" style="padding:8px;font-size:13px;color:var(--text-muted)">No data</div>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <div class="table-header"><h3>Performance Findings</h3></div>
+              <div class="table-scrollable">
+                <table>
+                  <thead>
+                    <tr><th>File</th><th>Line</th><th>Category</th><th>Severity</th><th>Description</th></tr>
+                  </thead>
+                  <tbody id="perfTabTable"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEO Tab -->
+          <div class="tab-content" id="tab-seo" role="tabpanel">
+            <div class="kpi-grid" id="seoTabKpis"></div>
+            <div class="widget-grid">
+              <div class="chart-container">
+                <div class="chart-title">SEO Checks</div>
+                <canvas id="chartSeoDonut" width="280" height="200"></canvas>
+              </div>
+              <div class="chart-container">
+                <div class="chart-title">Checklist</div>
+                <div id="seoChecklist" style="padding:8px;font-size:13px;color:var(--text-muted)">No data</div>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <div class="table-header"><h3>SEO Findings</h3></div>
+              <div class="table-scrollable">
+                <table>
+                  <thead>
+                    <tr><th>Category</th><th>Check</th><th>Severity</th><th>File</th><th>Description</th></tr>
+                  </thead>
+                  <tbody id="seoTabTable"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Security Global View -->
+        <div id="view-security" class="view" style="display: none">
+          <div class="page-header">
+            <h2>Security Overview</h2>
+            <div class="desc">Vulnerability landscape across all projects</div>
+          </div>
+          <div class="kpi-grid" id="globalSecKpis"></div>
+          <div class="widget-grid">
+            <div class="chart-container">
+              <div class="chart-title">
+                Severity Distribution (all projects)
+              </div>
+              <canvas id="chartGlobalSev" width="280" height="200"></canvas>
+            </div>
+            <div class="table-wrap" style="margin-bottom: 0">
+              <div class="table-header"><h3>Top Risk Projects</h3></div>
+              <div class="table-scrollable">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Project</th>
+                      <th>Critical</th>
+                      <th>High</th>
+                      <th>Medium</th>
+                      <th>Low</th>
+                      <th>Risk Score</th>
+                    </tr>
+                  </thead>
+                  <tbody id="globalSecTable"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Licenses Global View -->
+        <div id="view-licenses" class="view" style="display: none">
+          <div class="page-header">
+            <h2>License Overview</h2>
+            <div class="desc">License compliance across all projects</div>
+          </div>
+          <div class="kpi-grid" id="globalLicKpis"></div>
+          <div class="widget-grid">
+            <div class="chart-container">
+              <div class="chart-title">License Portfolio</div>
+              <canvas id="chartGlobalLic" width="280" height="200"></canvas>
+            </div>
+            <div class="table-wrap" style="margin-bottom: 0">
+              <div class="table-header">
+                <h3>Projects with License Risk</h3>
+              </div>
+              <div class="table-scrollable">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Project</th>
+                      <th>Forbidden</th>
+                      <th>Unknown</th>
+                      <th>Needs Review</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="globalLicTable"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Architecture View -->
+        <div id="view-architecture" class="view" style="display: none">
+          <div class="page-header">
+            <h2>Architecture</h2>
+            <div class="desc" id="archDesc">
+              Architecture diagrams from the last review
+            </div>
+          </div>
+          <div class="kpi-grid" id="archKpis"></div>
+          <div id="archDiagrams"></div>
+          <div class="empty-state" id="archEmpty" style="display: none">
+            <h3>No Architecture Data</h3>
+            <p>
+              Run <code>/architecture-review</code> to generate architecture
+              diagrams.
+            </p>
+          </div>
+        </div>
+
+        <!-- Code Quality Global View -->
+        <div id="view-codequality" class="view" style="display: none">
+          <div class="page-header">
+            <h2>Code Quality</h2>
+            <div class="desc">Code health metrics across all projects</div>
+          </div>
+          <div class="kpi-grid" id="globalCqKpis"></div>
+          <div class="widget-grid">
+            <div class="chart-container">
+              <div class="chart-title">Findings by Severity (all projects)</div>
+              <canvas id="chartGlobalCq" width="280" height="200"></canvas>
+            </div>
+            <div class="table-wrap" style="margin-bottom: 0">
+              <div class="table-header"><h3>Projects by Code Quality</h3></div>
+              <div class="table-scrollable">
+                <table>
+                  <thead>
+                    <tr><th>Project</th><th>Score</th><th>Critical</th><th>High</th><th>Medium</th><th>Files</th></tr>
+                  </thead>
+                  <tbody id="globalCqTable"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Accessibility Global View -->
+        <div id="view-a11y" class="view" style="display: none">
+          <div class="page-header">
+            <h2>Accessibility</h2>
+            <div class="desc">WCAG compliance across all projects</div>
+          </div>
+          <div class="kpi-grid" id="globalA11yKpis"></div>
+          <div class="widget-grid">
+            <div class="chart-container">
+              <div class="chart-title">Findings by Severity (all projects)</div>
+              <canvas id="chartGlobalA11y" width="280" height="200"></canvas>
+            </div>
+            <div class="table-wrap" style="margin-bottom: 0">
+              <div class="table-header"><h3>Projects by Accessibility</h3></div>
+              <div class="table-scrollable">
+                <table>
+                  <thead>
+                    <tr><th>Project</th><th>Score</th><th>Critical</th><th>High</th><th>Medium</th><th>WCAG Level</th></tr>
+                  </thead>
+                  <tbody id="globalA11yTable"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Performance Global View -->
+        <div id="view-performance" class="view" style="display: none">
+          <div class="page-header">
+            <h2>Performance</h2>
+            <div class="desc">Performance analysis across all projects</div>
+          </div>
+          <div class="kpi-grid" id="globalPerfKpis"></div>
+          <div class="widget-grid">
+            <div class="chart-container">
+              <div class="chart-title">Findings by Severity (all projects)</div>
+              <canvas id="chartGlobalPerf" width="280" height="200"></canvas>
+            </div>
+            <div class="table-wrap" style="margin-bottom: 0">
+              <div class="table-header"><h3>Projects by Performance</h3></div>
+              <div class="table-scrollable">
+                <table>
+                  <thead>
+                    <tr><th>Project</th><th>Score</th><th>Critical</th><th>High</th><th>Medium</th><th>Bundle Size</th></tr>
+                  </thead>
+                  <tbody id="globalPerfTable"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SEO Global View -->
+        <div id="view-seo" class="view" style="display: none">
+          <div class="page-header">
+            <h2>SEO</h2>
+            <div class="desc">Search engine optimization across all projects</div>
+          </div>
+          <div class="kpi-grid" id="globalSeoKpis"></div>
+          <div class="widget-grid">
+            <div class="chart-container">
+              <div class="chart-title">Findings by Severity (all projects)</div>
+              <canvas id="chartGlobalSeo" width="280" height="200"></canvas>
+            </div>
+            <div class="table-wrap" style="margin-bottom: 0">
+              <div class="table-header"><h3>Projects by SEO Score</h3></div>
+              <div class="table-scrollable">
+                <table>
+                  <thead>
+                    <tr><th>Project</th><th>Score</th><th>Critical</th><th>High</th><th>Meta Tags</th><th>Structured Data</th></tr>
+                  </thead>
+                  <tbody id="globalSeoTable"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- History View -->
+        <div id="view-workflows" class="view" style="display: none">
+          <div class="page-header">
+            <h2>Workflows</h2>
+            <div class="desc">Available workflows and their Devin/Windsurf integration status</div>
+          </div>
+          <div id="workflowsList" class="table-wrap">
+            <p style="color: var(--muted); padding: 16px;">Loading workflows...</p>
+          </div>
+        </div>
+
+        <div id="view-history" class="view" style="display: none">
+          <div class="page-header">
+            <h2>Workflow Runs</h2>
+            <div class="desc">History of all workflow executions</div>
+          </div>
+          <div class="chart-container">
+            <div class="chart-title">Score Trend (all workflows)</div>
+            <canvas id="chartAllRunsTrend" width="800" height="200"></canvas>
+          </div>
+          <div class="table-wrap">
+            <div class="table-header">
+              <h3>All Runs</h3>
+              <div class="table-filter">
+                <label for="historyFilterWorkflow" class="sr-only">Filter by workflow</label>
+                <select id="historyFilterWorkflow" onchange="renderHistory()">
+                  <option value="">All Workflows</option>
+                </select>
+              </div>
+            </div>
+            <div id="allRunsTimeline"></div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      // ---------------------------------------------------------------------------
+      // State
+      // ---------------------------------------------------------------------------
+      const API = "http://localhost:3847";
+      let dashboardData = { projects: [], runs: [], globalStats: {} };
+      let sbomData = null;
+      let securityData = null;
+      let licenseData = null;
+      let selectedProject = null;
+      let architectureData = null;
+      let codeQualityData = null;
+      let a11yData = null;
+      let performanceData = null;
+      let seoData = null;
+
+      // ---------------------------------------------------------------------------
+      // Data Loading
+      // ---------------------------------------------------------------------------
+      async function fetchJSON(endpoint) {
+        try {
+          const res = await fetch(API + endpoint);
+          if (!res.ok) return null;
+          return await res.json();
+        } catch {
+          return null;
+        }
+      }
+
+      async function loadDashboard() {
+        dashboardData = (await fetchJSON("/dashboard-data")) || {
+          projects: [],
+          runs: [],
+          globalStats: {},
+        };
+        renderPortfolio();
+        renderGlobalSecurity();
+        renderGlobalLicenses();
+        renderHistory();
+        if (dashboardData.projects.length > 0 && !selectedProject) {
+          selectedProject = dashboardData.projects[0].project;
+        }
+      }
+
+      async function loadProjectDetail(projectName) {
+        selectedProject = projectName;
+        [sbomData, securityData, licenseData, codeQualityData, a11yData, performanceData, seoData] = await Promise.all([
+          fetchJSON("/sbom-data"),
+          fetchJSON("/security-data"),
+          fetchJSON("/license-data"),
+          fetchJSON("/code-quality-data"),
+          fetchJSON("/a11y-data"),
+          fetchJSON("/performance-data"),
+          fetchJSON("/seo-data"),
+        ]);
+        renderProjectDetail();
+        switchView("project");
+      }
+
+      async function runFullScan() {
+        const btn = document.getElementById("btnFullScan");
+        const status = document.getElementById("scanStatus");
+        btn.disabled = true;
+        status.textContent = "Loading...";
+        try {
+          const result = await fetchJSON("/dashboard-full-scan");
+          if (result && result.success) {
+            status.textContent = "Data loaded! Refreshing...";
+            await loadDashboard();
+            if (selectedProject) await loadProjectDetail(selectedProject);
+            status.textContent =
+              "Last update: " + new Date().toLocaleTimeString();
+          } else {
+            status.textContent =
+              "Failed: " + (result ? result.error : "Server unavailable");
+          }
+        } catch (err) {
+          status.textContent = "Error: " + err.message;
+        }
+        btn.disabled = false;
+      }
+
+      // ---------------------------------------------------------------------------
+      // View Switching
+      // ---------------------------------------------------------------------------
+      function switchView(view) {
+        document
+          .querySelectorAll(".view")
+          .forEach((v) => (v.style.display = "none"));
+        document
+          .querySelectorAll(".nav-item")
+          .forEach((n) => {
+            n.classList.remove("active");
+            n.removeAttribute("aria-current");
+          });
+        const el = document.getElementById("view-" + view);
+        if (el) el.style.display = "block";
+        const nav = document.querySelector(`.nav-item[data-view="${view}"]`);
+        if (nav) {
+          nav.classList.add("active");
+          nav.setAttribute("aria-current", "true");
+        }
+        if (view === "project" && selectedProject) renderProjectDetail();
+        if (view === "architecture") renderArchitecture();
+        if (view === "codequality") renderGlobalCodeQuality();
+        if (view === "a11y") renderGlobalA11y();
+        if (view === "performance") renderGlobalPerformance();
+        if (view === "seo") renderGlobalSeo();
+        if (view === "workflows") loadWorkflows();
+      }
+
+      function switchTab(tab) {
+        document
+          .querySelectorAll(".tab")
+          .forEach((t) => {
+            t.classList.remove("active");
+            t.setAttribute("aria-selected", "false");
+          });
+        document
+          .querySelectorAll(".tab-content")
+          .forEach((c) => c.classList.remove("active"));
+        const tabBtn = document.querySelector(`.tab[data-tab="${tab}"]`);
+        if (tabBtn) {
+          tabBtn.classList.add("active");
+          tabBtn.setAttribute("aria-selected", "true");
+        }
+        document.getElementById("tab-" + tab).classList.add("active");
+      }
+
+      // ---------------------------------------------------------------------------
+      // Portfolio Rendering
+      // ---------------------------------------------------------------------------
+      function renderPortfolio() {
+        const gs = dashboardData.globalStats || {};
+        const vulns = gs.totalVulnerabilities || {};
+        const totalVuln =
+          (vulns.critical || 0) +
+          (vulns.high || 0) +
+          (vulns.medium || 0) +
+          (vulns.low || 0);
+
+        document.getElementById("globalKpis").innerHTML = `
+    <div class="kpi-card"><div class="kpi-label">Projects</div><div class="kpi-value">${gs.totalProjects || 0}</div></div>
+    <div class="kpi-card"><div class="kpi-label">Total Vulnerabilities</div><div class="kpi-value ${totalVuln > 0 ? "critical" : "ok"}">${totalVuln}</div>
+      <div class="kpi-sub"><span class="sev critical">C:${vulns.critical || 0}</span> <span class="sev high">H:${vulns.high || 0}</span> <span class="sev medium">M:${vulns.medium || 0}</span> <span class="sev low">L:${vulns.low || 0}</span></div></div>
+    <div class="kpi-card"><div class="kpi-label">Dependencies</div><div class="kpi-value">${gs.totalDependencies || 0}</div></div>
+    <div class="kpi-card"><div class="kpi-label">Scan Coverage (7d)</div><div class="kpi-value ${(gs.scanCoverage || 0) >= 80 ? "ok" : "warning"}">${gs.scanCoverage || 0}%</div></div>
+  `;
+
+        let projects = [...(dashboardData.projects || [])];
+        const sevFilter = document.getElementById("filterSeverity").value;
+        if (sevFilter === "critical")
+          projects = projects.filter(
+            (p) => (p.securitySummary?.critical || 0) > 0,
+          );
+        else if (sevFilter === "high")
+          projects = projects.filter(
+            (p) =>
+              (p.securitySummary?.critical || 0) +
+                (p.securitySummary?.high || 0) >
+              0,
+          );
+
+        const sortBy = document.getElementById("sortBy").value;
+        if (sortBy === "risk")
+          projects.sort((a, b) => (a.riskScore || 0) - (b.riskScore || 0));
+        else if (sortBy === "scan")
+          projects.sort(
+            (a, b) => new Date(a.lastScan || 0) - new Date(b.lastScan || 0),
+          );
+        else
+          projects.sort((a, b) =>
+            (a.project || "").localeCompare(b.project || ""),
+          );
+
+        const tbody = document.getElementById("projectTable");
+        if (projects.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--text-muted)">No projects found. Click "Run Full Scan" to start.</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = projects
+          .map((p) => {
+            const sec = p.securitySummary || {};
+            const lic = p.licenseSummary || {};
+            const badges = [
+              ...(p.techStack?.frameworks || []),
+              ...(p.techStack?.languages || []),
+            ]
+              .map((t) => `<span class="badge">${t}</span>`)
+              .join("");
+            const secAmpel =
+              (sec.critical || 0) > 0
+                ? "red"
+                : (sec.high || 0) > 0
+                  ? "yellow"
+                  : "green";
+            const licAmpel =
+              lic.policyStatus === "violation"
+                ? "red"
+                : lic.policyStatus === "warning"
+                  ? "yellow"
+                  : "green";
+            const riskClass =
+              (p.riskScore || 0) >= 80
+                ? "good"
+                : (p.riskScore || 0) >= 50
+                  ? "moderate"
+                  : "bad";
+            return `<tr onclick="loadProjectDetail('${p.project}')" style="cursor:pointer">
+      <td><strong>${p.project}</strong></td>
+      <td>${badges || "-"}</td>
+      <td>${p.sbomSummary?.totalDependencies || 0} <span style="color:var(--text-dim)">(${(p.sbomSummary?.ecosystems || []).join(", ") || "-"})</span></td>
+      <td><span class="ampel ${secAmpel}"></span> <span class="sev critical">${sec.critical || 0}</span> <span class="sev high">${sec.high || 0}</span> <span class="sev medium">${sec.medium || 0}</span></td>
+      <td><span class="ampel ${licAmpel}"></span> ${lic.policyStatus || "unknown"}</td>
+      <td><span class="risk-score ${riskClass}">${p.riskScore || 0}</span></td>
+      <td>${p.lastScan ? new Date(p.lastScan).toLocaleDateString() : "-"}</td>
+    </tr>`;
+          })
+          .join("");
+      }
+
+      // ---------------------------------------------------------------------------
+      // Project Detail Rendering
+      // ---------------------------------------------------------------------------
+      function renderProjectDetail() {
+        const proj = dashboardData.projects.find(
+          (p) => p.project === selectedProject,
+        );
+        if (!proj) return;
+
+        document.getElementById("projectDetailName").textContent = proj.project;
+        const badges = [
+          ...(proj.techStack?.frameworks || []),
+          ...(proj.techStack?.languages || []),
+        ]
+          .map((t) => `<span class="badge">${t}</span>`)
+          .join(" ");
+        document.getElementById("projectDetailDesc").innerHTML =
+          badges +
+          (proj.lastScan
+            ? ` &mdash; Last scan: ${new Date(proj.lastScan).toLocaleString()}`
+            : "");
+
+        const sec = proj.securitySummary || {};
+        const lic = proj.licenseSummary || {};
+        const riskClass =
+          (proj.riskScore || 0) >= 80
+            ? "good"
+            : (proj.riskScore || 0) >= 50
+              ? "moderate"
+              : "bad";
+
+        document.getElementById("projectKpis").innerHTML = `
+    <div class="kpi-card"><div class="kpi-label">Risk Score</div><div class="kpi-value"><span class="risk-score ${riskClass}">${proj.riskScore || 0}</span></div></div>
+    <div class="kpi-card"><div class="kpi-label">Dependencies</div><div class="kpi-value">${proj.sbomSummary?.totalDependencies || 0}</div>
+      <div class="kpi-sub">${proj.sbomSummary?.directDependencies || 0} direct / ${proj.sbomSummary?.devDependencies || 0} dev</div></div>
+    <div class="kpi-card"><div class="kpi-label">Vulnerabilities</div><div class="kpi-value ${(sec.critical || 0) > 0 ? "critical" : "ok"}">${(sec.critical || 0) + (sec.high || 0) + (sec.medium || 0) + (sec.low || 0)}</div>
+      <div class="kpi-sub"><span class="sev critical">C:${sec.critical || 0}</span> <span class="sev high">H:${sec.high || 0}</span> <span class="sev medium">M:${sec.medium || 0}</span> <span class="sev low">L:${sec.low || 0}</span></div></div>
+    <div class="kpi-card"><div class="kpi-label">License Status</div><div class="kpi-value ${lic.policyStatus === "ok" ? "ok" : lic.policyStatus === "violation" ? "critical" : "warning"}">${lic.policyStatus || "unknown"}</div>
+      <div class="kpi-sub">${lic.forbidden || 0} forbidden / ${lic.unknown || 0} unknown</div></div>
+  `;
+
+        drawDonut(
+          "chartSecurityDonut",
+          [sec.critical || 0, sec.high || 0, sec.medium || 0, sec.low || 0],
+          ["#ff4d6a", "#ff8c42", "#ffc542", "#54d9a8"],
+          ["Critical", "High", "Medium", "Low"],
+        );
+
+        if (sbomData && sbomData.ecosystems) {
+          const licCounts = {};
+          for (const eco of sbomData.ecosystems) {
+            for (const dep of eco.dependencies || []) {
+              const l = dep.license || "n/a";
+              licCounts[l] = (licCounts[l] || 0) + 1;
+            }
+          }
+          const sorted = Object.entries(licCounts)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 8);
+          const colors = [
+            "#4ade80",
+            "#6c8aff",
+            "#fbbf24",
+            "#ff8c42",
+            "#54d9a8",
+            "#ce93d8",
+            "#ff4d6a",
+            "#8b8fa7",
+          ];
+          drawDonut(
+            "chartLicensePie",
+            sorted.map((s) => s[1]),
+            colors.slice(0, sorted.length),
+            sorted.map((s) => s[0]),
+          );
+        }
+
+        const projectRuns = (dashboardData.runs || [])
+          .filter((r) => r.project === selectedProject)
+          .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+        if (projectRuns.length > 0) {
+          drawLineChart(
+            "chartScoreTrend",
+            projectRuns.map((r) => ({ x: r.timestamp, y: r.score || 0 })),
+          );
+        }
+
+        renderSbom();
+        renderSecurityTab();
+        renderLicenseTab();
+        renderProjectRuns();
+        renderCodeQualityTab();
+        renderA11yTab();
+        renderPerformanceTab();
+        renderSeoTab();
+      }
+
+      function renderSbom() {
+        if (!sbomData || !sbomData.ecosystems) {
+          document.getElementById("sbomTable").innerHTML =
+            `<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--text-muted)">No SBOM data. Run a scan first.</td></tr>`;
+          return;
+        }
+        const filterCat = document.getElementById("sbomFilterCategory").value;
+        const filterDirect = document.getElementById("sbomFilterDirect").value;
+
+        const categories = new Set();
+        let allDeps = [];
+        for (const eco of sbomData.ecosystems) {
+          for (const dep of eco.dependencies || []) {
+            categories.add(dep.category);
+            allDeps.push({ ...dep, ecosystem: eco.type });
+          }
+        }
+
+        const catSelect = document.getElementById("sbomFilterCategory");
+        if (catSelect.options.length <= 1) {
+          for (const c of [...categories].sort()) {
+            const opt = document.createElement("option");
+            opt.value = c;
+            opt.textContent = c;
+            catSelect.appendChild(opt);
+          }
+        }
+
+        if (filterCat)
+          allDeps = allDeps.filter((d) => d.category === filterCat);
+        if (filterDirect === "direct")
+          allDeps = allDeps.filter((d) => d.direct && !d.dev);
+        else if (filterDirect === "dev") allDeps = allDeps.filter((d) => d.dev);
+
+        allDeps.sort((a, b) => a.name.localeCompare(b.name));
+
+        document.getElementById("sbomTable").innerHTML = allDeps
+          .map((d) => {
+            const riskColor =
+              d.licenseRisk === "permissive"
+                ? "var(--permissive)"
+                : d.licenseRisk === "weak-copyleft"
+                  ? "var(--weak-copyleft)"
+                  : d.licenseRisk === "strong-copyleft"
+                    ? "var(--strong-copyleft)"
+                    : "var(--unknown-lic)";
+            return `<tr>
+      <td><strong>${d.name}</strong></td>
+      <td>${d.version}</td>
+      <td>${d.ecosystem}</td>
+      <td>${d.category}</td>
+      <td>${d.license || "n/a"}</td>
+      <td><span style="color:${riskColor}">${d.licenseRisk || "unknown"}</span></td>
+      <td>${d.dev ? "dev" : "prod"}</td>
+    </tr>`;
+          })
+          .join("");
+      }
+
+      function exportSbom() {
+        if (!sbomData) return;
+        const blob = new Blob([JSON.stringify(sbomData, null, 2)], {
+          type: "application/json",
+        });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = `sbom-${selectedProject || "project"}.json`;
+        a.click();
+      }
+
+      function renderSecurityTab() {
+        if (!securityData) {
+          document.getElementById("secTable").innerHTML =
+            `<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--text-muted)">No security data. Run a scan first.</td></tr>`;
+          document.getElementById("secKpis").innerHTML = "";
+          return;
+        }
+        const s = securityData.summary || securityData.result?.summary || {};
+        const total =
+          (s.critical || 0) + (s.high || 0) + (s.medium || 0) + (s.low || 0);
+        const fixable =
+          securityData.fixable || securityData.result?.fixable || 0;
+
+        document.getElementById("secKpis").innerHTML = `
+    <div class="kpi-card"><div class="kpi-label">Total</div><div class="kpi-value ${total > 0 ? "critical" : "ok"}">${total}</div></div>
+    <div class="kpi-card"><div class="kpi-label">Critical</div><div class="kpi-value critical">${s.critical || 0}</div></div>
+    <div class="kpi-card"><div class="kpi-label">Fixable</div><div class="kpi-value ok">${fixable}</div>
+      <div class="kpi-sub">${total > 0 ? Math.round((fixable / total) * 100) : 0}% can be fixed</div></div>
+  `;
+
+        let findings =
+          securityData.findings || securityData.result?.findings || [];
+        const sevFilter = document.getElementById("secFilterSeverity").value;
+        if (sevFilter)
+          findings = findings.filter((f) => f.severity === sevFilter);
+
+        document.getElementById("secTable").innerHTML =
+          findings
+            .map(
+              (f) => `<tr>
+    <td><strong>${f.package}</strong></td>
+    <td>${f.installedVersion || "-"}</td>
+    <td>${f.fixedIn || "<span style='color:var(--text-dim)'>none</span>"}</td>
+    <td><span class="sev ${f.severity}">${f.severity}</span></td>
+    <td>${f.dependencyType || "-"}</td>
+    <td>${(f.cveIds || []).join(", ") || "-"}</td>
+    <td style="max-width:250px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${f.description || "-"}</td>
+  </tr>`,
+            )
+            .join("") ||
+          `<tr><td colspan="7" style="text-align:center;padding:20px;color:var(--text-muted)">No vulnerabilities found</td></tr>`;
+      }
+
+      function renderLicenseTab() {
+        if (!licenseData) {
+          document.getElementById("licTable").innerHTML =
+            `<tr><td colspan="5" style="text-align:center;padding:40px;color:var(--text-muted)">No license data. Run a scan first.</td></tr>`;
+          document.getElementById("licKpis").innerHTML = "";
+          return;
+        }
+        const evalData = licenseData.evaluation || licenseData;
+        const stats = evalData.stats || {};
+
+        document.getElementById("licKpis").innerHTML = `
+    <div class="kpi-card"><div class="kpi-label">Checked</div><div class="kpi-value">${stats.totalChecked || 0}</div></div>
+    <div class="kpi-card"><div class="kpi-label">Forbidden</div><div class="kpi-value critical">${stats.forbidden || 0}</div></div>
+    <div class="kpi-card"><div class="kpi-label">Unknown</div><div class="kpi-value warning">${stats.unknown || 0}</div></div>
+    <div class="kpi-card"><div class="kpi-label">Needs Review</div><div class="kpi-value">${stats.needsReview || 0}</div></div>
+  `;
+
+        const filter = document.getElementById("licFilter").value;
+        let items = [
+          ...(evalData.violations || []).map((v) => ({
+            ...v,
+            policyResult: "forbidden",
+          })),
+          ...(evalData.reviewNeeded || []).map((v) => ({
+            ...v,
+            policyResult: "needs-review",
+          })),
+          ...(evalData.unknownLicenses || []).map((v) => ({
+            ...v,
+            policyResult: "unknown",
+          })),
+        ];
+        if (filter) items = items.filter((i) => i.policyResult === filter);
+
+        const policyColors = {
+          forbidden: "var(--violation)",
+          "needs-review": "var(--warning)",
+          unknown: "var(--unknown-lic)",
+        };
+
+        document.getElementById("licTable").innerHTML =
+          items
+            .map(
+              (i) => `<tr>
+    <td><strong>${i.package}</strong></td>
+    <td>${i.version || "-"}</td>
+    <td>${i.license || "n/a"}</td>
+    <td>${i.ecosystem || "-"}</td>
+    <td><span style="color:${policyColors[i.policyResult] || "var(--text)"}">${i.policyResult}</span></td>
+  </tr>`,
+            )
+            .join("") ||
+          `<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--text-muted)">All licenses compliant</td></tr>`;
+      }
+
+      function renderProjectRuns() {
+        const runs = (dashboardData.runs || [])
+          .filter((r) => r.project === selectedProject)
+          .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+        const container = document.getElementById("runsTimeline");
+        if (runs.length === 0) {
+          container.innerHTML = `<div class="empty-state"><h3>No Workflow Runs</h3><p>Run a workflow to see results here.</p></div>`;
+          return;
+        }
+        container.innerHTML = runs
+          .map((r) => {
+            const scoreColor =
+              (r.score || 0) >= 80
+                ? "var(--ok)"
+                : (r.score || 0) >= 50
+                  ? "var(--warning)"
+                  : "var(--violation)";
+            return `<div class="timeline-item">
+      <div class="timeline-score" style="color:${scoreColor}">${r.score != null ? r.score : "-"}</div>
+      <div class="timeline-meta">
+        <div class="timeline-workflow">${r.workflow || "unknown"} <span style="color:var(--text-dim)">${r.verdict || ""}</span></div>
+        <div class="timeline-time">${r.timestamp ? new Date(r.timestamp).toLocaleString() : "-"}</div>
+        <div class="timeline-summary">${r.summary || ""}</div>
+      </div>
+    </div>`;
+          })
+          .join("");
+
+        const sorted = [...runs].sort(
+          (a, b) => new Date(a.timestamp) - new Date(b.timestamp),
+        );
+        if (sorted.length > 1) {
+          drawLineChart(
+            "chartRunsTrend",
+            sorted.map((r) => ({ x: r.timestamp, y: r.score || 0 })),
+          );
+        }
+      }
+
+      // ---------------------------------------------------------------------------
+      // Global Security View
+      // ---------------------------------------------------------------------------
+      function renderGlobalSecurity() {
+        const gs = dashboardData.globalStats || {};
+        const vulns = gs.totalVulnerabilities || {};
+        const total =
+          (vulns.critical || 0) +
+          (vulns.high || 0) +
+          (vulns.medium || 0) +
+          (vulns.low || 0);
+
+        document.getElementById("globalSecKpis").innerHTML = `
+    <div class="kpi-card"><div class="kpi-label">Total Vulnerabilities</div><div class="kpi-value ${total > 0 ? "critical" : "ok"}">${total}</div></div>
+    <div class="kpi-card"><div class="kpi-label">Critical</div><div class="kpi-value critical">${vulns.critical || 0}</div></div>
+    <div class="kpi-card"><div class="kpi-label">High</div><div class="kpi-value" style="color:var(--high)">${vulns.high || 0}</div></div>
+    <div class="kpi-card"><div class="kpi-label">Projects Affected</div><div class="kpi-value">${(dashboardData.projects || []).filter((p) => (p.securitySummary?.critical || 0) + (p.securitySummary?.high || 0) > 0).length}</div></div>
+  `;
+
+        drawDonut(
+          "chartGlobalSev",
+          [
+            vulns.critical || 0,
+            vulns.high || 0,
+            vulns.medium || 0,
+            vulns.low || 0,
+          ],
+          ["#ff4d6a", "#ff8c42", "#ffc542", "#54d9a8"],
+          ["Critical", "High", "Medium", "Low"],
+        );
+
+        const projects = [...(dashboardData.projects || [])].sort((a, b) => {
+          const aScore =
+            (a.securitySummary?.critical || 0) * 10 +
+            (a.securitySummary?.high || 0) * 5;
+          const bScore =
+            (b.securitySummary?.critical || 0) * 10 +
+            (b.securitySummary?.high || 0) * 5;
+          return bScore - aScore;
+        });
+
+        document.getElementById("globalSecTable").innerHTML =
+          projects
+            .map((p) => {
+              const s = p.securitySummary || {};
+              const riskClass =
+                (p.riskScore || 0) >= 80
+                  ? "good"
+                  : (p.riskScore || 0) >= 50
+                    ? "moderate"
+                    : "bad";
+              return `<tr onclick="loadProjectDetail('${p.project}')" style="cursor:pointer">
+      <td><strong>${p.project}</strong></td>
+      <td><span class="sev critical">${s.critical || 0}</span></td>
+      <td><span class="sev high">${s.high || 0}</span></td>
+      <td><span class="sev medium">${s.medium || 0}</span></td>
+      <td><span class="sev low">${s.low || 0}</span></td>
+      <td><span class="risk-score ${riskClass}">${p.riskScore || 0}</span></td>
+    </tr>`;
+            })
+            .join("") ||
+          `<tr><td colspan="6" style="text-align:center;padding:20px;color:var(--text-muted)">No data</td></tr>`;
+      }
+
+      // ---------------------------------------------------------------------------
+      // Global Licenses View
+      // ---------------------------------------------------------------------------
+      function renderGlobalLicenses() {
+        const projects = dashboardData.projects || [];
+        let totalForbidden = 0,
+          totalUnknown = 0,
+          totalReview = 0;
+        for (const p of projects) {
+          const l = p.licenseSummary || {};
+          totalForbidden += l.forbidden || 0;
+          totalUnknown += l.unknown || 0;
+          totalReview += l.needsReview || 0;
+        }
+
+        document.getElementById("globalLicKpis").innerHTML = `
+    <div class="kpi-card"><div class="kpi-label">Forbidden Licenses</div><div class="kpi-value critical">${totalForbidden}</div></div>
+    <div class="kpi-card"><div class="kpi-label">Unknown Licenses</div><div class="kpi-value warning">${totalUnknown}</div></div>
+    <div class="kpi-card"><div class="kpi-label">Needs Review</div><div class="kpi-value">${totalReview}</div></div>
+    <div class="kpi-card"><div class="kpi-label">Projects at Risk</div><div class="kpi-value">${projects.filter((p) => p.licenseSummary?.policyStatus !== "ok").length}</div></div>
+  `;
+
+        drawDonut(
+          "chartGlobalLic",
+          [
+            totalForbidden,
+            totalUnknown,
+            totalReview,
+            Math.max(
+              0,
+              projects.reduce(
+                (s, p) => (p.sbomSummary?.totalDependencies || 0) + s,
+                0,
+              ) -
+                totalForbidden -
+                totalUnknown -
+                totalReview,
+            ),
+          ],
+          ["#ef4444", "#8b8fa7", "#fbbf24", "#4ade80"],
+          ["Forbidden", "Unknown", "Review", "OK"],
+        );
+
+        document.getElementById("globalLicTable").innerHTML =
+          projects
+            .filter((p) => p.licenseSummary?.policyStatus !== "ok")
+            .map((p) => {
+              const l = p.licenseSummary || {};
+              const statusColor =
+                l.policyStatus === "violation"
+                  ? "var(--violation)"
+                  : l.policyStatus === "warning"
+                    ? "var(--warning)"
+                    : "var(--text-muted)";
+              return `<tr onclick="loadProjectDetail('${p.project}')" style="cursor:pointer">
+      <td><strong>${p.project}</strong></td>
+      <td><span class="sev critical">${l.forbidden || 0}</span></td>
+      <td>${l.unknown || 0}</td>
+      <td>${l.needsReview || 0}</td>
+      <td><span style="color:${statusColor};font-weight:600">${l.policyStatus || "unknown"}</span></td>
+    </tr>`;
+            })
+            .join("") ||
+          `<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--text-muted)">All projects compliant</td></tr>`;
+      }
+
+      // ---------------------------------------------------------------------------
+      // History View
+      // ---------------------------------------------------------------------------
+      function renderHistory() {
+        const runs = [...(dashboardData.runs || [])].sort(
+          (a, b) => new Date(b.timestamp) - new Date(a.timestamp),
+        );
+        const workflows = [...new Set(runs.map((r) => r.workflow))].sort();
+        const select = document.getElementById("historyFilterWorkflow");
+        if (select.options.length <= 1) {
+          for (const w of workflows) {
+            const opt = document.createElement("option");
+            opt.value = w;
+            opt.textContent = w;
+            select.appendChild(opt);
+          }
+        }
+
+        const filterWf = select.value;
+        let filtered = filterWf
+          ? runs.filter((r) => r.workflow === filterWf)
+          : runs;
+
+        const container = document.getElementById("allRunsTimeline");
+        if (filtered.length === 0) {
+          container.innerHTML = `<div class="empty-state"><h3>No Workflow Runs</h3><p>Run workflows to see their history here.</p></div>`;
+          return;
+        }
+
+        container.innerHTML = filtered
+          .map((r) => {
+            const scoreColor =
+              (r.score || 0) >= 80
+                ? "var(--ok)"
+                : (r.score || 0) >= 50
+                  ? "var(--warning)"
+                  : "var(--violation)";
+            return `<div class="timeline-item">
+      <div class="timeline-score" style="color:${scoreColor}">${r.score != null ? r.score : "-"}</div>
+      <div class="timeline-meta">
+        <div class="timeline-workflow">${r.workflow || "unknown"} <span class="badge">${r.project || ""}</span> <span style="color:var(--text-dim)">${r.verdict || ""}</span></div>
+        <div class="timeline-time">${r.timestamp ? new Date(r.timestamp).toLocaleString() : "-"}</div>
+        <div class="timeline-summary">${r.summary || ""}</div>
+      </div>
+    </div>`;
+          })
+          .join("");
+
+        const sorted = [...filtered]
+          .filter((r) => r.score != null)
+          .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+        if (sorted.length > 1) {
+          drawLineChart(
+            "chartAllRunsTrend",
+            sorted.map((r) => ({ x: r.timestamp, y: r.score || 0 })),
+          );
+        }
+      }
+
+      // ---------------------------------------------------------------------------
+      // Canvas Charts
+      // ---------------------------------------------------------------------------
+      function drawDonut(canvasId, values, colors, labels) {
+        const canvas = document.getElementById(canvasId);
+        if (!canvas) return;
+        const ctx = canvas.getContext("2d");
+        const w = parseInt(canvas.getAttribute("width"), 10);
+        const h = parseInt(canvas.getAttribute("height"), 10);
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = w * dpr;
+        canvas.height = h * dpr;
+        canvas.style.width = w + "px";
+        canvas.style.height = h + "px";
+        ctx.scale(dpr, dpr);
+        ctx.clearRect(0, 0, w, h);
+
+        const total = values.reduce((s, v) => s + v, 0);
+        if (total === 0) {
+          ctx.fillStyle = "#2d3348";
+          ctx.beginPath();
+          ctx.arc(w * 0.35, h / 2, 60, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillStyle = "#0f1117";
+          ctx.beginPath();
+          ctx.arc(w * 0.35, h / 2, 35, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillStyle = "#8b8fa7";
+          ctx.font = "12px sans-serif";
+          ctx.textAlign = "center";
+          ctx.fillText("No data", w * 0.35, h / 2 + 4);
+          return;
+        }
+
+        const cx = w * 0.35,
+          cy = h / 2,
+          r = Math.min(cx, cy) - 10,
+          ir = r * 0.55;
+        let startAngle = -Math.PI / 2;
+        for (let i = 0; i < values.length; i++) {
+          if (values[i] === 0) continue;
+          const sliceAngle = (values[i] / total) * Math.PI * 2;
+          ctx.beginPath();
+          ctx.moveTo(
+            cx + ir * Math.cos(startAngle),
+            cy + ir * Math.sin(startAngle),
+          );
+          ctx.arc(cx, cy, r, startAngle, startAngle + sliceAngle);
+          ctx.arc(cx, cy, ir, startAngle + sliceAngle, startAngle, true);
+          ctx.closePath();
+          ctx.fillStyle = colors[i];
+          ctx.fill();
+          startAngle += sliceAngle;
+        }
+
+        // Center text
+        ctx.fillStyle = "#e4e7ef";
+        ctx.font = "bold 18px sans-serif";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(total, cx, cy);
+
+        // Legend
+        let ly = 20;
+        ctx.textAlign = "left";
+        ctx.textBaseline = "top";
+        for (let i = 0; i < labels.length; i++) {
+          if (values[i] === 0) continue;
+          ctx.fillStyle = colors[i];
+          ctx.fillRect(w * 0.72, ly, 10, 10);
+          ctx.fillStyle = "#e4e7ef";
+          ctx.font = "11px sans-serif";
+          ctx.fillText(`${labels[i]} (${values[i]})`, w * 0.72 + 16, ly);
+          ly += 18;
+        }
+      }
+
+      function drawLineChart(canvasId, points) {
+        const canvas = document.getElementById(canvasId);
+        if (!canvas || points.length < 2) return;
+        const ctx = canvas.getContext("2d");
+        const w = parseInt(canvas.getAttribute("width"), 10);
+        const h = parseInt(canvas.getAttribute("height"), 10);
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = w * dpr;
+        canvas.height = h * dpr;
+        canvas.style.width = w + "px";
+        canvas.style.height = h + "px";
+        ctx.scale(dpr, dpr);
+        ctx.clearRect(0, 0, w, h);
+
+        const pad = { top: 20, right: 20, bottom: 30, left: 40 };
+        const cw = w - pad.left - pad.right;
+        const ch = h - pad.top - pad.bottom;
+
+        const minY = 0,
+          maxY = 100;
+        const minX = new Date(points[0].x).getTime();
+        const maxX = new Date(points[points.length - 1].x).getTime();
+        const rangeX = maxX - minX || 1;
+
+        function px(p) {
+          return {
+            x: pad.left + ((new Date(p.x).getTime() - minX) / rangeX) * cw,
+            y: pad.top + ch - ((p.y - minY) / (maxY - minY)) * ch,
+          };
+        }
+
+        // Grid
+        ctx.strokeStyle = "#2d3348";
+        ctx.lineWidth = 1;
+        for (let v = 0; v <= 100; v += 25) {
+          const y = pad.top + ch - (v / 100) * ch;
+          ctx.beginPath();
+          ctx.moveTo(pad.left, y);
+          ctx.lineTo(w - pad.right, y);
+          ctx.stroke();
+          ctx.fillStyle = "#5d6177";
+          ctx.font = "10px sans-serif";
+          ctx.textAlign = "right";
+          ctx.textBaseline = "middle";
+          ctx.fillText(v, pad.left - 6, y);
+        }
+
+        // Line
+        ctx.beginPath();
+        ctx.strokeStyle = "#6c8aff";
+        ctx.lineWidth = 2;
+        ctx.lineJoin = "round";
+        for (let i = 0; i < points.length; i++) {
+          const p = px(points[i]);
+          if (i === 0) ctx.moveTo(p.x, p.y);
+          else ctx.lineTo(p.x, p.y);
+        }
+        ctx.stroke();
+
+        // Area
+        ctx.lineTo(px(points[points.length - 1]).x, pad.top + ch);
+        ctx.lineTo(px(points[0]).x, pad.top + ch);
+        ctx.closePath();
+        const grad = ctx.createLinearGradient(0, pad.top, 0, pad.top + ch);
+        grad.addColorStop(0, "rgba(108,138,255,0.2)");
+        grad.addColorStop(1, "rgba(108,138,255,0)");
+        ctx.fillStyle = grad;
+        ctx.fill();
+
+        // Dots
+        for (const p of points) {
+          const pp = px(p);
+          ctx.beginPath();
+          ctx.arc(pp.x, pp.y, 3, 0, Math.PI * 2);
+          ctx.fillStyle = "#6c8aff";
+          ctx.fill();
+          ctx.strokeStyle = "#0f1117";
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+        }
+
+        // X labels
+        ctx.fillStyle = "#5d6177";
+        ctx.font = "10px sans-serif";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "top";
+        const step = Math.max(1, Math.floor(points.length / 6));
+        for (let i = 0; i < points.length; i += step) {
+          const pp = px(points[i]);
+          const d = new Date(points[i].x);
+          ctx.fillText(
+            d.toLocaleDateString("de", { day: "2-digit", month: "2-digit" }),
+            pp.x,
+            pad.top + ch + 8,
+          );
+        }
+      }
+
+      // ---------------------------------------------------------------------------
+      // Architecture Rendering
+      // ---------------------------------------------------------------------------
+      let mermaidReady = false;
+      function initMermaid() {
+        if (mermaidReady) return;
+        if (typeof mermaid !== "undefined") {
+          mermaid.initialize({
+            startOnLoad: false,
+            theme: "dark",
+            themeVariables: {
+              darkMode: true,
+              background: "#1a1d27",
+              primaryColor: "#6c8aff",
+              primaryTextColor: "#e2e4ed",
+              primaryBorderColor: "#2d3148",
+              lineColor: "#5d6177",
+              secondaryColor: "#2d3148",
+              tertiaryColor: "#1a1d27",
+              fontFamily: "system-ui, -apple-system, sans-serif",
+            },
+          });
+          mermaidReady = true;
+        }
+      }
+
+      async function renderArchitecture() {
+        initMermaid();
+        const container = document.getElementById("archDiagrams");
+        const emptyState = document.getElementById("archEmpty");
+        const kpis = document.getElementById("archKpis");
+        const desc = document.getElementById("archDesc");
+
+        if (!architectureData) {
+          architectureData = await fetchJSON("/architecture-data");
+        }
+
+        if (
+          !architectureData ||
+          !architectureData.diagrams ||
+          architectureData.diagrams.length === 0
+        ) {
+          container.innerHTML = "";
+          kpis.innerHTML = "";
+          emptyState.style.display = "block";
+          return;
+        }
+
+        emptyState.style.display = "none";
+        const run = architectureData.lastRun;
+
+        // KPIs
+        kpis.innerHTML = `
+          <div class="kpi-card"><div class="kpi-label">Diagrams</div><div class="kpi-value">${architectureData.diagrams.length}</div></div>
+          <div class="kpi-card"><div class="kpi-label">Pattern</div><div class="kpi-value" style="font-size:16px">${run && run.verdict ? run.verdict.split(" - ")[0] : "n/a"}</div></div>
+          <div class="kpi-card"><div class="kpi-label">Score</div><div class="kpi-value ${run && run.score >= 80 ? "ok" : run && run.score >= 50 ? "warning" : "critical"}">${run ? run.score : "-"}</div></div>
+          <div class="kpi-card"><div class="kpi-label">Last Review</div><div class="kpi-value" style="font-size:14px">${run ? new Date(run.timestamp).toLocaleDateString() : "-"}</div></div>
+        `;
+
+        if (run) {
+          desc.textContent =
+            run.summary || "Architecture diagrams from the last review";
+        }
+
+        // Render Mermaid diagrams
+        container.innerHTML = "";
+        for (let i = 0; i < architectureData.diagrams.length; i++) {
+          const diag = architectureData.diagrams[i];
+          const card = document.createElement("div");
+          card.className = "chart-container";
+          card.style.marginBottom = "20px";
+          const title = document.createElement("div");
+          title.className = "chart-title";
+          title.textContent =
+            diag.name.charAt(0).toUpperCase() + diag.name.slice(1);
+          card.appendChild(title);
+
+          const mermaidDiv = document.createElement("div");
+          mermaidDiv.style.padding = "16px";
+          mermaidDiv.style.overflow = "auto";
+          card.appendChild(mermaidDiv);
+          container.appendChild(card);
+
+          try {
+            const id = "mermaid-diagram-" + i;
+            const { svg } = await mermaid.render(id, diag.mermaidCode);
+            mermaidDiv.innerHTML = svg;
+          } catch (err) {
+            mermaidDiv.innerHTML = `<pre style="color:var(--text-muted);font-size:12px;white-space:pre-wrap">${diag.mermaidCode}</pre>`;
+          }
+        }
+      }
+
+      // ---------------------------------------------------------------------------
+      // Generic Analysis Tab Renderer (reused by CQ, A11y, Perf, SEO)
+      // ---------------------------------------------------------------------------
+      function renderAnalysisTab(data, prefix, opts) {
+        const kpisEl = document.getElementById(prefix + "Kpis");
+        const tableEl = document.getElementById(prefix + "Table");
+        if (!data || !data.findings) {
+          if (kpisEl) kpisEl.innerHTML = "";
+          if (tableEl) tableEl.innerHTML = `<tr><td colspan="${opts.cols || 5}" style="text-align:center;padding:40px;color:var(--text-muted)">No data. Run a scan first.</td></tr>`;
+          return;
+        }
+        const s = data.summary || {};
+        const total = (s.critical || 0) + (s.high || 0) + (s.medium || 0) + (s.low || 0);
+        if (kpisEl) {
+          kpisEl.innerHTML = `
+            <div class="kpi-card"><div class="kpi-label">Score</div><div class="kpi-value ${(data.score || 0) >= 80 ? "ok" : (data.score || 0) >= 50 ? "warning" : "critical"}">${data.score || 0}</div><div class="kpi-sub">${(data.score || 0) >= 80 ? "Good" : (data.score || 0) >= 50 ? "Needs work" : "Poor"}</div></div>
+            <div class="kpi-card"><div class="kpi-label">Total Findings</div><div class="kpi-value ${total > 0 ? "warning" : "ok"}">${total}</div></div>
+            <div class="kpi-card"><div class="kpi-label">Critical</div><div class="kpi-value critical">${s.critical || 0}</div></div>
+            <div class="kpi-card"><div class="kpi-label">High</div><div class="kpi-value" style="color:var(--high)">${s.high || 0}</div></div>
+          `;
+        }
+        if (opts.donutId) {
+          drawDonut(opts.donutId,
+            [s.critical || 0, s.high || 0, s.medium || 0, s.low || 0],
+            ["#ff4d6a", "#ff8c42", "#ffc542", "#54d9a8"],
+            ["Critical", "High", "Medium", "Low"]
+          );
+        }
+        if (tableEl) {
+          tableEl.innerHTML = data.findings.slice(0, 100).map(f => opts.rowFn(f)).join("") ||
+            `<tr><td colspan="${opts.cols || 5}" style="text-align:center;padding:20px;color:var(--text-muted)">No findings</td></tr>`;
+        }
+      }
+
+      function renderCodeQualityTab() {
+        renderAnalysisTab(codeQualityData, "cq", {
+          cols: 5, donutId: "chartCqDonut",
+          rowFn: f => `<tr><td>${f.file || "-"}</td><td>${f.line || "-"}</td><td>${f.category || "-"}</td><td><span class="sev ${f.severity}">${f.severity}</span></td><td style="max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${f.description || "-"}</td></tr>`
+        });
+        const metricsEl = document.getElementById("cqMetrics");
+        if (metricsEl && codeQualityData && codeQualityData.metrics) {
+          const m = codeQualityData.metrics;
+          metricsEl.innerHTML = `
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+              <div>Files scanned: <strong>${m.totalFiles || 0}</strong></div>
+              <div>Total lines: <strong>${(m.totalLines || 0).toLocaleString()}</strong></div>
+              <div>Avg function length: <strong>${m.avgFunctionLength || 0}</strong></div>
+              <div>Max function length: <strong>${m.maxFunctionLength || 0}</strong></div>
+              <div><code>any</code> usage: <strong>${m.anyUsageCount || 0}</strong></div>
+              <div>TODOs: <strong>${m.todoCount || 0}</strong></div>
+              <div>Empty catches: <strong>${m.emptyCatchCount || 0}</strong></div>
+              <div>Console logs: <strong>${m.consoleLogCount || 0}</strong></div>
+            </div>`;
+        }
+      }
+
+      function renderA11yTab() {
+        renderAnalysisTab(a11yData, "a11yTab", {
+          cols: 6, donutId: "chartA11yDonut",
+          rowFn: f => `<tr><td>${f.file || "-"}</td><td>${f.line || "-"}</td><td>${f.rule || "-"}</td><td>${f.wcag || "-"}</td><td><span class="sev ${f.severity}">${f.severity}</span></td><td style="max-width:250px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${f.description || "-"}</td></tr>`
+        });
+        const catEl = document.getElementById("a11yCategories");
+        if (catEl && a11yData && a11yData.categorySummary) {
+          const cats = a11yData.categorySummary;
+          catEl.innerHTML = Object.entries(cats).map(([k, v]) => {
+            const total = (v.pass || 0) + (v.fail || 0);
+            const pct = total > 0 ? Math.round(v.pass / total * 100) : 0;
+            return `<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)"><span>${k}</span><span style="color:${pct >= 80 ? "var(--ok)" : pct >= 50 ? "var(--warning)" : "var(--violation)"}">${pct}% pass (${v.pass}/${total})</span></div>`;
+          }).join("");
+        }
+      }
+
+      function renderPerformanceTab() {
+        renderAnalysisTab(performanceData, "perfTab", {
+          cols: 5, donutId: "chartPerfDonut",
+          rowFn: f => `<tr><td>${f.file || "-"}</td><td>${f.line || "-"}</td><td>${f.category || "-"}</td><td><span class="sev ${f.severity}">${f.severity}</span></td><td style="max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${f.description || "-"}</td></tr>`
+        });
+        const patEl = document.getElementById("perfPatterns");
+        if (patEl && performanceData && performanceData.codePatterns) {
+          const p = performanceData.codePatterns.summary || {};
+          patEl.innerHTML = `
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+              <div>N+1 queries: <strong style="color:${(p.nPlusOne || 0) > 0 ? "var(--critical)" : "var(--ok)"}">${p.nPlusOne || 0}</strong></div>
+              <div>Full library imports: <strong>${p.fullImports || 0}</strong></div>
+              <div>Missing lazy loading: <strong>${p.missingLazy || 0}</strong></div>
+              <div>use client overuse: <strong>${p.useClientOveruse || 0}</strong></div>
+            </div>`;
+        }
+      }
+
+      function renderSeoTab() {
+        renderAnalysisTab(seoData, "seoTab", {
+          cols: 5, donutId: "chartSeoDonut",
+          rowFn: f => `<tr><td>${f.category || "-"}</td><td>${f.check || f.rule || "-"}</td><td><span class="sev ${f.severity}">${f.severity}</span></td><td>${f.file || "-"}</td><td style="max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${f.description || "-"}</td></tr>`
+        });
+        const checkEl = document.getElementById("seoChecklist");
+        if (checkEl && seoData && seoData.checks) {
+          const c = seoData.checks;
+          const check = (v) => v ? '<span style="color:var(--ok)">Pass</span>' : '<span style="color:var(--violation)">Fail</span>';
+          const meta = c.metaTags || {};
+          const og = c.openGraph || {};
+          const tech = c.technical || {};
+          checkEl.innerHTML = `
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;font-size:12px">
+              <div>Title tag: ${check(meta.title)}</div>
+              <div>Meta description: ${check(meta.description)}</div>
+              <div>Viewport: ${check(meta.viewport)}</div>
+              <div>OG title: ${check(og.ogTitle)}</div>
+              <div>OG description: ${check(og.ogDescription)}</div>
+              <div>OG image: ${check(og.ogImage)}</div>
+              <div>robots.txt: ${check(tech.hasRobotsTxt)}</div>
+              <div>sitemap.xml: ${check(tech.hasSitemap)}</div>
+              <div>Canonical URL: ${check(tech.hasCanonical)}</div>
+              <div>Structured data: ${check(c.structuredData?.hasJsonLd)}</div>
+              <div>Valid headings: ${check(c.headingHierarchy?.valid)}</div>
+              <div>Favicon: ${check(tech.hasFavicon)}</div>
+            </div>`;
+        }
+      }
+
+      // ---------------------------------------------------------------------------
+      // Generic Global Analysis View Renderer
+      // ---------------------------------------------------------------------------
+      function renderGlobalAnalysisView(summaryKey, kpisId, chartId, tableId, opts) {
+        const projects = dashboardData.projects || [];
+        let totalC = 0, totalH = 0, totalM = 0, totalL = 0;
+        for (const p of projects) {
+          const s = p[summaryKey] || {};
+          totalC += s.critical || 0;
+          totalH += s.high || 0;
+          totalM += s.medium || 0;
+          totalL += s.low || 0;
+        }
+        const total = totalC + totalH + totalM + totalL;
+        const avgScore = projects.length > 0
+          ? Math.round(projects.reduce((s, p) => s + ((p[summaryKey] || {}).score || 0), 0) / projects.length)
+          : 0;
+
+        document.getElementById(kpisId).innerHTML = `
+          <div class="kpi-card"><div class="kpi-label">Avg Score</div><div class="kpi-value ${avgScore >= 80 ? "ok" : avgScore >= 50 ? "warning" : "critical"}">${avgScore}</div><div class="kpi-sub">${avgScore >= 80 ? "Good" : avgScore >= 50 ? "Needs work" : "Poor"}</div></div>
+          <div class="kpi-card"><div class="kpi-label">Total Findings</div><div class="kpi-value ${total > 0 ? "warning" : "ok"}">${total}</div></div>
+          <div class="kpi-card"><div class="kpi-label">Critical</div><div class="kpi-value critical">${totalC}</div></div>
+          <div class="kpi-card"><div class="kpi-label">Projects</div><div class="kpi-value">${projects.length}</div></div>
+        `;
+
+        drawDonut(chartId,
+          [totalC, totalH, totalM, totalL],
+          ["#ff4d6a", "#ff8c42", "#ffc542", "#54d9a8"],
+          ["Critical", "High", "Medium", "Low"]
+        );
+
+        const sorted = [...projects].sort((a, b) => ((a[summaryKey] || {}).score || 0) - ((b[summaryKey] || {}).score || 0));
+        document.getElementById(tableId).innerHTML = sorted.map(p => {
+          const s = p[summaryKey] || {};
+          const scoreClass = (s.score || 0) >= 80 ? "good" : (s.score || 0) >= 50 ? "moderate" : "bad";
+          return `<tr onclick="loadProjectDetail('${p.project}')" style="cursor:pointer">
+            <td><strong>${p.project}</strong></td>
+            <td><span class="risk-score ${scoreClass}">${s.score || 0}</span></td>
+            <td><span class="sev critical">${s.critical || 0}</span></td>
+            <td><span class="sev high">${s.high || 0}</span></td>
+            <td><span class="sev medium">${s.medium || 0}</span></td>
+            <td>${opts.extraCol(p)}</td>
+          </tr>`;
+        }).join("") || `<tr><td colspan="6" style="text-align:center;padding:20px;color:var(--text-muted)">No data</td></tr>`;
+      }
+
+      function renderGlobalCodeQuality() {
+        renderGlobalAnalysisView("codeQualitySummary", "globalCqKpis", "chartGlobalCq", "globalCqTable", {
+          extraCol: p => (p.codeQualitySummary || {}).totalFiles || "-"
+        });
+      }
+
+      function renderGlobalA11y() {
+        renderGlobalAnalysisView("a11ySummary", "globalA11yKpis", "chartGlobalA11y", "globalA11yTable", {
+          extraCol: p => (p.a11ySummary || {}).wcagLevel || "-"
+        });
+      }
+
+      function renderGlobalPerformance() {
+        renderGlobalAnalysisView("performanceSummary", "globalPerfKpis", "chartGlobalPerf", "globalPerfTable", {
+          extraCol: p => {
+            const b = (p.performanceSummary || {}).bundleSizeKb;
+            return b ? (b > 1024 ? (b / 1024).toFixed(1) + " MB" : b + " KB") : "-";
+          }
+        });
+      }
+
+      function renderGlobalSeo() {
+        renderGlobalAnalysisView("seoSummary", "globalSeoKpis", "chartGlobalSeo", "globalSeoTable", {
+          extraCol: p => (p.seoSummary || {}).hasStructuredData ? "Yes" : "No"
+        });
+      }
+
+      // ---------------------------------------------------------------------------
+      // Workflows View
+      // ---------------------------------------------------------------------------
+      async function loadWorkflows() {
+        const container = document.getElementById("workflowsList");
+        try {
+          const data = await fetchJSON("/workflows");
+          if (!data || !data.workflows) {
+            container.innerHTML = '<p style="color:var(--muted);padding:16px;">Could not load workflows. Is the server running?</p>';
+            return;
+          }
+          const lastRuns = {};
+          if (dashboardData.runs) {
+            for (const run of dashboardData.runs) {
+              if (!lastRuns[run.workflow] || run.timestamp > lastRuns[run.workflow].timestamp) {
+                lastRuns[run.workflow] = run;
+              }
+            }
+          }
+          let html = '<table role="table"><thead><tr>';
+          html += '<th scope="col">Workflow</th>';
+          html += '<th scope="col">Description</th>';
+          html += '<th scope="col">Windsurf</th>';
+          html += '<th scope="col">Devin Skill</th>';
+          html += '<th scope="col">Last Run</th>';
+          html += '<th scope="col">Score</th>';
+          html += '</tr></thead><tbody>';
+          for (const w of data.workflows) {
+            const run = lastRuns[w.name];
+            const scoreClass = run ? (run.score >= 80 ? "sev-low" : run.score >= 50 ? "sev-medium" : "sev-high") : "";
+            html += '<tr>';
+            html += `<td><strong>${escapeHtml(w.name)}</strong></td>`;
+            html += `<td>${escapeHtml(w.description)}</td>`;
+            html += `<td><code>/${escapeHtml(w.name)}</code></td>`;
+            html += `<td>${w.hasDevinSkill ? '<span class="sev-low" style="padding:2px 8px;border-radius:4px;">Skill</span>' : '<span style="color:var(--muted);">--</span>'}</td>`;
+            html += `<td>${run ? new Date(run.timestamp).toLocaleDateString() : '<span style="color:var(--muted);">Never</span>'}</td>`;
+            html += `<td>${run ? '<span class="' + scoreClass + '" style="padding:2px 8px;border-radius:4px;">' + run.score + '/100</span>' : '--'}</td>`;
+            html += '</tr>';
+          }
+          html += '</tbody></table>';
+          html += `<p style="color:var(--muted);margin-top:12px;font-size:13px;">${data.count} workflows available</p>`;
+          container.innerHTML = html;
+        } catch (err) {
+          container.innerHTML = `<p style="color:var(--danger);padding:16px;">Error: ${escapeHtml(err.message)}</p>`;
+        }
+      }
+
+      function escapeHtml(str) {
+        if (!str) return "";
+        return String(str).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+      }
+
+      // ---------------------------------------------------------------------------
+      // Init
+      // ---------------------------------------------------------------------------
+      loadDashboard();
+    </script>
+  </body>
+</html>

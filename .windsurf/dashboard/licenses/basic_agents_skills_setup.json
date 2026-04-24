@@ -1,0 +1,14 @@
+{
+  "project": "basic_agents_skills_setup",
+  "evaluatedAt": "2026-04-17T09:06:18.947Z",
+  "policyStatus": "ok",
+  "violations": [],
+  "reviewNeeded": [],
+  "unknownLicenses": [],
+  "stats": {
+    "totalChecked": 0,
+    "forbidden": 0,
+    "needsReview": 0,
+    "unknown": 0
+  }
+}

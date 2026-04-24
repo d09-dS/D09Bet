@@ -1,0 +1,118 @@
+{
+  "project": "basic_agents_skills_setup",
+  "scannedAt": "2026-04-17T09:06:18.950Z",
+  "score": 38,
+  "summary": {
+    "critical": 2,
+    "high": 2,
+    "medium": 5,
+    "low": 1
+  },
+  "findings": [
+    {
+      "severity": "high",
+      "category": "technical",
+      "check": "robots.txt",
+      "file": "-",
+      "description": "Missing robots.txt file"
+    },
+    {
+      "severity": "high",
+      "category": "technical",
+      "check": "sitemap.xml",
+      "file": "-",
+      "description": "Missing sitemap.xml file"
+    },
+    {
+      "severity": "medium",
+      "category": "technical",
+      "check": "favicon",
+      "file": "-",
+      "description": "No favicon found in common locations"
+    },
+    {
+      "severity": "medium",
+      "category": "open-graph",
+      "check": "og:title",
+      "file": "-",
+      "description": "Missing Open Graph title"
+    },
+    {
+      "severity": "medium",
+      "category": "open-graph",
+      "check": "og:description",
+      "file": "-",
+      "description": "Missing Open Graph description"
+    },
+    {
+      "severity": "medium",
+      "category": "open-graph",
+      "check": "og:image",
+      "file": "-",
+      "description": "Missing Open Graph image"
+    },
+    {
+      "severity": "medium",
+      "category": "structured-data",
+      "check": "json-ld",
+      "file": "-",
+      "description": "No JSON-LD structured data found"
+    },
+    {
+      "severity": "low",
+      "category": "technical",
+      "check": "canonical",
+      "file": "-",
+      "description": "No canonical URL found"
+    },
+    {
+      "severity": "critical",
+      "category": "meta-tags",
+      "check": "title",
+      "file": "-",
+      "description": "Missing <title> tag"
+    },
+    {
+      "severity": "critical",
+      "category": "meta-tags",
+      "check": "meta-description",
+      "file": "-",
+      "description": "Missing meta description"
+    }
+  ],
+  "checks": {
+    "metaTags": {
+      "title": false,
+      "description": false,
+      "viewport": false,
+      "charset": false
+    },
+    "openGraph": {
+      "ogTitle": false,
+      "ogDescription": false,
+      "ogImage": false
+    },
+    "structuredData": {
+      "hasJsonLd": false,
+      "schemas": []
+    },
+    "technical": {
+      "hasSitemap": false,
+      "hasRobotsTxt": false,
+      "hasCanonical": false,
+      "hasFavicon": false
+    },
+    "headingHierarchy": {
+      "valid": true,
+      "issues": []
+    },
+    "imageAlt": {
+      "total": 0,
+      "missing": 0,
+      "decorativeMarked": 0
+    },
+    "links": {
+      "totalInternal": 0
+    }
+  }
+}

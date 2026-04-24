@@ -1,0 +1,2701 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>dotSource - Tech Stack Selection</title>
+    <link
+      rel="icon"
+      href="https://www.dotsource.de/typo3conf/ext/dotsource_theme/Resources/Public/Icons/favicon.ico"
+    />
+    <style>
+      :root {
+        --bg: #f2f2f2;
+        --panel: #ffffff;
+        --muted: #6b6b6b;
+        --text: #1a1a1a;
+        --border: #e0e0e0;
+        --ds-green: #7dc11f;
+        --ds-green-hover: #639a18;
+        --ds-green-light: #edf7e0;
+        --ds-blue: #0067b1;
+        --ds-blue-hover: #005291;
+        --ds-blue-light: #e0eef8;
+        --ds-black: #111111;
+        --ds-icon-color: #1a1a1a;
+        --confidence-high: #7dc11f;
+        --confidence-medium: #f0ad4e;
+        --confidence-low: #d9534f;
+      }
+      .skip-link {
+        position: absolute;
+        top: -100%;
+        left: 16px;
+        z-index: 100;
+        padding: 8px 16px;
+        background: var(--ds-blue);
+        color: #fff;
+        border-radius: 0 0 4px 4px;
+        font-size: 14px;
+        text-decoration: none;
+      }
+      .skip-link:focus {
+        top: 0;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto,
+          sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+      }
+      header {
+        background: var(--panel);
+        border-bottom: 3px solid var(--ds-blue);
+        padding: 0 24px;
+        max-width: 100%;
+      }
+      .header-inner {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        gap: 32px;
+        padding: 18px 0;
+      }
+      .ds-logo {
+        height: 32px;
+        width: auto;
+        display: block;
+        flex-shrink: 0;
+      }
+      .ds-logo-fallback {
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--text);
+        letter-spacing: -0.5px;
+        flex-shrink: 0;
+        display: none;
+      }
+      .ds-logo-fallback span {
+        color: var(--ds-green);
+      }
+      .header-divider {
+        width: 1px;
+        height: 28px;
+        background: var(--border);
+        flex-shrink: 0;
+      }
+      .header-text h1 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--text);
+      }
+      .header-text p {
+        margin: 3px 0 0;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .mode-badge {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        font-weight: 500;
+        padding: 4px 10px;
+        border-radius: 12px;
+        white-space: nowrap;
+      }
+      .mode-badge.online {
+        background: var(--ds-green-light);
+        color: #3a6010;
+      }
+      .mode-badge.offline {
+        background: #fff3cd;
+        color: #856404;
+      }
+      .mode-badge::before {
+        content: "";
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        display: inline-block;
+      }
+      .mode-badge.online::before {
+        background: var(--ds-green);
+      }
+      .mode-badge.offline::before {
+        background: #f0ad4e;
+      }
+      main {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 16px 24px 40px;
+      }
+      .offline-banner {
+        display: none;
+        background: #fff3cd;
+        border: 1px solid #ffc107;
+        border-radius: 8px;
+        padding: 10px 16px;
+        margin-bottom: 16px;
+        font-size: 13px;
+        color: #856404;
+      }
+      .offline-banner.show {
+        display: block;
+      }
+      .analyze-result {
+        display: none;
+        background: var(--ds-green-light);
+        border: 1px solid #b8dfaf;
+        border-radius: 8px;
+        padding: 12px 16px;
+        margin-bottom: 16px;
+        font-size: 13px;
+        color: #3a6010;
+      }
+      .analyze-result.show {
+        display: block;
+      }
+      .drop-zone {
+        display: none;
+        border: 2px dashed var(--border);
+        border-radius: 12px;
+        padding: 24px;
+        text-align: center;
+        color: var(--muted);
+        font-size: 14px;
+        margin-bottom: 16px;
+        transition:
+          border-color 0.2s,
+          background 0.2s;
+        cursor: pointer;
+      }
+      .drop-zone.show {
+        display: block;
+      }
+      .drop-zone.dragover {
+        border-color: var(--ds-blue);
+        background: var(--ds-blue-light);
+        color: var(--ds-blue);
+      }
+      .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+      }
+      .card {
+        background:
+          linear-gradient(var(--panel), var(--panel)) padding-box,
+          linear-gradient(135deg, var(--ds-green), var(--ds-blue)) border-box;
+        border: 2px solid transparent;
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        display: flex;
+        flex-direction: column;
+      }
+      .card h2 {
+        margin: 0 0 16px;
+        font-size: 18px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .card h2 .icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        color: var(--ds-icon-color);
+      }
+      .icon-green {
+        background: var(--ds-green-light);
+      }
+      .icon-blue {
+        background: var(--ds-blue-light);
+      }
+      .card h2 .icon svg {
+        width: 16px;
+        height: 16px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      label {
+        display: block;
+        margin: 12px 0 6px;
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 500;
+      }
+      input,
+      select {
+        width: 100%;
+        padding: 10px 12px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: var(--panel);
+        color: var(--text);
+        font-size: 14px;
+        outline: none;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s;
+      }
+      input:focus,
+      select:focus {
+        border-color: var(--ds-blue);
+        box-shadow: 0 0 0 3px rgba(0, 103, 177, 0.12);
+      }
+      select:focus-visible,
+      input:focus-visible,
+      button:focus-visible {
+        outline: 2px solid var(--ds-blue);
+        outline-offset: 2px;
+      }
+      .confidence-high {
+        border-left: 3px solid var(--confidence-high) !important;
+      }
+      .confidence-medium {
+        border-left: 3px solid var(--confidence-medium) !important;
+      }
+      .confidence-low {
+        border-left: 3px solid var(--confidence-low) !important;
+      }
+      .row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .actions {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        margin-top: 28px;
+        padding: 28px 24px;
+        border-radius: 12px;
+        background:
+          linear-gradient(var(--panel), var(--panel)) padding-box,
+          linear-gradient(135deg, var(--ds-green), var(--ds-blue)) border-box;
+        border: 2px solid transparent;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      }
+      #status {
+        text-align: center;
+        margin-top: 12px;
+      }
+      button {
+        cursor: pointer;
+        border: 1.5px solid var(--ds-black);
+        background: transparent;
+        color: var(--ds-black);
+        padding: 12px 32px;
+        border-radius: 4px;
+        font-size: 14px;
+        font-weight: 500;
+        letter-spacing: 0.01em;
+        min-width: 140px;
+        transition: all 0.15s;
+      }
+      button:hover {
+        background: var(--ds-black);
+        color: #ffffff;
+      }
+      button:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+      button:disabled:hover {
+        background: transparent;
+        color: var(--ds-black);
+      }
+      button.primary {
+        background: var(--ds-blue);
+        border-color: var(--ds-blue);
+        color: #ffffff;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        min-width: 180px;
+        padding: 13px 36px;
+      }
+      button.primary:hover {
+        background: var(--ds-blue-hover);
+        border-color: var(--ds-blue-hover);
+        color: #ffffff;
+      }
+      button.secondary {
+        background: var(--ds-green);
+        border-color: var(--ds-green);
+        color: #ffffff;
+        font-weight: 600;
+      }
+      button.secondary:hover {
+        background: var(--ds-green-hover);
+        border-color: var(--ds-green-hover);
+        color: #ffffff;
+      }
+      button.secondary:disabled:hover {
+        background: var(--ds-green);
+        border-color: var(--ds-green);
+        color: #ffffff;
+      }
+      .status {
+        padding: 12px 16px;
+        border-radius: 8px;
+        margin-top: 12px;
+        font-size: 14px;
+        display: none;
+      }
+      .status.show {
+        display: block;
+      }
+      .status.ok {
+        background: var(--ds-green-light);
+        border: 1px solid #b8dfaf;
+        color: #3a6010;
+      }
+      .status.err {
+        background: var(--ds-blue-light);
+        border: 1px solid #9fc3e8;
+        color: #003f6e;
+      }
+      .custom-input {
+        display: none;
+        margin-top: 6px;
+      }
+      .custom-input.show {
+        display: block;
+      }
+      .lang-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        min-height: 38px;
+        padding: 8px 10px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: var(--panel);
+        align-items: center;
+      }
+      .lang-chips:empty::after {
+        content: "Click Analyze Project to detect languages";
+        color: var(--muted);
+        font-size: 13px;
+        font-style: italic;
+      }
+      .lang-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 3px 10px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 500;
+        background: var(--ds-blue-light);
+        color: var(--ds-blue);
+        border: 1px solid rgba(0, 103, 177, 0.2);
+        white-space: nowrap;
+      }
+      .lang-chip .remove-chip {
+        cursor: pointer;
+        font-size: 14px;
+        line-height: 1;
+        opacity: 0.6;
+        margin-left: 2px;
+      }
+      .lang-chip .remove-chip:hover {
+        opacity: 1;
+      }
+      .json-preview {
+        background: #f8f8f8;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 16px;
+        margin-top: 24px;
+        font-family: "SF Mono", "Fira Code", "Consolas", monospace;
+        font-size: 12px;
+        line-height: 1.5;
+        color: var(--text);
+        max-height: 400px;
+        overflow-y: auto;
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+      .json-preview-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 24px;
+        margin-bottom: 8px;
+      }
+      .json-preview-header h3 {
+        margin: 0;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--muted);
+      }
+      @media (max-width: 900px) {
+        .grid-2 {
+          grid-template-columns: 1fr;
+        }
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #121212;
+          --panel: #1e1e1e;
+          --muted: #a0a0a0;
+          --text: #e8e8e8;
+          --border: #333333;
+          --ds-green-light: #1a2e0d;
+          --ds-blue-light: #0a1f33;
+          --ds-black: #e8e8e8;
+          --ds-icon-color: #e8e8e8;
+        }
+        .status.ok {
+          background: #1a2e0d;
+          border-color: #3a6010;
+          color: #b8dfaf;
+        }
+        .status.err {
+          background: #0a1f33;
+          border-color: #005291;
+          color: #9fc3e8;
+        }
+        button {
+          border-color: var(--border);
+          color: var(--text);
+        }
+        button:hover {
+          background: #333;
+          color: #fff;
+        }
+        .json-preview {
+          background: #161616;
+          border-color: #333;
+        }
+        .offline-banner {
+          background: #332b00;
+          border-color: #665500;
+          color: #ffc107;
+        }
+        .analyze-result {
+          background: #1a2e0d;
+          border-color: #3a6010;
+          color: #b8dfaf;
+        }
+        .drop-zone {
+          border-color: #444;
+          color: #888;
+        }
+        .drop-zone.dragover {
+          border-color: var(--ds-blue);
+          background: #0a1f33;
+        }
+        .mode-badge.online {
+          background: #1a2e0d;
+          color: #b8dfaf;
+        }
+        .mode-badge.offline {
+          background: #332b00;
+          color: #ffc107;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header>
+      <div class="header-inner">
+        <img
+          src="https://www.dotsource.de/fileadmin/hp_editors/Agentur-Infos/dotSource-Logo-web.png"
+          alt="dotSource"
+          class="ds-logo"
+          onerror="
+            this.style.display = 'none';
+            document.querySelector('.ds-logo-fallback').style.display = 'block';
+          "
+        />
+        <span class="ds-logo-fallback"><span>dot</span>Source</span>
+        <div class="header-divider"></div>
+        <div class="header-text">
+          <h1>Tech Stack Selection</h1>
+          <p>
+            Select your tech stack to generate tailored coding rules. Click
+            <strong>Save &amp; Generate</strong> when done.
+          </p>
+        </div>
+        <span class="mode-badge" id="modeBadge">Checking...</span>
+      </div>
+    </header>
+
+    <main id="main">
+      <div class="offline-banner" id="offlineBanner">
+        Offline Mode -- Node.js server not detected. You can still select your
+        stack manually. Config will be downloaded as a file. For full features
+        (project analysis, direct save), install Node.js and run install.bat /
+        install.sh.
+      </div>
+
+      <div class="analyze-result" id="analyzeResult"></div>
+
+      <div class="drop-zone" id="dropZone">
+        Drop your dependency file here: <strong>package.json</strong>,
+        <strong>pom.xml</strong>, <strong>build.gradle</strong>,
+        <strong>*.csproj</strong>, <strong>go.mod</strong>,
+        <strong>Cargo.toml</strong>, <strong>composer.json</strong>,
+        <strong>Gemfile</strong>, <strong>requirements.txt</strong>, or
+        <strong>pyproject.toml</strong>
+      </div>
+
+      <div class="grid-2">
+        <!-- Frontend Card -->
+        <section class="card">
+          <h2>
+            <span class="icon icon-green">
+              <svg viewBox="0 0 24 24">
+                <rect x="2" y="3" width="20" height="14" rx="2" />
+                <path d="M8 21h8M12 17v4" />
+              </svg>
+            </span>
+            Frontend
+          </h2>
+
+          <div class="row">
+            <div>
+              <label for="frontend">Technology</label>
+              <select id="frontend">
+                <option value="none">None</option>
+                <option value="angular">Angular</option>
+                <option value="react">React</option>
+                <option value="nextjs">Next.js</option>
+                <option value="vue">Vue</option>
+                <option value="nuxt">Nuxt</option>
+                <option value="svelte">Svelte / SvelteKit</option>
+                <option value="solid">SolidJS</option>
+                <option value="custom">Custom</option>
+              </select>
+              <input
+                id="frontendCustom"
+                class="custom-input"
+                placeholder="e.g. Qwik, Astro"
+              />
+            </div>
+            <div>
+              <label for="styling">Styling</label>
+              <select id="styling">
+                <option value="none">None</option>
+                <option value="tailwind">Tailwind CSS</option>
+                <option value="bootstrap">Bootstrap</option>
+                <option value="material">Material UI</option>
+                <option value="cssinjs">Styled Components</option>
+                <option value="scss">SCSS/SASS</option>
+                <option value="custom">Custom</option>
+              </select>
+              <input
+                id="stylingCustom"
+                class="custom-input"
+                placeholder="e.g. UnoCSS"
+              />
+            </div>
+          </div>
+
+          <label for="stateManagement">State Management</label>
+          <select id="stateManagement">
+            <option value="none">None / Built-in</option>
+            <option value="ngrx">NgRx</option>
+            <option value="redux">Redux Toolkit</option>
+            <option value="zustand">Zustand</option>
+            <option value="pinia">Pinia</option>
+            <option value="jotai">Jotai</option>
+            <option value="mobx">MobX</option>
+            <option value="custom">Custom</option>
+          </select>
+          <input
+            id="stateManagementCustom"
+            class="custom-input"
+            placeholder="e.g. XState"
+          />
+
+          <div class="row">
+            <div>
+              <label for="uiLibrary">UI Component Library</label>
+              <select id="uiLibrary">
+                <option value="none">None</option>
+                <option value="shadcn">shadcn/ui</option>
+                <option value="radix">Radix UI</option>
+                <option value="headlessui">Headless UI</option>
+                <option value="daisyui">daisyUI</option>
+                <option value="mantine">Mantine</option>
+                <option value="nextui">NextUI</option>
+                <option value="primereact">PrimeReact</option>
+                <option value="primeng">PrimeNG</option>
+                <option value="primevue">PrimeVue</option>
+                <option value="vuetify">Vuetify</option>
+                <option value="quasar">Quasar</option>
+                <option value="element-plus">Element Plus</option>
+                <option value="naive-ui">Naive UI</option>
+                <option value="angular-material">Angular Material</option>
+                <option value="ng-zorro">NG-ZORRO</option>
+                <option value="flowbite">Flowbite</option>
+                <option value="tremor">Tremor</option>
+                <option value="ark">Ark UI</option>
+                <option value="custom">Custom</option>
+              </select>
+              <input
+                id="uiLibraryCustom"
+                class="custom-input"
+                placeholder="e.g. Park UI"
+              />
+            </div>
+            <div>
+              <label for="bundler">Bundler</label>
+              <select id="bundler">
+                <option value="none">Auto / Built-in</option>
+                <option value="vite">Vite</option>
+                <option value="webpack">Webpack</option>
+                <option value="turbopack">Turbopack</option>
+                <option value="esbuild">esbuild</option>
+                <option value="rollup">Rollup</option>
+                <option value="parcel">Parcel</option>
+                <option value="swc">SWC</option>
+                <option value="tsup">tsup</option>
+                <option value="custom">Custom</option>
+              </select>
+              <input
+                id="bundlerCustom"
+                class="custom-input"
+                placeholder="e.g. Bun bundler"
+              />
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <label for="formLibrary">Form Library</label>
+              <select id="formLibrary">
+                <option value="none">None / Built-in</option>
+                <option value="react-hook-form">React Hook Form</option>
+                <option value="formik">Formik</option>
+                <option value="tanstack-form">TanStack Form</option>
+                <option value="angular-forms">Angular Forms</option>
+                <option value="vee-validate">VeeValidate</option>
+                <option value="vuelidate">Vuelidate</option>
+                <option value="formsnap">Formsnap</option>
+                <option value="superforms">Superforms</option>
+                <option value="custom">Custom</option>
+              </select>
+              <input
+                id="formLibraryCustom"
+                class="custom-input"
+                placeholder="e.g. Final Form"
+              />
+            </div>
+            <div>
+              <label for="dataFetching">Data Fetching</label>
+              <select id="dataFetching">
+                <option value="none">None / Built-in</option>
+                <option value="tanstack-query">TanStack Query</option>
+                <option value="swr">SWR</option>
+                <option value="axios">Axios</option>
+                <option value="ky">Ky</option>
+                <option value="ofetch">ofetch</option>
+                <option value="custom">Custom</option>
+              </select>
+              <input
+                id="dataFetchingCustom"
+                class="custom-input"
+                placeholder="e.g. ky"
+              />
+            </div>
+          </div>
+        </section>
+
+        <!-- Backend Card -->
+        <section class="card">
+          <h2>
+            <span class="icon icon-blue">
+              <svg viewBox="0 0 24 24">
+                <rect x="2" y="2" width="20" height="8" rx="2" />
+                <rect x="2" y="14" width="20" height="8" rx="2" />
+                <circle cx="6" cy="6" r="1" fill="currentColor" stroke="none" />
+                <circle
+                  cx="6"
+                  cy="18"
+                  r="1"
+                  fill="currentColor"
+                  stroke="none"
+                />
+              </svg>
+            </span>
+            Backend
+          </h2>
+
+          <label for="backend">Technology</label>
+          <select id="backend">
+            <option value="none">None</option>
+            <option value="express">Node.js / Express</option>
+            <option value="nestjs">NestJS</option>
+            <option value="fastify">Fastify</option>
+            <option value="hono">Hono</option>
+            <option value="koa">Koa</option>
+            <option value="spring">Java / Spring Boot</option>
+            <option value="quarkus">Java / Quarkus</option>
+            <option value="micronaut">Java / Micronaut</option>
+            <option value="vertx">Java / Vert.x</option>
+            <option value="helidon">Java / Helidon</option>
+            <option value="javalin">Java / Javalin</option>
+            <option value="ktor">Kotlin / Ktor</option>
+            <option value="dotnet">.NET Core</option>
+            <option value="blazor">.NET / Blazor</option>
+            <option value="go">Go (generic)</option>
+            <option value="gin">Go / Gin</option>
+            <option value="echo">Go / Echo</option>
+            <option value="fiber">Go / Fiber</option>
+            <option value="chi">Go / Chi</option>
+            <option value="rust">Rust (generic)</option>
+            <option value="actix">Rust / Actix</option>
+            <option value="axum">Rust / Axum</option>
+            <option value="rocket">Rust / Rocket</option>
+            <option value="warp">Rust / Warp</option>
+            <option value="fastapi">Python / FastAPI</option>
+            <option value="django">Python / Django</option>
+            <option value="flask">Python / Flask</option>
+            <option value="laravel">PHP / Laravel</option>
+            <option value="symfony">PHP / Symfony</option>
+            <option value="slim">PHP / Slim</option>
+            <option value="rails">Ruby / Rails</option>
+            <option value="sinatra">Ruby / Sinatra</option>
+            <option value="phoenix">Elixir / Phoenix</option>
+            <option value="custom">Custom</option>
+          </select>
+          <input
+            id="backendCustom"
+            class="custom-input"
+            placeholder="e.g. tRPC, Phoenix"
+          />
+
+          <div class="row">
+            <div>
+              <label for="database">Database</label>
+              <select id="database">
+                <option value="none">None</option>
+                <option value="postgres">PostgreSQL</option>
+                <option value="mysql">MySQL / MariaDB</option>
+                <option value="mongo">MongoDB</option>
+                <option value="sqlite">SQLite</option>
+                <option value="mssql">MS SQL Server</option>
+                <option value="oracle">Oracle</option>
+                <option value="h2">H2 (Java)</option>
+                <option value="redis">Redis</option>
+                <option value="cassandra">Apache Cassandra</option>
+                <option value="dynamodb">DynamoDB</option>
+                <option value="cockroachdb">CockroachDB</option>
+                <option value="clickhouse">ClickHouse</option>
+                <option value="neo4j">Neo4j</option>
+                <option value="elasticsearch">Elasticsearch</option>
+                <option value="neon">Neon (Serverless PG)</option>
+                <option value="duckdb">DuckDB</option>
+                <option value="couchbase">Couchbase</option>
+                <option value="supabase">Supabase</option>
+                <option value="firebase">Firebase / Firestore</option>
+                <option value="turso">Turso / LibSQL</option>
+                <option value="custom">Custom</option>
+              </select>
+              <input
+                id="databaseCustom"
+                class="custom-input"
+                placeholder="e.g. PlanetScale"
+              />
+            </div>
+            <div>
+              <label for="orm">ORM / Client</label>
+              <select id="orm">
+                <option value="none">None</option>
+                <option value="prisma">Prisma</option>
+                <option value="drizzle">Drizzle</option>
+                <option value="typeorm">TypeORM</option>
+                <option value="sequelize">Sequelize</option>
+                <option value="efcore">Entity Framework Core</option>
+                <option value="dapper">Dapper (.NET)</option>
+                <option value="sqlalchemy">SQLAlchemy</option>
+                <option value="sqlmodel">SQLModel</option>
+                <option value="hibernate">Hibernate (Java)</option>
+                <option value="jpa">Spring Data JPA</option>
+                <option value="spring-data-jdbc">Spring Data JDBC</option>
+                <option value="r2dbc">Spring Data R2DBC</option>
+                <option value="mybatis">MyBatis (Java)</option>
+                <option value="jooq">jOOQ (Java)</option>
+                <option value="querydsl">QueryDSL (Java)</option>
+                <option value="exposed">Exposed (Kotlin)</option>
+                <option value="ktorm">Ktorm (Kotlin)</option>
+                <option value="gorm">GORM (Go)</option>
+                <option value="ent">Ent (Go)</option>
+                <option value="diesel">Diesel (Rust)</option>
+                <option value="sea-orm">SeaORM (Rust)</option>
+                <option value="sqlx">SQLx (Rust/Go)</option>
+                <option value="doctrine">Doctrine (PHP)</option>
+                <option value="eloquent">Eloquent (PHP)</option>
+                <option value="activerecord">ActiveRecord (Ruby)</option>
+                <option value="sequel">Sequel (Ruby)</option>
+                <option value="custom">Custom</option>
+              </select>
+              <input
+                id="ormCustom"
+                class="custom-input"
+                placeholder="e.g. Kysely"
+              />
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <label for="validation">Validation</label>
+              <select id="validation">
+                <option value="none">None / Built-in</option>
+                <option value="zod">Zod</option>
+                <option value="yup">Yup</option>
+                <option value="joi">Joi</option>
+                <option value="class-validator">class-validator</option>
+                <option value="typebox">TypeBox</option>
+                <option value="valibot">Valibot</option>
+                <option value="arktype">ArkType</option>
+                <option value="pydantic">Pydantic</option>
+                <option value="marshmallow">Marshmallow</option>
+                <option value="bean-validation">Bean Validation (Java)</option>
+                <option value="fluentvalidation">
+                  FluentValidation (.NET)
+                </option>
+                <option value="data-annotations">
+                  Data Annotations (.NET)
+                </option>
+                <option value="go-playground">go-playground/validator</option>
+                <option value="validator">validator (Rust)</option>
+                <option value="laravel-validation">Laravel Validation</option>
+                <option value="symfony-validator">Symfony Validator</option>
+                <option value="custom">Custom</option>
+              </select>
+              <input
+                id="validationCustom"
+                class="custom-input"
+                placeholder="e.g. io-ts"
+              />
+            </div>
+            <div>
+              <label for="caching">Caching</label>
+              <select id="caching">
+                <option value="none">None</option>
+                <option value="redis">Redis / ioredis</option>
+                <option value="cache-manager">cache-manager</option>
+                <option value="keyv">Keyv</option>
+                <option value="lru-cache">LRU Cache</option>
+                <option value="caffeine">Caffeine (Java)</option>
+                <option value="ehcache">Ehcache (Java)</option>
+                <option value="hazelcast">Hazelcast</option>
+                <option value="infinispan">Infinispan</option>
+                <option value="guava">Guava Cache (Java)</option>
+                <option value="spring-cache">Spring Cache</option>
+                <option value="memory-cache">Memory Cache (.NET)</option>
+                <option value="ristretto">Ristretto (Go)</option>
+                <option value="moka">Moka (Rust)</option>
+                <option value="memcached">Memcached</option>
+                <option value="diskcache">diskcache (Python)</option>
+                <option value="custom">Custom</option>
+              </select>
+              <input
+                id="cachingCustom"
+                class="custom-input"
+                placeholder="e.g. Memcached"
+              />
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <label for="messageQueue">Message Queue</label>
+              <select id="messageQueue">
+                <option value="none">None</option>
+                <option value="bullmq">BullMQ</option>
+                <option value="rabbitmq">RabbitMQ</option>
+                <option value="kafka">Apache Kafka</option>
+                <option value="activemq">Apache ActiveMQ</option>
+                <option value="pulsar">Apache Pulsar</option>
+                <option value="nats">NATS</option>
+                <option value="sqs">AWS SQS</option>
+                <option value="azure-service-bus">Azure Service Bus</option>
+                <option value="ibm-mq">IBM MQ</option>
+                <option value="celery">Celery (Python)</option>
+                <option value="rq">RQ (Python)</option>
+                <option value="masstransit">MassTransit (.NET)</option>
+                <option value="mediatr">MediatR (.NET)</option>
+                <option value="sidekiq">Sidekiq (Ruby)</option>
+                <option value="horizon">Horizon (Laravel)</option>
+                <option value="symfony-messenger">Symfony Messenger</option>
+                <option value="custom">Custom</option>
+              </select>
+              <input
+                id="messageQueueCustom"
+                class="custom-input"
+                placeholder="e.g. SQS"
+              />
+            </div>
+            <div>
+              <label for="realtime">Realtime</label>
+              <select id="realtime">
+                <option value="none">None</option>
+                <option value="socketio">Socket.io</option>
+                <option value="websocket">WebSocket (ws)</option>
+                <option value="sse">Server-Sent Events (SSE)</option>
+                <option value="stomp">STOMP (Spring WebSocket)</option>
+                <option value="webflux">Spring WebFlux / Reactor</option>
+                <option value="netty">Netty</option>
+                <option value="pusher">Pusher</option>
+                <option value="ably">Ably</option>
+                <option value="signalr">SignalR (.NET)</option>
+                <option value="actioncable">Action Cable (Rails)</option>
+                <option value="django-channels">Django Channels</option>
+                <option value="supabase-realtime">Supabase Realtime</option>
+                <option value="custom">Custom</option>
+              </select>
+              <input
+                id="realtimeCustom"
+                class="custom-input"
+                placeholder="e.g. SSE"
+              />
+            </div>
+          </div>
+        </section>
+
+        <!-- Detected Languages Card (spans full width) -->
+        <section class="card" style="grid-column: 1 / -1">
+          <h2>
+            <span class="icon icon-green">
+              <svg viewBox="0 0 24 24">
+                <polyline points="16 18 22 12 16 6" />
+                <polyline points="8 6 2 12 8 18" />
+              </svg>
+            </span>
+            Detected Programming Languages
+          </h2>
+          <label
+            >Languages found in this project (auto-detected via file
+            extensions)</label
+          >
+          <div class="lang-chips" id="progLangChips"></div>
+        </section>
+
+        <!-- Architecture Card -->
+        <section class="card">
+          <h2>
+            <span class="icon icon-blue">
+              <svg viewBox="0 0 24 24">
+                <polygon points="12 2 2 7 12 12 22 7 12 2" />
+                <polyline points="2 17 12 22 22 17" />
+                <polyline points="2 12 12 17 22 12" />
+              </svg>
+            </span>
+            Architecture
+          </h2>
+
+          <div class="row">
+            <div>
+              <label for="i18n">Internationalization (i18n)</label>
+              <select id="i18n">
+                <option value="no">No</option>
+                <option value="yes">Yes</option>
+              </select>
+            </div>
+            <div>
+              <label for="languages">Languages</label>
+              <input id="languages" placeholder="EN, DE, FR" />
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <label for="auth">Authentication</label>
+              <select id="auth">
+                <option value="none">None</option>
+                <option value="jwt">JWT</option>
+                <option value="oauth">OAuth2 / OIDC</option>
+                <option value="session">Session-based</option>
+                <option value="keycloak">Keycloak</option>
+                <option value="auth0">Auth0</option>
+                <option value="clerk">Clerk</option>
+                <option value="supabase_auth">Supabase Auth</option>
+                <option value="spring-security">Spring Security</option>
+                <option value="identity">ASP.NET Identity</option>
+                <option value="identityserver">IdentityServer</option>
+                <option value="casbin">Casbin (Go)</option>
+                <option value="custom">Custom</option>
+              </select>
+              <input
+                id="authCustom"
+                class="custom-input"
+                placeholder="e.g. NextAuth"
+              />
+            </div>
+            <div>
+              <label for="apiStyle">API Style</label>
+              <select id="apiStyle">
+                <option value="none">None</option>
+                <option value="rest">REST</option>
+                <option value="graphql">GraphQL</option>
+                <option value="grpc">gRPC</option>
+                <option value="trpc">tRPC</option>
+                <option value="custom">Custom</option>
+              </select>
+              <input
+                id="apiStyleCustom"
+                class="custom-input"
+                placeholder="e.g. JSON-RPC"
+              />
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <label for="multiTenancy">Multi-Tenancy</label>
+              <select id="multiTenancy">
+                <option value="none">None</option>
+                <option value="schema">Schema-per-Tenant</option>
+                <option value="row">Row-Level (shared DB)</option>
+                <option value="database">Database-per-Tenant</option>
+                <option value="custom">Custom</option>
+              </select>
+              <input
+                id="multiTenancyCustom"
+                class="custom-input"
+                placeholder="e.g. Custom isolation"
+              />
+            </div>
+            <div>
+              <label for="monorepo">Monorepo</label>
+              <select id="monorepo">
+                <option value="none">None</option>
+                <option value="nx">Nx</option>
+                <option value="turborepo">Turborepo</option>
+                <option value="lerna">Lerna</option>
+                <option value="pnpm-workspaces">pnpm Workspaces</option>
+                <option value="npm-workspaces">npm Workspaces</option>
+                <option value="custom">Custom</option>
+              </select>
+              <input
+                id="monorepoCustom"
+                class="custom-input"
+                placeholder="e.g. Bazel"
+              />
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <label for="typescript">TypeScript</label>
+              <select id="typescript">
+                <option value="no">No</option>
+                <option value="yes">Yes</option>
+              </select>
+            </div>
+            <div>
+              <label for="packageManager">Package Manager</label>
+              <select id="packageManager">
+                <option value="unknown">Auto-detect</option>
+                <option value="npm">npm</option>
+                <option value="pnpm">pnpm</option>
+                <option value="yarn">Yarn</option>
+                <option value="bun">Bun</option>
+                <option value="custom">Custom</option>
+              </select>
+              <input
+                id="packageManagerCustom"
+                class="custom-input"
+                placeholder="e.g. Maven, Gradle"
+              />
+            </div>
+          </div>
+        </section>
+
+        <!-- DevOps Card -->
+        <section class="card">
+          <h2>
+            <span class="icon icon-green">
+              <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="3" />
+                <path
+                  d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"
+                />
+              </svg>
+            </span>
+            DevOps &amp; Quality
+          </h2>
+
+          <div class="row">
+            <div>
+              <label for="testing">Testing</label>
+              <select id="testing">
+                <option value="none">None</option>
+                <option value="vitest">Vitest</option>
+                <option value="jest">Jest</option>
+                <option value="mocha">Mocha</option>
+                <option value="vitest_playwright">Vitest + Playwright</option>
+                <option value="vitest_cypress">Vitest + Cypress</option>
+                <option value="jest_playwright">Jest + Playwright</option>
+                <option value="jest_cypress">Jest + Cypress</option>
+                <option value="playwright">Playwright</option>
+                <option value="cypress">Cypress</option>
+                <option value="xunit">xUnit (.NET)</option>
+                <option value="nunit">NUnit (.NET)</option>
+                <option value="mstest">MSTest (.NET)</option>
+                <option value="bunit">bUnit (Blazor)</option>
+                <option value="pytest">pytest (Python)</option>
+                <option value="junit5">JUnit 5 (Java)</option>
+                <option value="kotest">Kotest (Kotlin)</option>
+                <option value="spock">Spock (Groovy)</option>
+                <option value="go-test">Go Test</option>
+                <option value="ginkgo">Ginkgo (Go)</option>
+                <option value="cargo-test">Cargo Test (Rust)</option>
+                <option value="phpunit">PHPUnit</option>
+                <option value="pest">Pest (PHP)</option>
+                <option value="rspec">RSpec (Ruby)</option>
+                <option value="minitest">Minitest (Ruby)</option>
+                <option value="exunit">ExUnit (Elixir)</option>
+                <option value="flutter-test">Flutter Test</option>
+                <option value="scalatest">ScalaTest</option>
+                <option value="custom">Custom</option>
+              </select>
+              <input
+                id="testingCustom"
+                class="custom-input"
+                placeholder="e.g. Bun test"
+              />
+            </div>
+            <div>
+              <label for="quality">Code Quality</label>
+              <select id="quality">
+                <option value="none">None</option>
+                <option value="eslint_prettier_husky">
+                  ESLint + Prettier + Husky
+                </option>
+                <option value="eslint_prettier_lintstaged">
+                  ESLint + Prettier + lint-staged
+                </option>
+                <option value="eslint_prettier">ESLint + Prettier</option>
+                <option value="eslint">ESLint</option>
+                <option value="prettier">Prettier</option>
+                <option value="biome">Biome</option>
+                <option value="oxlint">OxLint</option>
+                <option value="dprint">dprint</option>
+                <option value="ruff">Ruff (Python)</option>
+                <option value="black">Black (Python)</option>
+                <option value="mypy">mypy (Python)</option>
+                <option value="checkstyle">Checkstyle (Java)</option>
+                <option value="spotless">Spotless (Java)</option>
+                <option value="jacoco">JaCoCo (Java)</option>
+                <option value="stylecop">StyleCop (.NET)</option>
+                <option value="sonar">SonarAnalyzer</option>
+                <option value="golangci-lint">golangci-lint (Go)</option>
+                <option value="clippy">Clippy (Rust)</option>
+                <option value="phpstan">PHPStan</option>
+                <option value="php-cs-fixer">PHP CS Fixer</option>
+                <option value="rubocop">RuboCop (Ruby)</option>
+                <option value="credo">Credo (Elixir)</option>
+                <option value="scalafmt">Scalafmt (Scala)</option>
+                <option value="custom">Custom</option>
+              </select>
+              <input
+                id="qualityCustom"
+                class="custom-input"
+                placeholder="e.g. dprint"
+              />
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <label for="deployment">Deployment</label>
+              <select id="deployment">
+                <option value="unknown">Not decided</option>
+                <option value="none">None</option>
+                <option value="docker">Docker</option>
+                <option value="kubernetes">Kubernetes</option>
+                <option value="vercel">Vercel</option>
+                <option value="netlify">Netlify</option>
+                <option value="cloudflare">Cloudflare</option>
+                <option value="fly">Fly.io</option>
+                <option value="railway">Railway</option>
+                <option value="render">Render</option>
+                <option value="heroku">Heroku</option>
+                <option value="serverless">Serverless</option>
+                <option value="sst">SST (Ion)</option>
+                <option value="aws-cdk">AWS CDK</option>
+                <option value="aws-sam">AWS SAM</option>
+                <option value="aws-amplify">AWS Amplify</option>
+                <option value="gcp-appengine">GCP App Engine</option>
+                <option value="terraform">Terraform</option>
+                <option value="pulumi">Pulumi</option>
+                <option value="kamal">Kamal</option>
+                <option value="custom">Custom</option>
+              </select>
+              <input
+                id="deploymentCustom"
+                class="custom-input"
+                placeholder="e.g. CapRover"
+              />
+            </div>
+            <div>
+              <label for="cicd">CI/CD</label>
+              <select id="cicd">
+                <option value="none">None</option>
+                <option value="github_actions">GitHub Actions</option>
+                <option value="gitlab_ci">GitLab CI</option>
+                <option value="azure_devops">Azure DevOps</option>
+                <option value="jenkins">Jenkins</option>
+                <option value="bitbucket">Bitbucket Pipelines</option>
+                <option value="circleci">CircleCI</option>
+                <option value="custom">Custom</option>
+              </select>
+              <input
+                id="cicdCustom"
+                class="custom-input"
+                placeholder="e.g. TeamCity"
+              />
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div class="actions">
+        <button
+          class="secondary"
+          id="btnAnalyze"
+          disabled
+          title="Checking server..."
+        >
+          Analyze Project
+        </button>
+        <button class="primary" id="btnSave">Save &amp; Generate</button>
+        <button id="btnReset">Reset</button>
+      </div>
+      <div id="status" class="status" role="alert" aria-live="polite"></div>
+
+      <div class="json-preview-header">
+        <h3>Live Config Preview</h3>
+      </div>
+      <pre class="json-preview" id="jsonPreview"></pre>
+    </main>
+
+    <script>
+      // -----------------------------------------------------------------------
+      // Detection Maps -- loaded from server endpoint, compact fallback for offline
+      // Source of truth: .windsurf/tools/detection-maps.json
+      // -----------------------------------------------------------------------
+      let DETECTION_MAP = null;
+      let PYTHON_MAP = null;
+      let FULL_MAPS_LOADED = false;
+
+      // Compact offline fallback (covers most common deps per category)
+      const FALLBACK_NPM_MAP = {
+        "frontend.framework": [
+          { dep: "next", value: "nextjs", priority: 10 },
+          { dep: "@angular/core", value: "angular", priority: 10 },
+          { dep: "nuxt", value: "nuxt", priority: 10 },
+          { dep: "svelte", value: "svelte", priority: 10 },
+          { dep: "vue", value: "vue", priority: 5 },
+          { dep: "react", value: "react", priority: 1 },
+        ],
+        "frontend.styling": [
+          { dep: "tailwindcss", value: "tailwind", priority: 10 },
+          { dep: "@mui/material", value: "material", priority: 10 },
+          { dep: "antd", value: "antd", priority: 10 },
+          { dep: "bootstrap", value: "bootstrap", priority: 5 },
+        ],
+        "frontend.stateManagement": [
+          { dep: "@ngrx/store", value: "ngrx", priority: 10 },
+          { dep: "@reduxjs/toolkit", value: "redux", priority: 10 },
+          { dep: "zustand", value: "zustand", priority: 10 },
+          { dep: "pinia", value: "pinia", priority: 10 },
+        ],
+        "backend.framework": [
+          { dep: "@nestjs/core", value: "nestjs", priority: 10 },
+          { dep: "fastify", value: "fastify", priority: 8 },
+          { dep: "hono", value: "hono", priority: 8 },
+          { dep: "express", value: "express", priority: 5 },
+        ],
+        "backend.orm": [
+          { dep: "@prisma/client", value: "prisma", priority: 10 },
+          { dep: "drizzle-orm", value: "drizzle", priority: 10 },
+          { dep: "typeorm", value: "typeorm", priority: 10 },
+        ],
+        "backend.database": [
+          { dep: "pg", value: "postgres", priority: 10 },
+          { dep: "mysql2", value: "mysql", priority: 10 },
+          { dep: "mongodb", value: "mongo", priority: 10 },
+          { dep: "mongoose", value: "mongo", priority: 10 },
+        ],
+        "backend.validation": [
+          { dep: "zod", value: "zod", priority: 10 },
+          { dep: "joi", value: "joi", priority: 8 },
+        ],
+        "devops.testing": [
+          { dep: "vitest", value: "vitest", priority: 10 },
+          { dep: "jest", value: "jest", priority: 9 },
+          { dep: "mocha", value: "mocha", priority: 8 },
+          { dep: "cypress", value: "cypress", priority: 9 },
+          { dep: "@playwright/test", value: "playwright", priority: 9 },
+        ],
+      };
+
+      const FALLBACK_PYTHON_MAP = {
+        "backend.framework": [
+          { dep: "django", value: "django" },
+          { dep: "fastapi", value: "fastapi" },
+          { dep: "flask", value: "flask" },
+        ],
+        "backend.orm": [
+          { dep: "sqlalchemy", value: "sqlalchemy" },
+          { dep: "sqlmodel", value: "sqlmodel" },
+        ],
+        "backend.database": [
+          { dep: "psycopg2", value: "postgres" },
+          { dep: "psycopg2-binary", value: "postgres" },
+          { dep: "pymongo", value: "mongo" },
+        ],
+        "backend.validation": [{ dep: "pydantic", value: "pydantic" }],
+        "devops.testing": [{ dep: "pytest", value: "pytest" }],
+      };
+
+      // Initialize with fallback, upgrade when server responds
+      DETECTION_MAP = FALLBACK_NPM_MAP;
+      PYTHON_MAP = FALLBACK_PYTHON_MAP;
+
+      async function loadFullMapsFromServer() {
+        try {
+          const res = await fetch("http://localhost:3847/detection-map");
+          if (!res.ok) return;
+          const data = await res.json();
+          if (data.npm) DETECTION_MAP = data.npm;
+          if (data.python) PYTHON_MAP = data.python;
+          if (data.java) JAVA_MAP_CLIENT = data.java;
+          if (data.dotnet) DOTNET_MAP_CLIENT = data.dotnet;
+          if (data.go) GO_MAP_CLIENT = data.go;
+          if (data.rust) RUST_MAP_CLIENT = data.rust;
+          if (data.php) PHP_MAP_CLIENT = data.php;
+          if (data.ruby) RUBY_MAP_CLIENT = data.ruby;
+          FULL_MAPS_LOADED = true;
+          console.log(
+            "[project-init-ui] Full detection maps loaded from server",
+          );
+        } catch {
+          console.log(
+            "[project-init-ui] Server not available, using compact offline maps",
+          );
+        }
+      }
+
+      // -----------------------------------------------------------------------
+      // State
+      // -----------------------------------------------------------------------
+      let serverOnline = false;
+
+      // -----------------------------------------------------------------------
+      // Helpers
+      // -----------------------------------------------------------------------
+      function getValue(id) {
+        const el = document.getElementById(id);
+        return el ? el.value : "";
+      }
+
+      function setValue(id, value) {
+        const el = document.getElementById(id);
+        if (!el) return false;
+        const options = Array.from(el.options || []);
+        const match = options.find((o) => o.value === value);
+        if (match) {
+          el.value = value;
+          return true;
+        }
+        const hasCustom = options.find((o) => o.value === "custom");
+        if (hasCustom) {
+          el.value = "custom";
+          const customInput = document.getElementById(id + "Custom");
+          if (customInput) {
+            customInput.value = value;
+            customInput.classList.add("show");
+          }
+          return true;
+        }
+        return false;
+      }
+
+      function setConfidence(id, level) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.classList.remove(
+          "confidence-high",
+          "confidence-medium",
+          "confidence-low",
+        );
+        if (level) el.classList.add("confidence-" + level);
+      }
+
+      function clearConfidence() {
+        document
+          .querySelectorAll(
+            ".confidence-high, .confidence-medium, .confidence-low",
+          )
+          .forEach((el) => {
+            el.classList.remove(
+              "confidence-high",
+              "confidence-medium",
+              "confidence-low",
+            );
+          });
+      }
+
+      function getValueWithCustom(selectId, customId) {
+        const selectVal = getValue(selectId);
+        if (selectVal === "custom") {
+          const customVal = getValue(customId).trim();
+          return customVal || "custom";
+        }
+        return selectVal;
+      }
+
+      function normalizeLanguages(value) {
+        const raw = (value || "").trim();
+        if (!raw) return [];
+        return raw
+          .split(",")
+          .map((x) => x.trim().toUpperCase())
+          .filter(Boolean);
+      }
+
+      function buildConfig() {
+        const i18n = getValue("i18n");
+        return {
+          version: 2,
+          generatedAt: new Date().toISOString(),
+          frontend: {
+            framework: getValueWithCustom("frontend", "frontendCustom"),
+            styling: getValueWithCustom("styling", "stylingCustom"),
+            stateManagement: getValueWithCustom(
+              "stateManagement",
+              "stateManagementCustom",
+            ),
+            uiLibrary: getValueWithCustom("uiLibrary", "uiLibraryCustom"),
+            bundler: getValueWithCustom("bundler", "bundlerCustom"),
+            formLibrary: getValueWithCustom("formLibrary", "formLibraryCustom"),
+            dataFetching: getValueWithCustom(
+              "dataFetching",
+              "dataFetchingCustom",
+            ),
+          },
+          backend: {
+            framework: getValueWithCustom("backend", "backendCustom"),
+            database: getValueWithCustom("database", "databaseCustom"),
+            orm: getValueWithCustom("orm", "ormCustom"),
+            validation: getValueWithCustom("validation", "validationCustom"),
+            caching: getValueWithCustom("caching", "cachingCustom"),
+            messageQueue: getValueWithCustom(
+              "messageQueue",
+              "messageQueueCustom",
+            ),
+            realtime: getValueWithCustom("realtime", "realtimeCustom"),
+          },
+          architecture: {
+            i18n: i18n === "yes",
+            languages:
+              i18n === "yes" ? normalizeLanguages(getValue("languages")) : [],
+            auth: getValueWithCustom("auth", "authCustom"),
+            apiStyle: getValueWithCustom("apiStyle", "apiStyleCustom"),
+            multiTenancy: getValueWithCustom(
+              "multiTenancy",
+              "multiTenancyCustom",
+            ),
+            monorepo: getValueWithCustom("monorepo", "monorepoCustom"),
+            typescript: getValue("typescript") === "yes",
+          },
+          meta: {
+            programmingLanguages: getProgLangList(),
+          },
+          devops: {
+            deployment: getValueWithCustom("deployment", "deploymentCustom"),
+            cicd: getValueWithCustom("cicd", "cicdCustom"),
+            testing: getValueWithCustom("testing", "testingCustom"),
+            quality: getValueWithCustom("quality", "qualityCustom"),
+            packageManager: getValueWithCustom(
+              "packageManager",
+              "packageManagerCustom",
+            ),
+          },
+        };
+      }
+
+      function showStatus(msg, isError) {
+        const el = document.getElementById("status");
+        el.textContent = msg;
+        el.className = "status show " + (isError ? "err" : "ok");
+        setTimeout(() => {
+          el.className = "status";
+        }, 4000);
+      }
+
+      function validateConfig(config) {
+        const errors = [];
+        if (
+          config.frontend.framework === "none" &&
+          config.backend.framework === "none"
+        ) {
+          errors.push("Select at least one frontend or backend framework");
+        }
+        if (
+          config.architecture.i18n &&
+          config.architecture.languages.length === 0
+        ) {
+          errors.push("Languages are required when i18n is enabled");
+        }
+        return errors;
+      }
+
+      function updatePreview() {
+        const preview = document.getElementById("jsonPreview");
+        if (preview)
+          preview.textContent = JSON.stringify(buildConfig(), null, 2);
+      }
+
+      // -----------------------------------------------------------------------
+      // Server Detection + UI Mode
+      // -----------------------------------------------------------------------
+      function updateUIMode() {
+        const badge = document.getElementById("modeBadge");
+        const banner = document.getElementById("offlineBanner");
+        const analyzeBtn = document.getElementById("btnAnalyze");
+        const dropZone = document.getElementById("dropZone");
+
+        if (serverOnline) {
+          badge.textContent = "Server Connected";
+          badge.className = "mode-badge online";
+          banner.classList.remove("show");
+          analyzeBtn.disabled = false;
+          analyzeBtn.title = "Scan your project to auto-detect the tech stack";
+          dropZone.classList.remove("show");
+        } else {
+          badge.textContent = "Offline Mode";
+          badge.className = "mode-badge offline";
+          banner.classList.add("show");
+          analyzeBtn.disabled = true;
+          analyzeBtn.title =
+            "Requires Node.js server (run install.bat / install.sh)";
+          dropZone.classList.add("show");
+        }
+      }
+
+      async function checkServer() {
+        try {
+          const controller = new AbortController();
+          const timeout = setTimeout(() => controller.abort(), 2000);
+          const r = await fetch("http://localhost:3847/health", {
+            signal: controller.signal,
+          });
+          clearTimeout(timeout);
+          serverOnline = r.ok;
+        } catch {
+          serverOnline = false;
+        }
+        updateUIMode();
+        if (serverOnline && !FULL_MAPS_LOADED) {
+          loadFullMapsFromServer();
+        }
+      }
+
+      // -----------------------------------------------------------------------
+      // Analyze: apply detected config to form fields
+      // -----------------------------------------------------------------------
+      const FIELD_MAP = {
+        "frontend.framework": "frontend",
+        "frontend.styling": "styling",
+        "frontend.stateManagement": "stateManagement",
+        "frontend.uiLibrary": "uiLibrary",
+        "frontend.bundler": "bundler",
+        "frontend.formLibrary": "formLibrary",
+        "frontend.dataFetching": "dataFetching",
+        "backend.framework": "backend",
+        "backend.database": "database",
+        "backend.orm": "orm",
+        "backend.validation": "validation",
+        "backend.caching": "caching",
+        "backend.messageQueue": "messageQueue",
+        "backend.realtime": "realtime",
+        "devops.testing": "testing",
+        "devops.quality": "quality",
+        "devops.deployment": "deployment",
+        "devops.cicd": "cicd",
+        "devops.packageManager": "packageManager",
+        "architecture.monorepo": "monorepo",
+      };
+
+      function applyDetected(detected, confidence) {
+        clearConfidence();
+
+        for (const [dotPath, selectId] of Object.entries(FIELD_MAP)) {
+          const [section, key] = dotPath.split(".");
+          const val = detected[section] && detected[section][key];
+          if (val && val !== "none" && val !== "unknown") {
+            setValue(selectId, val);
+            setConfidence(selectId, confidence[dotPath] || "medium");
+          }
+        }
+
+        if (detected.architecture && detected.architecture.i18n) {
+          setValue("i18n", "yes");
+          setConfidence("i18n", confidence["architecture.i18n"] || "medium");
+        }
+
+        if (detected.architecture && detected.architecture.typescript) {
+          setValue("typescript", "yes");
+          setConfidence(
+            "typescript",
+            confidence["architecture.typescript"] || "medium",
+          );
+        }
+
+        if (
+          detected.architecture &&
+          detected.architecture.languages &&
+          detected.architecture.languages.length > 0
+        ) {
+          const langInput = document.getElementById("languages");
+          if (langInput)
+            langInput.value = detected.architecture.languages.join(", ");
+        }
+
+        // Programming languages chips
+        if (
+          detected.meta &&
+          detected.meta.programmingLanguages &&
+          detected.meta.programmingLanguages.length > 0
+        ) {
+          renderProgLangChips(detected.meta.programmingLanguages);
+        }
+
+        updatePreview();
+      }
+
+      function renderProgLangChips(langs) {
+        const container = document.getElementById("progLangChips");
+        if (!container) return;
+        container.innerHTML = "";
+        for (const lang of langs) {
+          const chip = document.createElement("span");
+          chip.className = "lang-chip";
+          chip.setAttribute("data-lang", lang);
+          chip.innerHTML =
+            lang +
+            ' <span class="remove-chip" title="Remove ' +
+            lang +
+            '">&times;</span>';
+          chip
+            .querySelector(".remove-chip")
+            .addEventListener("click", function () {
+              chip.remove();
+              updatePreview();
+            });
+          container.appendChild(chip);
+        }
+      }
+
+      function getProgLangList() {
+        const container = document.getElementById("progLangChips");
+        if (!container) return [];
+        return Array.from(container.querySelectorAll(".lang-chip")).map(
+          function (c) {
+            return c.getAttribute("data-lang");
+          },
+        );
+      }
+
+      function showAnalyzeResult(data) {
+        const el = document.getElementById("analyzeResult");
+        const parts = [];
+        const d = data.detected;
+        const collectParts = (obj) => {
+          for (const [key, val] of Object.entries(obj)) {
+            if (
+              typeof val === "string" &&
+              val !== "none" &&
+              val !== "unknown" &&
+              val !== "rest"
+            ) {
+              parts.push(val);
+            }
+          }
+        };
+        collectParts(d.frontend);
+        collectParts(d.backend);
+        if (d.architecture.typescript) parts.push("TypeScript");
+        if (d.architecture.i18n) parts.push("i18n");
+        if (d.architecture.monorepo !== "none")
+          parts.push(d.architecture.monorepo);
+
+        const confValues = Object.values(data.confidence);
+        const highCount = confValues.filter((c) => c === "high").length;
+        const medCount = confValues.filter((c) => c === "medium").length;
+        const lowCount = confValues.filter((c) => c === "low").length;
+
+        let structureInfo = "";
+        if (
+          d.architecture &&
+          d.architecture.pattern &&
+          d.architecture.pattern !== "unknown"
+        ) {
+          structureInfo =
+            " <strong>Architecture:</strong> " + d.architecture.pattern + ".";
+        }
+        if (
+          d.architecture &&
+          d.architecture.projectStructure &&
+          d.architecture.projectStructure.length > 0
+        ) {
+          structureInfo +=
+            " <strong>Folders:</strong> " +
+            d.architecture.projectStructure.slice(0, 8).join(", ");
+          if (d.architecture.projectStructure.length > 8)
+            structureInfo +=
+              " +" + (d.architecture.projectStructure.length - 8) + " more";
+          structureInfo += ".";
+        }
+
+        let langInfo = "";
+        if (
+          d.meta &&
+          d.meta.programmingLanguages &&
+          d.meta.programmingLanguages.length > 0
+        ) {
+          langInfo =
+            " <strong>Languages:</strong> " +
+            d.meta.programmingLanguages.join(", ") +
+            ".";
+        }
+
+        el.innerHTML =
+          "<strong>Project analyzed:</strong> " +
+          data.filesScanned.length +
+          " sources scanned. " +
+          "<strong>Detected:</strong> " +
+          (parts.length > 0 ? parts.join(" + ") : "No stack detected") +
+          ". " +
+          highCount +
+          " high" +
+          (medCount > 0 ? ", " + medCount + " medium" : "") +
+          (lowCount > 0 ? ", " + lowCount + " low" : "") +
+          " confidence." +
+          langInfo +
+          structureInfo +
+          " Review and adjust before saving.";
+        el.classList.add("show");
+      }
+
+      // -----------------------------------------------------------------------
+      // Offline: Drag & Drop file parsing
+      // -----------------------------------------------------------------------
+      function detectFromDepsClient(allDeps) {
+        const result = {};
+        const confidence = {};
+
+        for (const [field, entries] of Object.entries(DETECTION_MAP)) {
+          let best = null;
+          for (const entry of entries) {
+            if (allDeps[entry.dep]) {
+              if (!best || entry.priority > best.priority) best = entry;
+            }
+          }
+          if (best) {
+            result[field] = best.value;
+            confidence[field] = "high";
+          }
+        }
+
+        // Testing: detect unit and e2e frameworks separately, then combine
+        const unit =
+          allDeps["vitest"] ||
+          allDeps["@vitest/coverage-v8"] ||
+          allDeps["@vitest/ui"]
+            ? "vitest"
+            : allDeps["jest"] ||
+                allDeps["@jest/core"] ||
+                allDeps["ts-jest"] ||
+                allDeps["babel-jest"]
+              ? "jest"
+              : allDeps["mocha"]
+                ? "mocha"
+                : allDeps["ava"]
+                  ? "ava"
+                  : allDeps["jasmine"] || allDeps["jasmine-core"]
+                    ? "jasmine"
+                    : allDeps["uvu"]
+                      ? "uvu"
+                      : allDeps["karma"]
+                        ? "karma"
+                        : allDeps["tap"]
+                          ? "tap"
+                          : null;
+        const e2e =
+          allDeps["@playwright/test"] || allDeps["playwright"]
+            ? "playwright"
+            : allDeps["cypress"]
+              ? "cypress"
+              : allDeps["nightwatch"]
+                ? "nightwatch"
+                : allDeps["webdriverio"] || allDeps["@wdio/cli"]
+                  ? "webdriverio"
+                  : allDeps["testcafe"]
+                    ? "testcafe"
+                    : allDeps["puppeteer"]
+                      ? "puppeteer"
+                      : null;
+        if (unit && e2e) {
+          result["devops.testing"] = unit + "_" + e2e;
+          confidence["devops.testing"] = "high";
+        } else if (unit) {
+          result["devops.testing"] = unit;
+          confidence["devops.testing"] = "high";
+        } else if (e2e) {
+          result["devops.testing"] = e2e;
+          confidence["devops.testing"] = "high";
+        }
+
+        // Quality combos
+        const hasEslint = !!allDeps["eslint"];
+        const hasPrettier = !!allDeps["prettier"];
+        const hasHusky = !!allDeps["husky"];
+        const hasLintStaged = !!allDeps["lint-staged"];
+        const hasBiome = !!allDeps["@biomejs/biome"];
+        const hasOxlint = !!allDeps["oxlint"];
+        const hasDprint = !!allDeps["dprint"];
+        if (hasEslint && hasPrettier && hasHusky) {
+          result["devops.quality"] = "eslint_prettier_husky";
+          confidence["devops.quality"] = "high";
+        } else if (hasEslint && hasPrettier && hasLintStaged) {
+          result["devops.quality"] = "eslint_prettier_lintstaged";
+          confidence["devops.quality"] = "high";
+        } else if (hasEslint && hasPrettier) {
+          result["devops.quality"] = "eslint_prettier";
+          confidence["devops.quality"] = "high";
+        } else if (hasBiome) {
+          result["devops.quality"] = "biome";
+          confidence["devops.quality"] = "high";
+        } else if (hasOxlint) {
+          result["devops.quality"] = "oxlint";
+          confidence["devops.quality"] = "high";
+        } else if (hasDprint) {
+          result["devops.quality"] = "dprint";
+          confidence["devops.quality"] = "high";
+        } else if (hasEslint) {
+          result["devops.quality"] = "eslint";
+          confidence["devops.quality"] = "high";
+        } else if (hasPrettier) {
+          result["devops.quality"] = "prettier";
+          confidence["devops.quality"] = "high";
+        }
+
+        return { result, confidence };
+      }
+
+      function parsePythonDepsClient(content) {
+        const deps = [];
+        for (const line of content.split("\n")) {
+          const trimmed = line.trim();
+          if (!trimmed || trimmed.startsWith("#") || trimmed.startsWith("-"))
+            continue;
+          const match = trimmed.match(/^([a-zA-Z0-9_-]+)/);
+          if (match) deps.push(match[1].toLowerCase());
+        }
+        return deps;
+      }
+
+      function parsePyprojectDepsClient(content) {
+        const deps = [];
+        let inDeps = false;
+        for (const line of content.split("\n")) {
+          const trimmed = line.trim();
+          if (
+            trimmed === "[project.dependencies]" ||
+            trimmed === "[tool.poetry.dependencies]"
+          ) {
+            inDeps = true;
+            continue;
+          }
+          if (trimmed.startsWith("[") && inDeps) break;
+          if (inDeps) {
+            const match = trimmed.match(/^"?([a-zA-Z0-9_-]+)/);
+            if (match) deps.push(match[1].toLowerCase());
+          }
+        }
+        return deps;
+      }
+
+      function detectFromPythonDeps(deps) {
+        const result = {};
+        const confidence = {};
+        for (const [field, entries] of Object.entries(PYTHON_MAP)) {
+          for (const entry of entries) {
+            if (deps.includes(entry.dep)) {
+              result[field] = entry.value;
+              confidence[field] = "high";
+            }
+          }
+        }
+        return { result, confidence };
+      }
+
+      // --- Client-side parsers for non-JS/Python dependency files ---
+      function parseMavenDepsClient(content) {
+        const deps = [];
+        const depRegex = /<dependency>[\s\S]*?<\/dependency>/gi;
+        const matches = content.match(depRegex);
+        if (matches) {
+          for (const block of matches) {
+            const m = block.match(/<artifactId>\s*([^<]+)\s*<\/artifactId>/i);
+            if (m) deps.push(m[1].trim());
+          }
+        }
+        const pluginRegex = /<plugin>[\s\S]*?<\/plugin>/gi;
+        const pluginMatches = content.match(pluginRegex);
+        if (pluginMatches) {
+          for (const block of pluginMatches) {
+            const m = block.match(/<artifactId>\s*([^<]+)\s*<\/artifactId>/i);
+            if (m) deps.push(m[1].trim());
+          }
+        }
+        return deps;
+      }
+
+      function parseGradleDepsClient(content) {
+        const deps = [];
+        const pattern =
+          /(?:implementation|api|compileOnly|runtimeOnly|testImplementation|testRuntimeOnly|kapt|annotationProcessor)\s*\(?['"]([^'"]+)['"]\)?/gi;
+        let match;
+        while ((match = pattern.exec(content)) !== null) {
+          const parts = match[1].split(":");
+          if (parts.length >= 2) deps.push(parts[1]);
+        }
+        return [...new Set(deps)];
+      }
+
+      function parseCsprojDepsClient(content) {
+        const deps = [];
+        const pattern = /<PackageReference\s+Include="([^"]+)"/gi;
+        let match;
+        while ((match = pattern.exec(content)) !== null) deps.push(match[1]);
+        const sdkMatch = content.match(/<Project\s+Sdk="([^"]+)"/i);
+        if (sdkMatch) deps.push(sdkMatch[1]);
+        return deps;
+      }
+
+      function parseGoModDepsClient(content) {
+        const deps = [];
+        const singleReq = /^require\s+(\S+)\s+/gm;
+        let match;
+        while ((match = singleReq.exec(content)) !== null) deps.push(match[1]);
+        const blockMatch = content.match(/require\s*\(([\s\S]*?)\)/g);
+        if (blockMatch) {
+          for (const block of blockMatch) {
+            for (const line of block.split("\n")) {
+              const trimmed = line.trim();
+              if (
+                trimmed.startsWith("//") ||
+                trimmed === "require (" ||
+                trimmed === ")"
+              )
+                continue;
+              const modMatch = trimmed.match(/^(\S+)\s+/);
+              if (modMatch) deps.push(modMatch[1]);
+            }
+          }
+        }
+        return deps;
+      }
+
+      function parseCargoDepsClient(content) {
+        const deps = [];
+        const sections = [
+          "[dependencies]",
+          "[dev-dependencies]",
+          "[build-dependencies]",
+        ];
+        let inDeps = false;
+        for (const line of content.split("\n")) {
+          const trimmed = line.trim();
+          if (sections.some((s) => trimmed.toLowerCase() === s.toLowerCase())) {
+            inDeps = true;
+            continue;
+          }
+          if (trimmed.startsWith("[") && inDeps) {
+            inDeps = false;
+            continue;
+          }
+          if (inDeps && trimmed && !trimmed.startsWith("#")) {
+            const m = trimmed.match(/^([a-zA-Z0-9_-]+)\s*=/);
+            if (m) deps.push(m[1]);
+          }
+        }
+        return deps;
+      }
+
+      function parseComposerDepsClient(content) {
+        const deps = [];
+        try {
+          const composer = JSON.parse(content);
+          const allDeps = {
+            ...(composer.require || {}),
+            ...(composer["require-dev"] || {}),
+          };
+          for (const pkg of Object.keys(allDeps)) deps.push(pkg);
+        } catch {
+          /* ignore */
+        }
+        return deps;
+      }
+
+      function parseGemfileDepsClient(content) {
+        const deps = [];
+        const pattern = /^\s*gem\s+['"]([^'"]+)['"]/gm;
+        let match;
+        while ((match = pattern.exec(content)) !== null) deps.push(match[1]);
+        return deps;
+      }
+
+      // Compact detection maps for non-JS/Python stacks (client-side)
+      let JAVA_MAP_CLIENT = {
+        "backend.framework": [
+          { dep: "spring-boot-starter-web", value: "spring" },
+          { dep: "spring-boot-starter-webflux", value: "spring" },
+          { dep: "spring-boot-starter", value: "spring" },
+          { dep: "spring-boot", value: "spring" },
+          { dep: "spring-web", value: "spring" },
+          { dep: "spring-webmvc", value: "spring" },
+          { dep: "spring-context", value: "spring" },
+          { dep: "quarkus-core", value: "quarkus" },
+          { dep: "quarkus-resteasy", value: "quarkus" },
+          { dep: "quarkus-resteasy-reactive", value: "quarkus" },
+          { dep: "quarkus-resteasy-jackson", value: "quarkus" },
+          { dep: "micronaut-core", value: "micronaut" },
+          { dep: "micronaut-http-server-netty", value: "micronaut" },
+          { dep: "vertx-web", value: "vertx" },
+          { dep: "vertx-core", value: "vertx" },
+          { dep: "helidon-webserver", value: "helidon" },
+          { dep: "helidon-microprofile", value: "helidon" },
+          { dep: "javalin", value: "javalin" },
+          { dep: "ktor-server-core", value: "ktor" },
+          { dep: "ktor-server-netty", value: "ktor" },
+        ],
+        "backend.orm": [
+          { dep: "spring-boot-starter-data-jpa", value: "jpa" },
+          { dep: "spring-data-jpa", value: "jpa" },
+          { dep: "jakarta.persistence-api", value: "jpa" },
+          { dep: "javax.persistence-api", value: "jpa" },
+          { dep: "spring-boot-starter-data-jdbc", value: "spring-data-jdbc" },
+          { dep: "spring-data-jdbc", value: "spring-data-jdbc" },
+          { dep: "spring-boot-starter-data-r2dbc", value: "r2dbc" },
+          { dep: "r2dbc-postgresql", value: "r2dbc" },
+          { dep: "r2dbc-mysql", value: "r2dbc" },
+          { dep: "hibernate-core", value: "hibernate" },
+          { dep: "hibernate-entitymanager", value: "hibernate" },
+          { dep: "mybatis-spring-boot-starter", value: "mybatis" },
+          { dep: "mybatis", value: "mybatis" },
+          { dep: "jooq", value: "jooq" },
+          { dep: "jooq-codegen", value: "jooq" },
+          { dep: "querydsl-jpa", value: "querydsl" },
+          { dep: "querydsl-apt", value: "querydsl" },
+          { dep: "exposed-core", value: "exposed" },
+          { dep: "exposed-dao", value: "exposed" },
+          { dep: "ktorm-core", value: "ktorm" },
+        ],
+        "backend.database": [
+          { dep: "postgresql", value: "postgres" },
+          { dep: "org.postgresql", value: "postgres" },
+          { dep: "r2dbc-postgresql", value: "postgres" },
+          { dep: "mysql-connector-j", value: "mysql" },
+          { dep: "mysql-connector-java", value: "mysql" },
+          { dep: "r2dbc-mysql", value: "mysql" },
+          { dep: "mongodb-driver-sync", value: "mongo" },
+          { dep: "mongodb-driver-reactivestreams", value: "mongo" },
+          { dep: "spring-boot-starter-data-mongodb", value: "mongo" },
+          { dep: "h2", value: "h2" },
+          { dep: "mssql-jdbc", value: "mssql" },
+          { dep: "ojdbc8", value: "oracle" },
+          { dep: "ojdbc11", value: "oracle" },
+          { dep: "cassandra-driver-core", value: "cassandra" },
+          { dep: "spring-boot-starter-data-cassandra", value: "cassandra" },
+          { dep: "elasticsearch-java", value: "elasticsearch" },
+          {
+            dep: "spring-boot-starter-data-elasticsearch",
+            value: "elasticsearch",
+          },
+          { dep: "neo4j-java-driver", value: "neo4j" },
+          { dep: "spring-boot-starter-data-neo4j", value: "neo4j" },
+          { dep: "sqlite-jdbc", value: "sqlite" },
+          { dep: "HikariCP", value: "postgres" },
+        ],
+        "backend.validation": [
+          { dep: "spring-boot-starter-validation", value: "bean-validation" },
+          { dep: "hibernate-validator", value: "bean-validation" },
+          { dep: "jakarta.validation-api", value: "bean-validation" },
+          { dep: "javax.validation", value: "bean-validation" },
+        ],
+        "backend.caching": [
+          { dep: "spring-boot-starter-data-redis", value: "redis" },
+          { dep: "spring-boot-starter-cache", value: "spring-cache" },
+          { dep: "lettuce-core", value: "redis" },
+          { dep: "jedis", value: "redis" },
+          { dep: "caffeine", value: "caffeine" },
+          { dep: "ehcache", value: "ehcache" },
+          { dep: "hazelcast-spring", value: "hazelcast" },
+          { dep: "hazelcast", value: "hazelcast" },
+          { dep: "infinispan-spring-boot-starter", value: "infinispan" },
+          { dep: "guava", value: "guava" },
+        ],
+        "backend.messageQueue": [
+          { dep: "spring-boot-starter-amqp", value: "rabbitmq" },
+          { dep: "spring-rabbit", value: "rabbitmq" },
+          { dep: "spring-kafka", value: "kafka" },
+          { dep: "kafka-clients", value: "kafka" },
+          { dep: "spring-boot-starter-activemq", value: "activemq" },
+          { dep: "activemq-broker", value: "activemq" },
+          { dep: "activemq-client", value: "activemq" },
+          { dep: "pulsar-client", value: "pulsar" },
+          { dep: "spring-pulsar", value: "pulsar" },
+          { dep: "nats-client", value: "nats" },
+        ],
+        "backend.realtime": [
+          { dep: "spring-boot-starter-websocket", value: "stomp" },
+          { dep: "spring-websocket", value: "stomp" },
+          { dep: "spring-messaging", value: "stomp" },
+          { dep: "spring-boot-starter-webflux", value: "webflux" },
+          { dep: "reactor-core", value: "webflux" },
+          { dep: "netty-all", value: "netty" },
+          { dep: "netty-codec-http", value: "netty" },
+        ],
+        "architecture.auth": [
+          { dep: "spring-boot-starter-security", value: "spring-security" },
+          { dep: "spring-security-core", value: "spring-security" },
+          { dep: "spring-boot-starter-oauth2-client", value: "oauth" },
+          { dep: "spring-boot-starter-oauth2-resource-server", value: "oauth" },
+          { dep: "java-jwt", value: "jwt" },
+          { dep: "jjwt-api", value: "jwt" },
+          { dep: "nimbus-jose-jwt", value: "jwt" },
+          { dep: "keycloak-spring-boot-starter", value: "oauth" },
+        ],
+        "devops.testing": [
+          { dep: "junit-jupiter", value: "junit5" },
+          { dep: "junit-jupiter-api", value: "junit5" },
+          { dep: "spring-boot-starter-test", value: "junit5" },
+          { dep: "kotest-runner-junit5", value: "kotest" },
+        ],
+      };
+
+      let DOTNET_MAP_CLIENT = {
+        "backend.framework": [
+          { dep: "Microsoft.AspNetCore", value: "dotnet" },
+          { dep: "Microsoft.AspNetCore.App", value: "dotnet" },
+        ],
+        "backend.orm": [
+          { dep: "Microsoft.EntityFrameworkCore", value: "efcore" },
+          { dep: "Dapper", value: "dapper" },
+        ],
+        "backend.database": [
+          { dep: "Npgsql", value: "postgres" },
+          { dep: "MongoDB.Driver", value: "mongo" },
+          { dep: "Microsoft.Data.SqlClient", value: "mssql" },
+          { dep: "Microsoft.Data.Sqlite", value: "sqlite" },
+        ],
+        "backend.validation": [
+          { dep: "FluentValidation", value: "fluentvalidation" },
+        ],
+        "backend.caching": [{ dep: "StackExchange.Redis", value: "redis" }],
+        "backend.messageQueue": [
+          { dep: "MassTransit", value: "masstransit" },
+          { dep: "MediatR", value: "mediatr" },
+        ],
+        "backend.realtime": [
+          { dep: "Microsoft.AspNetCore.SignalR", value: "signalr" },
+        ],
+        "architecture.auth": [
+          {
+            dep: "Microsoft.AspNetCore.Authentication.JwtBearer",
+            value: "jwt",
+          },
+        ],
+        "devops.testing": [
+          { dep: "xunit", value: "xunit" },
+          { dep: "NUnit", value: "nunit" },
+        ],
+      };
+
+      let GO_MAP_CLIENT = {
+        "backend.framework": [
+          { dep: "github.com/gin-gonic/gin", value: "gin" },
+          { dep: "github.com/labstack/echo", value: "echo" },
+          { dep: "github.com/gofiber/fiber", value: "fiber" },
+          { dep: "github.com/go-chi/chi", value: "chi" },
+        ],
+        "backend.orm": [
+          { dep: "gorm.io/gorm", value: "gorm" },
+          { dep: "entgo.io/ent", value: "ent" },
+        ],
+        "backend.database": [
+          { dep: "github.com/lib/pq", value: "postgres" },
+          { dep: "github.com/jackc/pgx", value: "postgres" },
+          { dep: "go.mongodb.org/mongo-driver", value: "mongo" },
+        ],
+        "architecture.auth": [
+          { dep: "github.com/golang-jwt/jwt", value: "jwt" },
+        ],
+        "devops.testing": [
+          { dep: "github.com/stretchr/testify", value: "go-test" },
+        ],
+      };
+
+      let RUST_MAP_CLIENT = {
+        "backend.framework": [
+          { dep: "actix-web", value: "actix" },
+          { dep: "axum", value: "axum" },
+          { dep: "rocket", value: "rocket" },
+          { dep: "warp", value: "warp" },
+        ],
+        "backend.orm": [
+          { dep: "diesel", value: "diesel" },
+          { dep: "sea-orm", value: "sea-orm" },
+          { dep: "sqlx", value: "sqlx" },
+        ],
+        "backend.database": [
+          { dep: "tokio-postgres", value: "postgres" },
+          { dep: "mongodb", value: "mongo" },
+          { dep: "rusqlite", value: "sqlite" },
+        ],
+        "architecture.auth": [{ dep: "jsonwebtoken", value: "jwt" }],
+        "devops.testing": [{ dep: "mockall", value: "cargo-test" }],
+      };
+
+      let PHP_MAP_CLIENT = {
+        "backend.framework": [
+          { dep: "laravel/framework", value: "laravel" },
+          { dep: "symfony/framework-bundle", value: "symfony" },
+          { dep: "slim/slim", value: "slim" },
+        ],
+        "backend.orm": [
+          { dep: "doctrine/orm", value: "doctrine" },
+          { dep: "illuminate/database", value: "eloquent" },
+        ],
+        "backend.database": [
+          { dep: "ext-pgsql", value: "postgres" },
+          { dep: "ext-mysqli", value: "mysql" },
+          { dep: "mongodb/mongodb", value: "mongo" },
+          { dep: "predis/predis", value: "redis" },
+        ],
+        "architecture.auth": [
+          { dep: "laravel/sanctum", value: "session" },
+          { dep: "tymon/jwt-auth", value: "jwt" },
+        ],
+        "devops.testing": [
+          { dep: "phpunit/phpunit", value: "phpunit" },
+          { dep: "pestphp/pest", value: "pest" },
+        ],
+        "devops.quality": [
+          { dep: "phpstan/phpstan", value: "phpstan" },
+          { dep: "friendsofphp/php-cs-fixer", value: "php-cs-fixer" },
+        ],
+      };
+
+      let RUBY_MAP_CLIENT = {
+        "backend.framework": [
+          { dep: "rails", value: "rails" },
+          { dep: "sinatra", value: "sinatra" },
+        ],
+        "backend.orm": [
+          { dep: "activerecord", value: "activerecord" },
+          { dep: "sequel", value: "sequel" },
+        ],
+        "backend.database": [
+          { dep: "pg", value: "postgres" },
+          { dep: "mysql2", value: "mysql" },
+          { dep: "redis", value: "redis" },
+        ],
+        "architecture.auth": [
+          { dep: "devise", value: "session" },
+          { dep: "omniauth", value: "oauth" },
+        ],
+        "devops.testing": [
+          { dep: "rspec", value: "rspec" },
+          { dep: "minitest", value: "minitest" },
+        ],
+        "devops.quality": [{ dep: "rubocop", value: "rubocop" }],
+      };
+
+      function applyMapToDepsClient(deps, map, isExact) {
+        const result = {};
+        const confidence = {};
+        for (const [field, entries] of Object.entries(map)) {
+          for (const entry of entries) {
+            const found = isExact
+              ? deps.includes(entry.dep)
+              : deps.some(
+                  (d) =>
+                    d === entry.dep ||
+                    d.startsWith(entry.dep + "/") ||
+                    d.endsWith("/" + entry.dep),
+                );
+            if (found) {
+              result[field] = entry.value;
+              confidence[field] = "high";
+              break;
+            }
+          }
+        }
+        return { result, confidence };
+      }
+
+      function flatToNested(flat) {
+        const nested = {
+          frontend: {
+            framework: "none",
+            styling: "none",
+            stateManagement: "none",
+            uiLibrary: "none",
+            bundler: "none",
+            formLibrary: "none",
+            dataFetching: "none",
+          },
+          backend: {
+            framework: "none",
+            database: "none",
+            orm: "none",
+            validation: "none",
+            caching: "none",
+            messageQueue: "none",
+            realtime: "none",
+          },
+          architecture: {
+            i18n: false,
+            languages: [],
+            auth: "none",
+            apiStyle: "none",
+            multiTenancy: "none",
+            monorepo: "none",
+            typescript: false,
+          },
+          devops: {
+            deployment: "none",
+            cicd: "none",
+            testing: "none",
+            quality: "none",
+            packageManager: "unknown",
+          },
+        };
+        for (const [dotPath, value] of Object.entries(flat)) {
+          const [section, key] = dotPath.split(".");
+          if (nested[section]) nested[section][key] = value;
+        }
+        return nested;
+      }
+
+      function handleDroppedFile(file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          const content = e.target.result;
+          const name = file.name.toLowerCase();
+          let detected, confidence;
+
+          if (name === "package.json") {
+            try {
+              const pkg = JSON.parse(content);
+              const allDeps = {
+                ...(pkg.dependencies || {}),
+                ...(pkg.devDependencies || {}),
+              };
+              const r = detectFromDepsClient(allDeps);
+              detected = flatToNested(r.result);
+              confidence = r.confidence;
+            } catch {
+              showStatus("Failed to parse package.json", true);
+              return;
+            }
+          } else if (
+            name === "requirements.txt" ||
+            name.startsWith("requirements")
+          ) {
+            const deps = parsePythonDepsClient(content);
+            const r = detectFromPythonDeps(deps);
+            detected = flatToNested(r.result);
+            confidence = r.confidence;
+          } else if (name === "pyproject.toml") {
+            const deps = parsePyprojectDepsClient(content);
+            const r = detectFromPythonDeps(deps);
+            detected = flatToNested(r.result);
+            confidence = r.confidence;
+          } else if (name === "pom.xml") {
+            const deps = parseMavenDepsClient(content);
+            const r = applyMapToDepsClient(deps, JAVA_MAP_CLIENT, true);
+            if (!r.result["backend.framework"])
+              r.result["backend.framework"] = "spring";
+            detected = flatToNested(r.result);
+            confidence = r.confidence;
+          } else if (name === "build.gradle" || name === "build.gradle.kts") {
+            const deps = parseGradleDepsClient(content);
+            const r = applyMapToDepsClient(deps, JAVA_MAP_CLIENT, true);
+            if (!r.result["backend.framework"])
+              r.result["backend.framework"] = "spring";
+            detected = flatToNested(r.result);
+            confidence = r.confidence;
+          } else if (name.endsWith(".csproj")) {
+            const deps = parseCsprojDepsClient(content);
+            const r = applyMapToDepsClient(deps, DOTNET_MAP_CLIENT, true);
+            if (!r.result["backend.framework"])
+              r.result["backend.framework"] = "dotnet";
+            detected = flatToNested(r.result);
+            confidence = r.confidence;
+          } else if (name === "go.mod") {
+            const deps = parseGoModDepsClient(content);
+            const r = applyMapToDepsClient(deps, GO_MAP_CLIENT, false);
+            if (!r.result["backend.framework"])
+              r.result["backend.framework"] = "go";
+            detected = flatToNested(r.result);
+            confidence = r.confidence;
+          } else if (name === "cargo.toml") {
+            const deps = parseCargoDepsClient(content);
+            const r = applyMapToDepsClient(deps, RUST_MAP_CLIENT, true);
+            if (!r.result["backend.framework"])
+              r.result["backend.framework"] = "rust";
+            detected = flatToNested(r.result);
+            confidence = r.confidence;
+          } else if (name === "composer.json") {
+            const deps = parseComposerDepsClient(content);
+            const r = applyMapToDepsClient(deps, PHP_MAP_CLIENT, true);
+            if (!r.result["backend.framework"]) {
+              r.result["backend.framework"] = content.includes("laravel")
+                ? "laravel"
+                : content.includes("symfony")
+                  ? "symfony"
+                  : "laravel";
+            }
+            detected = flatToNested(r.result);
+            confidence = r.confidence;
+          } else if (name === "gemfile") {
+            const deps = parseGemfileDepsClient(content);
+            const r = applyMapToDepsClient(deps, RUBY_MAP_CLIENT, true);
+            if (!r.result["backend.framework"])
+              r.result["backend.framework"] = "rails";
+            detected = flatToNested(r.result);
+            confidence = r.confidence;
+          } else {
+            showStatus(
+              "Unsupported file. Drop package.json, pom.xml, build.gradle, *.csproj, go.mod, Cargo.toml, composer.json, Gemfile, requirements.txt, or pyproject.toml.",
+              true,
+            );
+            return;
+          }
+
+          applyDetected(detected, confidence);
+          const el = document.getElementById("analyzeResult");
+          el.innerHTML =
+            "<strong>Partial detection from " +
+            file.name +
+            ":</strong> Only the dropped file was analyzed. Some fields may not be detected.";
+          el.classList.add("show");
+          showStatus("Stack detected from " + file.name, false);
+        };
+        reader.readAsText(file);
+      }
+
+      // -----------------------------------------------------------------------
+      // Event Listeners
+      // -----------------------------------------------------------------------
+
+      // Custom input toggle + preview
+      document.querySelectorAll("select").forEach((select) => {
+        select.addEventListener("change", () => {
+          const customInput = document.getElementById(select.id + "Custom");
+          if (customInput) {
+            customInput.classList.toggle("show", select.value === "custom");
+            if (select.value === "custom") customInput.focus();
+          }
+          updatePreview();
+        });
+      });
+      document.querySelectorAll("input").forEach((input) => {
+        input.addEventListener("input", updatePreview);
+      });
+      updatePreview();
+
+      // Analyze Project
+      document
+        .getElementById("btnAnalyze")
+        .addEventListener("click", async () => {
+          const btn = document.getElementById("btnAnalyze");
+          btn.disabled = true;
+          btn.textContent = "Analyzing...";
+          try {
+            const r = await fetch("http://localhost:3847/analyze");
+            const data = await r.json();
+            applyDetected(data.detected, data.confidence);
+            showAnalyzeResult(data);
+            showStatus("Project analyzed successfully", false);
+
+            // Generate BOM after successful analysis
+            btn.textContent = "Generating BOM...";
+            try {
+              const bomR = await fetch("http://localhost:3847/generate-bom");
+              const bomData = await bomR.json();
+              if (bomData.success) {
+                const el = document.getElementById("analyzeResult");
+                el.innerHTML +=
+                  "<br><strong>BOM generated:</strong> " +
+                  bomData.totalDeps +
+                  " dependencies (" +
+                  bomData.ecosystems.join(", ") +
+                  ") &rarr; <code>docs/BOM.md</code>";
+              }
+            } catch (bomErr) {
+              console.warn(
+                "BOM generation failed (non-critical):",
+                bomErr.message,
+              );
+            }
+          } catch (err) {
+            showStatus("Analysis failed: " + err.message, true);
+          } finally {
+            btn.disabled = false;
+            btn.textContent = "Analyze Project";
+          }
+        });
+
+      // Save & Generate
+      document.getElementById("btnSave").addEventListener("click", async () => {
+        const config = buildConfig();
+        const errors = validateConfig(config);
+        if (errors.length > 0) {
+          showStatus(errors.join("; "), true);
+          return;
+        }
+        const json = JSON.stringify(config, null, 2);
+
+        if (serverOnline) {
+          try {
+            const response = await fetch("http://localhost:3847/save-config", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: json,
+            });
+            const result = await response.json();
+            if (result.success) {
+              showStatus(
+                "Config saved. Run /project-init to generate skills.",
+                false,
+              );
+              setTimeout(() => {
+                window.close();
+              }, 2000);
+            } else {
+              throw new Error(
+                result.error || result.errors?.join("; ") || "Unknown error",
+              );
+            }
+          } catch (err) {
+            downloadConfig(json);
+          }
+        } else {
+          downloadConfig(json);
+        }
+      });
+
+      function downloadConfig(json) {
+        const blob = new Blob([json], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "project-init-config.json";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+
+        // Copy to clipboard
+        navigator.clipboard
+          .writeText(json)
+          .then(() => {
+            showStatus(
+              "Config downloaded and copied to clipboard. Move to .windsurf/",
+              false,
+            );
+          })
+          .catch(() => {
+            showStatus(
+              "Config downloaded. Move to .windsurf/project-init-config.json",
+              false,
+            );
+          });
+      }
+
+      // Reset
+      document.getElementById("btnReset").addEventListener("click", () => {
+        document.querySelectorAll("select").forEach((el) => {
+          el.selectedIndex = 0;
+        });
+        document.querySelectorAll("input").forEach((el) => {
+          el.value = "";
+        });
+        document.querySelectorAll(".custom-input").forEach((el) => {
+          el.classList.remove("show");
+        });
+        clearConfidence();
+        document.getElementById("analyzeResult").classList.remove("show");
+        updatePreview();
+        showStatus("Form reset.", false);
+      });
+
+      // Drag & Drop
+      const dropZone = document.getElementById("dropZone");
+      dropZone.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        dropZone.classList.add("dragover");
+      });
+      dropZone.addEventListener("dragleave", () => {
+        dropZone.classList.remove("dragover");
+      });
+      dropZone.addEventListener("drop", (e) => {
+        e.preventDefault();
+        dropZone.classList.remove("dragover");
+        const file = e.dataTransfer.files[0];
+        if (file) handleDroppedFile(file);
+      });
+      dropZone.addEventListener("click", () => {
+        const input = document.createElement("input");
+        input.type = "file";
+        input.accept = ".json,.txt,.toml,.xml,.gradle,.kts,.csproj,.mod";
+        input.onchange = (e) => {
+          const file = e.target.files[0];
+          if (file) handleDroppedFile(file);
+        };
+        input.click();
+      });
+
+      // Init: check server
+      checkServer();
+    </script>
+  </body>
+</html>
