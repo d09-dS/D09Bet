@@ -15,6 +15,8 @@ import { DateTimeInput } from "@/components/ui/date-time-input";
 import { toast } from "sonner";
 import { Plus, Loader2, XCircle, PlusCircle } from "lucide-react";
 
+const inputClass = "h-11 rounded-xl bg-secondary/50 border-border/50 focus:border-primary/50 focus:ring-primary/20 transition-all [&:not(:placeholder-shown)]:bg-white [&:not(:placeholder-shown)]:text-[#0A0E13] [&:not(:placeholder-shown)]:border-white/30";
+
 export default function CreateBetPage() {
   const tAdmin = useTranslations("admin");
   const tCommon = useTranslations("common");
@@ -123,10 +125,10 @@ export default function CreateBetPage() {
         <CardContent className="space-y-4">
           {/* Category selection */}
           {categories.length > 0 && (
-            <div>
-              <Label>{tAdmin("marketCategory")} *</Label>
+            <div className="space-y-2">
+              <Label className="text-sm font-medium">{tAdmin("marketCategory")} *</Label>
               <select
-                className="w-full rounded border bg-background px-3 py-2 text-sm mt-1"
+                className="h-11 w-full rounded-xl bg-secondary/50 border border-border/50 px-3 py-2 text-sm focus:border-primary/50 focus:ring-primary/20 transition-all"
                 value={newEvent.categoryId}
                 onChange={(e) =>
                   setNewEvent({ ...newEvent, categoryId: e.target.value })
@@ -143,46 +145,53 @@ export default function CreateBetPage() {
           )}
 
           {/* Event details */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <Label>{tAdmin("betTitleDe")} *</Label>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label className="text-sm font-medium">{tAdmin("betTitleDe")} *</Label>
               <Input
                 value={newEvent.title}
                 onChange={(e) =>
                   setNewEvent({ ...newEvent, title: e.target.value })
                 }
                 placeholder={tAdmin("betTitleDePlaceholder")}
+                className={inputClass}
               />
             </div>
-            <div>
-              <Label>{tAdmin("betTitleEn")}</Label>
+            <div className="space-y-2">
+              <Label className="text-sm font-medium">{tAdmin("betTitleEn")}</Label>
               <Input
                 value={newEvent.titleEn}
                 onChange={(e) =>
                   setNewEvent({ ...newEvent, titleEn: e.target.value })
                 }
+                placeholder={tAdmin("betTitleEn")}
+                className={inputClass}
               />
             </div>
-            <div>
-              <Label>{tAdmin("descriptionDe")}</Label>
+            <div className="space-y-2">
+              <Label className="text-sm font-medium">{tAdmin("descriptionDe")}</Label>
               <Input
                 value={newEvent.description}
                 onChange={(e) =>
                   setNewEvent({ ...newEvent, description: e.target.value })
                 }
+                placeholder={tAdmin("descriptionDe")}
+                className={inputClass}
               />
             </div>
-            <div>
-              <Label>{tAdmin("descriptionEn")}</Label>
+            <div className="space-y-2">
+              <Label className="text-sm font-medium">{tAdmin("descriptionEn")}</Label>
               <Input
                 value={newEvent.descriptionEn}
                 onChange={(e) =>
                   setNewEvent({ ...newEvent, descriptionEn: e.target.value })
                 }
+                placeholder={tAdmin("descriptionEn")}
+                className={inputClass}
               />
             </div>
-            <div>
-              <Label>{tAdmin("endTime")} *</Label>
+            <div className="space-y-2">
+              <Label className="text-sm font-medium">{tAdmin("endTime")} *</Label>
               <DateTimeInput
                 required
                 value={newEvent.endTime}
@@ -197,7 +206,7 @@ export default function CreateBetPage() {
 
           {/* Outcomes with odds */}
           <div className="space-y-2">
-            <Label>{tAdmin("outcomesAndOdds")}</Label>
+            <Label className="text-sm font-medium">{tAdmin("outcomesAndOdds")}</Label>
             <p className="text-xs text-muted-foreground">
               {tAdmin("oddsMultiplierHint")}
             </p>
@@ -213,7 +222,7 @@ export default function CreateBetPage() {
                     copy[i] = { ...copy[i], name: e.target.value };
                     setNewOutcomes(copy);
                   }}
-                  className="flex-1"
+                  className={`flex-1 ${inputClass}`}
                 />
                 <div className="flex items-center gap-1">
                   <Input
@@ -224,7 +233,7 @@ export default function CreateBetPage() {
                       copy[i] = { ...copy[i], odds: e.target.value };
                       setNewOutcomes(copy);
                     }}
-                    className="w-24"
+                    className={`w-24 ${inputClass}`}
                   />
                 </div>
                 {newOutcomes.length > 2 && (
