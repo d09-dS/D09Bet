@@ -13,13 +13,13 @@ export async function PATCH(
     const body = await req.json();
     const { amount, reason } = body as { amount: number; reason?: string };
 
-    if (typeof amount !== "number" || !isFinite(amount)) throw new ApiError(400, "amount must be a finite number");
+    if (typeof amount !== "number" || !isFinite(amount)) throw new ApiError(400, "amountMustBeNumber");
 
     const user = await prisma.user.findUnique({ where: { id } });
-    if (!user) throw new ApiError(404, "User not found");
+    if (!user) throw new ApiError(404, "userNotFound");
 
     const newBalance = Number(user.tokenBalance) + amount;
-    if (newBalance < 0) throw new ApiError(400, "Adjustment would result in negative balance");
+    if (newBalance < 0) throw new ApiError(400, "negativeBalance");
 
     const updated = await prisma.$transaction(async (tx) => {
       const u = await tx.user.update({

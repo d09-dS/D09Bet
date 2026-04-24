@@ -17,13 +17,13 @@ export async function getAuthUser(req: NextRequest) {
 
 export async function requireAuth(req: NextRequest) {
   const user = await getAuthUser(req);
-  if (!user) throw new ApiError(401, "Unauthorized");
+  if (!user) throw new ApiError(401, "unauthorized");
   return user;
 }
 
 export async function requireRole(req: NextRequest, ...roles: string[]) {
   const user = await requireAuth(req);
-  if (!roles.includes(user.role)) throw new ApiError(403, "Forbidden");
+  if (!roles.includes(user.role)) throw new ApiError(403, "forbidden");
   return user;
 }
 
@@ -33,7 +33,8 @@ export class ApiError extends Error {
   constructor(
     public status: number,
     message: string,
-    public fieldErrors?: Record<string, string>
+    public fieldErrors?: Record<string, string>,
+    public errorParams?: Record<string, string | number>
   ) {
     super(message);
   }
@@ -43,10 +44,11 @@ export function errorResponse(err: unknown) {
   if (err instanceof ApiError) {
     const body: Record<string, unknown> = { error: err.message };
     if (err.fieldErrors) body.fieldErrors = err.fieldErrors;
+    if (err.errorParams) body.errorParams = err.errorParams;
     return NextResponse.json(body, { status: err.status });
   }
   console.error(err);
-  return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  return NextResponse.json({ error: "internalServerError" }, { status: 500 });
 }
 
 // ─── Serialisation (Decimal / BigInt → number) ───────────

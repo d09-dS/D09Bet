@@ -6,6 +6,7 @@ import { useTranslations, useLocale } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { useSearchParams } from "next/navigation";
 import { api } from "@/lib/api";
+import { translateApiError } from "@/lib/translate-api-error";
 import {
   BetEvent,
   User,
@@ -98,6 +99,7 @@ export default function AdminPage() {
   const tCommon = useTranslations("common");
   const tEvents = useTranslations("events");
   const tAdmin = useTranslations("admin");
+  const tApiErrors = useTranslations("apiErrors");
   const locale = useLocale();
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -322,7 +324,7 @@ export default function AdminPage() {
       setShowCreateForm(false);
       loadTabData();
     } catch (err: unknown) {
-      toast.error(err instanceof Error ? err.message : tCommon("error"));
+      toast.error(translateApiError(err, tApiErrors));
     } finally {
       setCreatingEvent(false);
     }
@@ -331,10 +333,10 @@ export default function AdminPage() {
   async function handleStatusChange(eventId: string, newStatus: EventStatus) {
     try {
       await api.patch(`/events/${eventId}/status`, { status: newStatus }, tok);
-      toast.success(`Status → ${newStatus}`);
+      toast.success(tAdmin("statusChanged", { status: newStatus }));
       loadTabData();
     } catch (err: unknown) {
-      toast.error(err instanceof Error ? err.message : tCommon("error"));
+      toast.error(translateApiError(err, tApiErrors));
     }
   }
 
@@ -375,7 +377,7 @@ export default function AdminPage() {
       ]);
       loadTabData();
     } catch (err: unknown) {
-      toast.error(err instanceof Error ? err.message : tCommon("error"));
+      toast.error(translateApiError(err, tApiErrors));
     } finally {
       setAddingMarket(false);
     }
@@ -392,7 +394,7 @@ export default function AdminPage() {
       toast.success(tAdmin("marketSettled"));
       loadTabData();
     } catch (err: unknown) {
-      toast.error(err instanceof Error ? err.message : tCommon("error"));
+      toast.error(translateApiError(err, tApiErrors));
     } finally {
       setSettlingMarket(null);
     }
@@ -407,7 +409,7 @@ export default function AdminPage() {
       );
       loadTabData();
     } catch (err: unknown) {
-      toast.error(err instanceof Error ? err.message : tCommon("error"));
+      toast.error(translateApiError(err, tApiErrors));
     }
   }
 
@@ -417,7 +419,7 @@ export default function AdminPage() {
       toast.success(tAdmin("roleChanged"));
       loadTabData();
     } catch (err: unknown) {
-      toast.error(err instanceof Error ? err.message : tCommon("error"));
+      toast.error(translateApiError(err, tApiErrors));
     }
   }
 
@@ -440,7 +442,7 @@ export default function AdminPage() {
       setTokenReason("");
       loadTabData();
     } catch (err: unknown) {
-      toast.error(err instanceof Error ? err.message : tCommon("error"));
+      toast.error(translateApiError(err, tApiErrors));
     }
   }
 
@@ -450,7 +452,7 @@ export default function AdminPage() {
       await api.put(`/admin/settings/${key}`, { value }, tok);
       toast.success(tAdmin("settingSaved"));
     } catch (err: unknown) {
-      toast.error(err instanceof Error ? err.message : tCommon("error"));
+      toast.error(translateApiError(err, tApiErrors));
     }
   }
 
@@ -1320,7 +1322,7 @@ export default function AdminPage() {
                     { key: "USER_REGISTERED,USER_LOGIN", label: tAdmin("auditAuth"), Icon: UserPlus },
                     { key: "PLACE_BET", label: tAdmin("auditBets"), Icon: Target },
                     { key: "CREATE_EVENT,CHANGE_EVENT_STATUS,AUTO_CLOSE_EVENT", label: tAdmin("auditEvents"), Icon: Calendar },
-                    { key: "ADJUST_TOKENS", label: "Tokens", Icon: Coins },
+                    { key: "ADJUST_TOKENS", label: tAdmin("auditTokens"), Icon: Coins },
                     { key: "CHANGE_ROLE,ACTIVATE_USER,DEACTIVATE_USER,UPDATE_PROFILE", label: tAdmin("auditUsers"), Icon: Users },
                     { key: "UPDATE_SETTING", label: tAdmin("auditSettings"), Icon: Settings },
                   ].map((f) => (

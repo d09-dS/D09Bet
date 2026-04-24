@@ -13,10 +13,10 @@ export async function PUT(
     const body = await req.json();
     const { value } = body as { value: string };
 
-    if (typeof value !== "string") throw new ApiError(400, "value must be a string");
+    if (typeof value !== "string") throw new ApiError(400, "valueMustBeString");
 
     const existing = await prisma.systemSetting.findUnique({ where: { key } });
-    if (!existing) throw new ApiError(404, "Setting not found");
+    if (!existing) throw new ApiError(404, "settingNotFound");
 
     const updated = await prisma.systemSetting.update({
       where: { key }, data: { value, updatedBy: admin.id },

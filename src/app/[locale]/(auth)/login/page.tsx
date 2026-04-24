@@ -12,6 +12,7 @@ import { toast } from "sonner";
 
 export default function LoginPage() {
   const t = useTranslations("auth");
+  const tApiErrors = useTranslations("apiErrors");
   const locale = useLocale();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -36,7 +37,11 @@ export default function LoginPage() {
       if (!checkRes.ok) {
         const data = await checkRes.json();
         setLoading(false);
-        setError(data.error || t("invalidCredentials"));
+        try {
+          setError(tApiErrors(data.error, data.errorParams ?? undefined));
+        } catch {
+          setError(data.error || t("invalidCredentials"));
+        }
         return;
       }
     } catch {

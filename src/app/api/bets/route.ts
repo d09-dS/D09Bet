@@ -6,31 +6,31 @@ import { logAction } from "@/lib/audit";
 export async function POST(req: NextRequest) {
   try {
     const user = await requireRole(req, "USER", "ADMIN");
-    if (!user.isActive) throw new ApiError(403, "Account is deactivated");
+    if (!user.isActive) throw new ApiError(403, "accountDeactivated");
 
     const body = await req.json();
     const { outcomeId, stake } = body as { outcomeId: string; stake: number };
-    if (!outcomeId || stake == null) throw new ApiError(400, "outcomeId and stake are required");
+    if (!outcomeId || stake == null) throw new ApiError(400, "outcomeIdAndStakeRequired");
 
     const outcome = await prisma.outcome.findUnique({
       where: { id: outcomeId },
       include: { market: { include: { event: true } } },
     });
-    if (!outcome) throw new ApiError(404, "Outcome not found");
-    if (outcome.market.status !== "OPEN") throw new ApiError(400, "Market is not open for betting");
-    if (outcome.market.event.status !== "OPEN") throw new ApiError(400, "Event is not open for betting");
+    if (!outcome) throw new ApiError(404, "outcomeNotFound");
+    if (outcome.market.status !== "OPEN") throw new ApiError(400, "marketNotOpen");
+    if (outcome.market.event.status !== "OPEN") throw new ApiError(400, "eventNotOpen");
 
     // Second-precise endTime guard — no bets after event has ended
     if (outcome.market.event.endTime && new Date(outcome.market.event.endTime) <= new Date()) {
-      throw new ApiError(400, "Event has ended");
+      throw new ApiError(400, "eventEnded");
     }
 
     const minStake = await getDecimalSetting("min_bet_stake", 0.5);
     const maxStake = await getDecimalSetting("max_bet_stake", 100);
     if (stake < minStake || stake > maxStake) {
-      throw new ApiError(400, `Stake must be between ${minStake} and ${maxStake}`);
+      throw new ApiError(400, "invalidStakeRange", undefined, { min: String(minStake), max: String(maxStake) });
     }
-    if (Number(user.tokenBalance) < stake) throw new ApiError(400, "Insufficient token balance");
+    if (Number(user.tokenBalance) < stake) throw new ApiError(400, "insufficientBalance");
 
     const potentialWin = Math.round(stake * Number(outcome.currentOdds) * 100) / 100;
 
@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
       const [lockedUser] = await tx.$queryRawUnsafe<{ token_balance: number }[]>(
         "SELECT * FROM users WHERE id = $1::uuid FOR UPDATE", user.id,
       );
-      if (Number(lockedUser.token_balance) < stake) throw new ApiError(400, "Insufficient token balance");
+      if (Number(lockedUser.token_balance) < stake) throw new ApiError(400, "insufficientBalance");
 
       const bal = Number(lockedUser.token_balance) - stake;
       await tx.user.update({ where: { id: user.id }, data: { tokenBalance: bal } });

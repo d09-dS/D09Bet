@@ -19,17 +19,17 @@ export async function PATCH(
     const admin = await requireRole(req, "ADMIN");
 
     const { status } = (await req.json()) as { status: string };
-    if (!status) throw new ApiError(400, "status is required");
+    if (!status) throw new ApiError(400, "statusRequired");
 
     const event = await prisma.event.findFirst({
       where: { id, deletedAt: null },
       include: { category: { select: { name: true } } },
     });
-    if (!event) throw new ApiError(404, "Event not found");
+    if (!event) throw new ApiError(404, "eventNotFound");
 
     const allowed = VALID_TRANSITIONS[event.status];
     if (!allowed || !allowed.includes(status as EventStatus)) {
-      throw new ApiError(400, `Cannot transition from ${event.status} to ${status}`);
+      throw new ApiError(400, "invalidStatusTransition", undefined, { from: event.status, to: status });
     }
 
     const newStatus = status as EventStatus;
@@ -39,7 +39,7 @@ export async function PATCH(
       const markets = await prisma.market.findMany({ where: { eventId: id } });
       const unsettled = markets.filter((m) => m.status !== "SETTLED" && m.status !== "CANCELED");
       if (unsettled.length > 0) {
-        throw new ApiError(400, "All markets must be settled before the event can be marked as SETTLED");
+        throw new ApiError(400, "allMarketsSettledRequired");
       }
     }
 

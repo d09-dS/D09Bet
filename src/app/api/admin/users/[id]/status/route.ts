@@ -13,10 +13,10 @@ export async function PATCH(
     const body = await req.json();
     const { isActive } = body as { isActive: boolean };
 
-    if (typeof isActive !== "boolean") throw new ApiError(400, "isActive must be a boolean");
+    if (typeof isActive !== "boolean") throw new ApiError(400, "isActiveBoolean");
 
     const user = await prisma.user.findUnique({ where: { id } });
-    if (!user) throw new ApiError(404, "User not found");
+    if (!user) throw new ApiError(404, "userNotFound");
 
     // If activating for the first time, allocate initial tokens
     const isFirstActivation = isActive && !user.isActive && Number(user.tokenBalance) === 0;

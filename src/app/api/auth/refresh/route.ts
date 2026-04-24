@@ -12,15 +12,15 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const { refreshToken: token } = body;
 
-    if (!token) throw new ApiError(400, "Refresh token is required");
+    if (!token) throw new ApiError(400, "refreshTokenRequired");
 
     const payload = await verifyToken(token);
     if (!payload || payload.type !== "refresh") {
-      throw new ApiError(401, "Invalid or expired refresh token");
+      throw new ApiError(401, "invalidRefreshToken");
     }
 
     const user = await prisma.user.findUnique({ where: { id: payload.sub } });
-    if (!user || !user.isActive) throw new ApiError(401, "User not found or inactive");
+    if (!user || !user.isActive) throw new ApiError(401, "userNotFoundOrInactive");
 
     const [accessToken, refreshToken] = await Promise.all([
       generateAccessToken(user.id, user.username, user.role),
