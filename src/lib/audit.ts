@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { Prisma } from "@/generated/prisma/client";
 
 let cachedSystemAdminId: string | null = null;
 
@@ -43,7 +44,7 @@ export async function logAction(
         action,
         entityType: entityType ?? null,
         entityId: entityId ?? null,
-        details: details ?? undefined,
+        details: details ? (details as Prisma.InputJsonValue) : undefined,
       },
     });
   } catch (err) {

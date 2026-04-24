@@ -141,7 +141,7 @@ export default function BetSlip() {
                           min={1}
                           value={item.stake || ""}
                           onChange={(e) => updateStake(item.outcomeId, Number(e.target.value))}
-                          className="h-9 text-sm rounded-lg bg-secondary/50 border-border/50"
+                          className="h-11 text-sm rounded-xl bg-secondary/50 border-border/50 focus:border-primary/50 focus:ring-primary/20 transition-all [&:not(:placeholder-shown)]:bg-white [&:not(:placeholder-shown)]:text-[#0A0E13] [&:not(:placeholder-shown)]:border-white/30"
                           placeholder={t("stake")}
                         />
                         <span className="text-xs text-muted-foreground whitespace-nowrap">

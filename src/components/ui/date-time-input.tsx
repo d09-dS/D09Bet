@@ -153,14 +153,15 @@ export function DateTimeInput({
         type="button"
         onClick={() => setOpen((o) => !o)}
         className={cn(
-          "flex h-10 w-full items-center gap-3 rounded-xl border bg-secondary/30 px-3 text-sm transition-all text-left",
+          "flex h-11 w-full items-center gap-3 rounded-xl border bg-secondary/50 px-3 text-sm transition-all text-left",
           open
-            ? "border-primary ring-2 ring-primary/20"
-            : "border-input hover:border-primary/30",
+            ? "border-primary/50 ring-2 ring-primary/20"
+            : "border-border/50 hover:border-primary/30",
+          displayValue && "bg-white text-[#0A0E13] border-white/30",
           !displayValue && "text-muted-foreground",
         )}
       >
-        <Calendar className={cn("h-4 w-4 shrink-0", open ? "text-primary" : "text-muted-foreground")} />
+        <Calendar className={cn("h-4 w-4 shrink-0", displayValue ? "text-[#0A0E13]" : open ? "text-primary" : "text-muted-foreground")} />
         <span className="flex-1 truncate">
           {displayValue || (locale === "de" ? "Datum & Uhrzeit wählen" : "Select date & time")}
         </span>
