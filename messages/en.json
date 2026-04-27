@@ -265,7 +265,14 @@
     "profileChangeApproved": "Profile change approved",
     "profileChangeRejected": "Profile change rejected",
     "requestedBy": "Requested by",
-    "requestedAt": "Requested at"
+    "requestedAt": "Requested at",
+    "confirmApproveTitle": "Confirm Approval",
+    "confirmApproveDesc": "Are you sure you want to approve the profile changes for {username}?",
+    "confirmRejectTitle": "Confirm Rejection",
+    "confirmRejectDesc": "Are you sure you want to reject the profile changes for {username}?",
+    "confirmSettingTitle": "Confirm Setting Change",
+    "confirmSettingDesc": "Are you sure you want to change the setting \"{key}\"?",
+    "confirmSave": "Save"
   },
   "error": {
     "title": "Something went wrong",

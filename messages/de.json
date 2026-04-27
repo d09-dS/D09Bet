@@ -265,7 +265,14 @@
     "profileChangeApproved": "Profil-Aenderung genehmigt",
     "profileChangeRejected": "Profil-Aenderung abgelehnt",
     "requestedBy": "Angefragt von",
-    "requestedAt": "Angefragt am"
+    "requestedAt": "Angefragt am",
+    "confirmApproveTitle": "Genehmigung bestaetigen",
+    "confirmApproveDesc": "Bist du sicher, dass du die Profilaenderungen von {username} genehmigen moechtest?",
+    "confirmRejectTitle": "Ablehnung bestaetigen",
+    "confirmRejectDesc": "Bist du sicher, dass du die Profilaenderungen von {username} ablehnen moechtest?",
+    "confirmSettingTitle": "Einstellung aendern",
+    "confirmSettingDesc": "Bist du sicher, dass du die Einstellung \"{key}\" aendern moechtest?",
+    "confirmSave": "Speichern"
   },
   "error": {
     "title": "Etwas ist schiefgelaufen",
