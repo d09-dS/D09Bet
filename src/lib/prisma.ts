@@ -1,9 +1,14 @@
 import { PrismaClient } from "@/generated/prisma/client";
 
-const globalForPrisma = globalThis as unknown as { prisma: PrismaClient };
+const globalForPrisma = globalThis as unknown as {
+  prisma: PrismaClient | undefined;
+};
 
 function createPrismaClient() {
-  const url = process.env.DATABASE_URL!;
+  const url = process.env.DATABASE_URL;
+  if (!url) {
+    throw new Error("DATABASE_URL environment variable is not set");
+  }
 
   // Prisma Accelerate URLs start with prisma+postgres://
   if (url.startsWith("prisma+postgres://") || url.startsWith("prisma://")) {
@@ -17,6 +22,24 @@ function createPrismaClient() {
   return new PrismaClient({ adapter });
 }
 
-export const prisma = globalForPrisma.prisma || createPrismaClient();
+function getPrismaClient(): PrismaClient {
+  const cached = globalForPrisma.prisma;
 
-if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
+  // Verify the cached instance is from the current generated client.
+  // After `prisma generate` the PrismaClient class changes, so an old
+  // instance (from a previous hot-reload) won't be an instanceof the
+  // new class and will be missing newly-added model delegates.
+  if (cached && cached instanceof PrismaClient) {
+    return cached;
+  }
+
+  const client = createPrismaClient();
+
+  if (process.env.NODE_ENV !== "production") {
+    globalForPrisma.prisma = client;
+  }
+
+  return client;
+}
+
+export const prisma = getPrismaClient();

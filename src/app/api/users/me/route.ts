@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { serialize, errorResponse, requireRole } from "@/lib/api-utils";
 import { prisma } from "@/lib/prisma";
+import { Prisma } from "@/generated/prisma/client";
 import { logAction } from "@/lib/audit";
 import { notifyAdmins } from "@/lib/notifications";
 
@@ -55,7 +56,7 @@ export async function PUT(req: NextRequest) {
     });
 
     const pending = await prisma.pendingProfileChange.create({
-      data: { userId: user.id, changes },
+      data: { userId: user.id, changes: changes as Prisma.InputJsonValue },
     });
 
     logAction(user.id, "REQUEST_PROFILE_CHANGE", "User", user.id, changes);
