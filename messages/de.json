@@ -120,7 +120,10 @@
     "lost": "Verloren",
     "void": "Ungültig",
     "noBets": "Keine Wetten vorhanden",
-    "betPlaced": "Wette platziert!"
+    "betPlaced": "Wette platziert!",
+    "maxAvailable": "Max. verfügbar: {amount} dotCoins",
+    "remaining": "Verbleibend",
+    "insufficientBalance": "Gesamteinsatz ({total}) übersteigt dein Guthaben ({balance} dotCoins). Reduziere die Einsätze, um alle Wetten zu platzieren."
   },
   "profile": {
     "title": "Profil",
