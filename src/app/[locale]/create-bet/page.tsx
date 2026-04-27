@@ -243,11 +243,17 @@ export default function CreateBetPage() {
                 />
                 <div className="flex items-center gap-1">
                   <Input
+                    type="number"
+                    min="1"
+                    max="100"
+                    step="0.01"
                     placeholder={tAdmin("oddsLabel")}
                     value={row.odds}
                     onChange={(e) => {
+                      const val = e.target.value;
+                      if (val !== "" && parseFloat(val) > 100) return;
                       const copy = [...newOutcomes];
-                      copy[i] = { ...copy[i], odds: e.target.value };
+                      copy[i] = { ...copy[i], odds: val };
                       setNewOutcomes(copy);
                     }}
                     className={`w-24 ${inputClass}`}

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { useRouter, Link } from "@/i18n/navigation";
+import { useSession } from "next-auth/react";
 import { motion } from "framer-motion";
 import { api } from "@/lib/api";
 import { BetEvent, LeaderboardEntry } from "@/types";
@@ -33,6 +34,7 @@ export default function HomePage() {
   const tCommon = useTranslations("common");
   const router = useRouter();
   const locale = useLocale();
+  const { data: session } = useSession();
 
   const [featured, setFeatured] = useState<BetEvent[]>([]);
   const [leaders, setLeaders] = useState<LeaderboardEntry[]>([]);
@@ -125,7 +127,7 @@ export default function HomePage() {
 
           <div className="grid gap-6 md:grid-cols-2">
             {[
-              { icon: UserPlus, title: t("step1Title"), desc: t("step1Desc") },
+              ...(!session?.user ? [{ icon: UserPlus, title: t("step1Title"), desc: t("step1Desc") }] : []),
               { icon: Target, title: t("step2Title"), desc: t("step2Desc") },
               { icon: PlusCircle, title: t("step3Title"), desc: t("step3Desc") },
               { icon: TrendingUp, title: t("step4Title"), desc: t("step4Desc") },
@@ -367,22 +369,24 @@ export default function HomePage() {
       </section>
 
       {/* ── CTA ── */}
-      <section className="py-16 border-t border-border/50">
-        <div className="mx-auto max-w-2xl px-4 text-center">
-          <h2 className="text-2xl font-bold md:text-4xl mb-3">
-            {t("readyToBet")}
-          </h2>
-          <p className="text-muted-foreground mb-8 max-w-lg mx-auto">
-            {t("ctaDesc")}
-          </p>
-          <Link href="/register">
-            <Button size="lg" className="gap-2 px-10 h-12 font-semibold">
-              {t("startNow")}
-              <ArrowRight className="h-4 w-4" />
-            </Button>
-          </Link>
-        </div>
-      </section>
+      {!session?.user && (
+        <section className="py-16 border-t border-border/50">
+          <div className="mx-auto max-w-2xl px-4 text-center">
+            <h2 className="text-2xl font-bold md:text-4xl mb-3">
+              {t("readyToBet")}
+            </h2>
+            <p className="text-muted-foreground mb-8 max-w-lg mx-auto">
+              {t("ctaDesc")}
+            </p>
+            <Link href="/register">
+              <Button size="lg" className="gap-2 px-10 h-12 font-semibold">
+                {t("startNow")}
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+            </Link>
+          </div>
+        </section>
+      )}
     </div>
   );
 }

@@ -128,3 +128,16 @@ export interface PageResponse<T> {
   number: number;
   size: number;
 }
+
+export type ProfileChangeStatus = "PENDING" | "APPROVED" | "REJECTED";
+
+export interface PendingProfileChange {
+  id: string;
+  userId: string;
+  user?: { username: string; email: string };
+  changes: Record<string, unknown>;
+  status: ProfileChangeStatus;
+  reviewedBy?: string;
+  reviewedAt?: string;
+  createdAt: string;
+}

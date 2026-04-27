@@ -35,7 +35,7 @@ async function main() {
 
   // System settings
   const settings = [
-    { key: "initial_tokens", value: "10", description: "Tokens allocated to new users on registration", dataType: "DECIMAL" },
+    { key: "initial_tokens", value: "1000", description: "Tokens allocated to new users on registration", dataType: "DECIMAL" },
     { key: "daily_bonus_amount", value: "2", description: "Daily login bonus amount", dataType: "DECIMAL" },
     { key: "daily_bonus_enabled", value: "true", description: "Whether daily login bonus is enabled", dataType: "BOOLEAN" },
     { key: "min_bet_stake", value: "0.5", description: "Minimum bet stake", dataType: "DECIMAL" },

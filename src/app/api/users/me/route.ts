@@ -2,10 +2,17 @@ import { NextRequest, NextResponse } from "next/server";
 import { serialize, errorResponse, requireRole } from "@/lib/api-utils";
 import { prisma } from "@/lib/prisma";
 import { logAction } from "@/lib/audit";
+import { notifyAdmins } from "@/lib/notifications";
 
 export async function GET(req: NextRequest) {
   try {
     const user = await requireRole(req, "USER", "ADMIN");
+
+    const pendingChange = await prisma.pendingProfileChange.findFirst({
+      where: { userId: user.id, status: "PENDING" },
+      orderBy: { createdAt: "desc" },
+    });
+
     return NextResponse.json(
       serialize({
         id: user.id,
@@ -17,6 +24,9 @@ export async function GET(req: NextRequest) {
         bio: user.bio,
         locale: user.locale,
         createdAt: user.createdAt,
+        pendingChange: pendingChange
+          ? { id: pendingChange.id, changes: pendingChange.changes, createdAt: pendingChange.createdAt }
+          : null,
       }),
     );
   } catch (err) {
@@ -30,27 +40,37 @@ export async function PUT(req: NextRequest) {
     const body = await req.json();
     const { bio, avatarUrl, locale } = body;
 
-    const data: Record<string, unknown> = {};
-    if (bio !== undefined) data.bio = bio;
-    if (avatarUrl !== undefined) data.avatarUrl = avatarUrl;
-    if (locale !== undefined) data.locale = locale;
+    const changes: Record<string, unknown> = {};
+    if (bio !== undefined) changes.bio = bio;
+    if (avatarUrl !== undefined) changes.avatarUrl = avatarUrl;
+    if (locale !== undefined) changes.locale = locale;
 
-    const updated = await prisma.user.update({ where: { id: user.id }, data });
+    if (Object.keys(changes).length === 0) {
+      return NextResponse.json(serialize({ id: user.id, pending: false }));
+    }
 
-    logAction(user.id, "UPDATE_PROFILE", "User", user.id, data);
+    await prisma.pendingProfileChange.updateMany({
+      where: { userId: user.id, status: "PENDING" },
+      data: { status: "REJECTED" },
+    });
+
+    const pending = await prisma.pendingProfileChange.create({
+      data: { userId: user.id, changes },
+    });
+
+    logAction(user.id, "REQUEST_PROFILE_CHANGE", "User", user.id, changes);
+
+    notifyAdmins({
+      type: "PROFILE_CHANGE_REQUESTED",
+      title: `Profile change request: ${user.username}`,
+      message: `${user.username} has requested profile changes: ${Object.keys(changes).join(", ")}`,
+      entityType: "USER",
+      entityId: user.id,
+    }).catch(() => {});
 
     return NextResponse.json(
-      serialize({
-        id: updated.id,
-        username: updated.username,
-        email: updated.email,
-        role: updated.role,
-        tokenBalance: updated.tokenBalance,
-        avatarUrl: updated.avatarUrl,
-        bio: updated.bio,
-        locale: updated.locale,
-        createdAt: updated.createdAt,
-      }),
+      serialize({ id: pending.id, pending: true, changes: pending.changes }),
+      { status: 201 },
     );
   } catch (err) {
     return errorResponse(err);
