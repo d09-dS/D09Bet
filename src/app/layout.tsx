@@ -14,17 +14,17 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "dotBet – Bet with virtual Tokens",
+    default: "dotBet – Bet with virtual dotCoins",
     template: "%s | dotBet",
   },
-  description: "Place bets on events, collect tokens and climb the rankings.",
+  description: "Place bets on events, collect dotCoins and climb the rankings.",
   icons: {
     icon: "/favicon.svg",
   },
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
   openGraph: {
-    title: "dotBet – Bet with virtual Tokens",
-    description: "Token-based betting platform.",
+    title: "dotBet – Bet with virtual dotCoins",
+    description: "dotCoins betting platform.",
     siteName: "dotBet",
     type: "website",
   },

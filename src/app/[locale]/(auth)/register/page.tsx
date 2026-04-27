@@ -8,10 +8,12 @@ import { Label } from "@/components/ui/label";
 import { Flame, Loader2, CheckCircle } from "lucide-react";
 import { useState } from "react";
 import { api, ApiError } from "@/lib/api";
+import { translateApiError } from "@/lib/translate-api-error";
 import { useSplash } from "@/components/SplashScreen";
 
 export default function RegisterPage() {
   const t = useTranslations("auth");
+  const tApiErrors = useTranslations("apiErrors");
   const [error, setError] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
@@ -38,9 +40,13 @@ export default function RegisterPage() {
       setLoading(false);
       if (err instanceof ApiError) {
         if (err.fieldErrors) {
-          setFieldErrors(err.fieldErrors);
+          const translated: Record<string, string> = {};
+          for (const [key, val] of Object.entries(err.fieldErrors)) {
+            try { translated[key] = tApiErrors(val); } catch { translated[key] = val; }
+          }
+          setFieldErrors(translated);
         } else {
-          setError(err.message);
+          setError(translateApiError(err, tApiErrors));
         }
       } else if (err instanceof Error) {
         setError(`${t("connectionError", { message: err.message })}`);

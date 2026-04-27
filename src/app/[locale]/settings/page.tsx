@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { useLocale } from "next-intl";
 import { api } from "@/lib/api";
+import { translateApiError } from "@/lib/translate-api-error";
 import { User } from "@/types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -24,6 +25,7 @@ interface ProfileWithPending extends User {
 export default function SettingsPage() {
   const t = useTranslations("profile");
   const tCommon = useTranslations("common");
+  const tApiErrors = useTranslations("apiErrors");
   const { data: session, status } = useSession();
   const router = useRouter();
   const locale = useLocale();
@@ -72,7 +74,7 @@ export default function SettingsPage() {
       toast.success(t("saved"));
       await loadProfile();
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : tCommon("error"));
+      toast.error(translateApiError(err, tApiErrors));
     } finally {
       setSaving(false);
     }

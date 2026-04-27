@@ -13,18 +13,18 @@ export async function POST(
     const user = await requireRole(req, "USER", "ADMIN");
 
     const event = await prisma.event.findFirst({ where: { id: eventId, deletedAt: null } });
-    if (!event) throw new ApiError(404, "Event not found");
+    if (!event) throw new ApiError(404, "eventNotFound");
     if (!["DRAFT", "OPEN"].includes(event.status)) {
-      throw new ApiError(400, `Cannot add markets to event with status ${event.status}`);
+      throw new ApiError(400, "cannotAddMarketsToStatus", undefined, { status: event.status });
     }
 
     const body = await req.json();
     const { name, nameEn, type, marginFactor, virtualPool: vPool, sortOrder, outcomes } = body;
 
-    if (!name) throw new ApiError(400, "name is required");
-    if (!type) throw new ApiError(400, "type is required");
+    if (!name) throw new ApiError(400, "nameRequired");
+    if (!type) throw new ApiError(400, "typeRequired");
     if (!outcomes || !Array.isArray(outcomes) || outcomes.length < 2) {
-      throw new ApiError(400, "At least 2 outcomes are required");
+      throw new ApiError(400, "minOutcomesRequired");
     }
 
     const resolvedMargin = marginFactor ?? 0.95;

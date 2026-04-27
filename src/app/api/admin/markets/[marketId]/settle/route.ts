@@ -13,16 +13,16 @@ export async function POST(
     const body = await req.json();
     const { winningOutcomeId } = body as { winningOutcomeId: string };
 
-    if (!winningOutcomeId) throw new ApiError(400, "winningOutcomeId is required");
+    if (!winningOutcomeId) throw new ApiError(400, "winningOutcomeRequired");
 
     const market = await prisma.market.findUnique({ where: { id: marketId } });
-    if (!market) throw new ApiError(404, "Market not found");
-    if (market.status === "SETTLED") throw new ApiError(400, "Market has already been settled");
-    if (market.status !== "OPEN" && market.status !== "LOCKED") throw new ApiError(400, "Market must be OPEN or LOCKED to settle");
+    if (!market) throw new ApiError(404, "marketNotFound");
+    if (market.status === "SETTLED") throw new ApiError(400, "marketAlreadySettled");
+    if (market.status !== "OPEN" && market.status !== "LOCKED") throw new ApiError(400, "marketNotSettleable");
 
     const outcomes = await prisma.outcome.findMany({ where: { marketId }, orderBy: { sortOrder: "asc" } });
     if (!outcomes.find((o) => o.id === winningOutcomeId)) {
-      throw new ApiError(400, "Winning outcome not found in this market");
+      throw new ApiError(400, "winningOutcomeNotFound");
     }
 
     await prisma.$transaction(async (tx) => {

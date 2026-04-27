@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { useTranslations, useLocale } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { api } from "@/lib/api";
+import { translateApiError } from "@/lib/translate-api-error";
 import { BetEvent, Category } from "@/types";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -21,6 +22,7 @@ const inputClass =
 export default function CreateBetPage() {
   const tAdmin = useTranslations("admin");
   const tCommon = useTranslations("common");
+  const tApiErrors = useTranslations("apiErrors");
   const locale = useLocale();
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -106,7 +108,7 @@ export default function CreateBetPage() {
         router.push("/events");
       }
     } catch (err: unknown) {
-      toast.error(err instanceof Error ? err.message : tCommon("error"));
+      toast.error(translateApiError(err, tApiErrors));
     } finally {
       setCreating(false);
     }

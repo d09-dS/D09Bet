@@ -17,11 +17,11 @@ export async function PATCH(
     const { role } = body as { role: string };
 
     if (!role || !VALID_ROLES.includes(role as RoleValue)) {
-      throw new ApiError(400, "Invalid role");
+      throw new ApiError(400, "invalidRole");
     }
 
     const user = await prisma.user.findUnique({ where: { id } });
-    if (!user) throw new ApiError(404, "User not found");
+    if (!user) throw new ApiError(404, "userNotFound");
 
     const updated = await prisma.user.update({
       where: { id }, data: { role: role as RoleValue },

@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import { useBetSlipStore } from "@/stores/betSlipStore";
 import { api } from "@/lib/api";
+import { translateApiError } from "@/lib/translate-api-error";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { X, Trash2, Ticket, Loader2 } from "lucide-react";
@@ -16,6 +17,7 @@ export default function BetSlip() {
   const t = useTranslations("events");
   const tBets = useTranslations("bets");
   const tCommon = useTranslations("common");
+  const tApiErrors = useTranslations("apiErrors");
   const { data: session } = useSession();
   const { items, isOpen, removeItem, updateStake, clearSlip, toggleOpen, setOpen } = useBetSlipStore();
   const { balance, setBalance } = useBalance();
@@ -48,7 +50,7 @@ export default function BetSlip() {
       toast.success(tBets("betPlaced"), { description: `${stake} ${tCommon("tokens")}` });
       window.dispatchEvent(new Event("bet-placed"));
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : tCommon("error");
+      const message = translateApiError(err, tApiErrors);
       toast.error(tCommon("error"), { description: message });
     } finally {
       setPlacing(null);
