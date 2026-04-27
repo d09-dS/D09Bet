@@ -3,17 +3,19 @@
 import { useEffect, useRef, useCallback } from "react";
 import { Client, type IMessage } from "@stomp/stompjs";
 
-const WS_URL =
-  (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api")
-    .replace("/api", "")
-    .replace(/^http/, "ws") + "/ws";
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const WS_URL = API_URL
+  ? API_URL.replace("/api", "").replace(/^http/, "ws") + "/ws"
+  : null;
 
-/** Lightweight hook around a shared STOMP client. */
+/** Lightweight hook around a shared STOMP client. Does nothing if NEXT_PUBLIC_API_URL is not set. */
 export function useStompClient() {
   const clientRef = useRef<Client | null>(null);
   const subsRef = useRef<Map<string, { id: string; unsub: () => void }>>(new Map());
 
   useEffect(() => {
+    if (!WS_URL) return;
+
     const client = new Client({
       brokerURL: WS_URL,
       reconnectDelay: 5000,
