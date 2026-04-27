@@ -52,6 +52,9 @@ export const useBetSlipStore = create<BetSlipState>()(
       toggleOpen: () => set((state) => ({ isOpen: !state.isOpen })),
       setOpen: (open) => set({ isOpen: open }),
     }),
-    { name: "dotbet-slip" }
+    {
+      name: "dotbet-slip",
+      partialize: (state) => ({ items: state.items }),
+    }
   )
 );
