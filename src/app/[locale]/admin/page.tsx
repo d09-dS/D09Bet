@@ -176,6 +176,23 @@ export default function AdminPage() {
   const [tokenAmount, setTokenAmount] = useState("");
   const [tokenReason, setTokenReason] = useState("");
 
+  // Profile change confirmation
+  const [confirmDialog, setConfirmDialog] = useState<{
+    changeId: string;
+    action: "approve" | "reject";
+    username: string;
+    changes: Record<string, unknown>;
+  } | null>(null);
+
+  // System setting confirmation
+  const [settingEdits, setSettingEdits] = useState<Record<string, string>>({});
+  const [settingConfirm, setSettingConfirm] = useState<{
+    key: string;
+    oldValue: string;
+    newValue: string;
+    description: string;
+  } | null>(null);
+
   useEffect(() => {
     if (status === "loading") return;
     if (!session?.user?.accessToken) {
@@ -1309,7 +1326,12 @@ export default function AdminPage() {
                           <div className="flex gap-2">
                             <Button
                               size="sm"
-                              onClick={() => handleProfileChangeReview(change.id, "approve")}
+                              onClick={() => setConfirmDialog({
+                                changeId: change.id,
+                                action: "approve",
+                                username: currentUser?.username ?? "?",
+                                changes,
+                              })}
                               className="gap-1"
                             >
                               <CheckCircle2 className="h-3.5 w-3.5" />
@@ -1318,7 +1340,12 @@ export default function AdminPage() {
                             <Button
                               size="sm"
                               variant="destructive"
-                              onClick={() => handleProfileChangeReview(change.id, "reject")}
+                              onClick={() => setConfirmDialog({
+                                changeId: change.id,
+                                action: "reject",
+                                username: currentUser?.username ?? "?",
+                                changes,
+                              })}
                               className="gap-1"
                             >
                               <XCircle className="h-3.5 w-3.5" />
@@ -1369,23 +1396,59 @@ export default function AdminPage() {
                 </div>
               ) : (
                 <div className="space-y-4">
-                  {settings.map((setting) => (
-                    <div key={setting.key} className="space-y-1">
-                      <label className="text-sm font-medium">{setting.key}</label>
-                      {setting.description && (
-                        <p className="text-xs text-muted-foreground">
-                          {setting.description}
-                        </p>
-                      )}
-                      <Input
-                        defaultValue={setting.value}
-                        onBlur={(e) => {
-                          if (e.target.value !== setting.value)
-                            handleUpdateSetting(setting.key, e.target.value);
-                        }}
-                      />
-                    </div>
-                  ))}
+                  {settings.map((setting) => {
+                    const edited = settingEdits[setting.key] ?? setting.value;
+                    const isDirty = edited !== setting.value;
+                    return (
+                      <div key={setting.key} className="space-y-1">
+                        <label className="text-sm font-medium">{setting.key}</label>
+                        {setting.description && (
+                          <p className="text-xs text-muted-foreground">
+                            {setting.description}
+                          </p>
+                        )}
+                        <div className="flex gap-2">
+                          <Input
+                            value={edited}
+                            onChange={(e) =>
+                              setSettingEdits((prev) => ({ ...prev, [setting.key]: e.target.value }))
+                            }
+                          />
+                          {isDirty && (
+                            <>
+                              <Button
+                                size="sm"
+                                onClick={() =>
+                                  setSettingConfirm({
+                                    key: setting.key,
+                                    oldValue: setting.value,
+                                    newValue: edited,
+                                    description: setting.description || "",
+                                  })
+                                }
+                              >
+                                <CheckCircle2 className="mr-1 h-3.5 w-3.5" />
+                                {tAdmin("confirmSave")}
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() =>
+                                  setSettingEdits((prev) => {
+                                    const next = { ...prev };
+                                    delete next[setting.key];
+                                    return next;
+                                  })
+                                }
+                              >
+                                <XCircle className="h-3.5 w-3.5" />
+                              </Button>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               )}
             </CardContent>
@@ -1747,6 +1810,152 @@ export default function AdminPage() {
             )}
           </CardContent>
         </Card>
+      )}
+
+      {/* ═══════════ PROFILE CHANGE CONFIRM DIALOG ═══════════ */}
+      {confirmDialog && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+          onClick={() => setConfirmDialog(null)}
+        >
+          <Card
+            className="w-full max-w-md mx-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                {confirmDialog.action === "approve" ? (
+                  <CheckCircle2 className="h-5 w-5 text-primary" />
+                ) : (
+                  <XCircle className="h-5 w-5 text-destructive" />
+                )}
+                {confirmDialog.action === "approve"
+                  ? tAdmin("confirmApproveTitle")
+                  : tAdmin("confirmRejectTitle")}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-sm text-muted-foreground">
+                {confirmDialog.action === "approve"
+                  ? tAdmin("confirmApproveDesc", { username: confirmDialog.username })
+                  : tAdmin("confirmRejectDesc", { username: confirmDialog.username })}
+              </p>
+              <div className="grid gap-2 text-sm">
+                {Object.entries(confirmDialog.changes).map(([key, newVal]) => (
+                  <div
+                    key={key}
+                    className="grid grid-cols-2 gap-2 items-center rounded bg-secondary/50 px-3 py-2"
+                  >
+                    <span className="font-medium">{key}</span>
+                    <span className="text-primary truncate" title={String(newVal ?? "—")}>
+                      {String(newVal ?? "—")}
+                    </span>
+                  </div>
+                ))}
+              </div>
+              <div className="flex gap-2 justify-end">
+                <Button
+                  variant="outline"
+                  onClick={() => setConfirmDialog(null)}
+                >
+                  {tCommon("cancel")}
+                </Button>
+                <Button
+                  variant={confirmDialog.action === "reject" ? "destructive" : "default"}
+                  onClick={async () => {
+                    await handleProfileChangeReview(confirmDialog.changeId, confirmDialog.action);
+                    setConfirmDialog(null);
+                  }}
+                >
+                  {confirmDialog.action === "approve" ? (
+                    <CheckCircle2 className="mr-1 h-4 w-4" />
+                  ) : (
+                    <XCircle className="mr-1 h-4 w-4" />
+                  )}
+                  {confirmDialog.action === "approve"
+                    ? tAdmin("approve")
+                    : tAdmin("reject")}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* ═══════════ SYSTEM SETTING CONFIRM DIALOG ═══════════ */}
+      {settingConfirm && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+          onClick={() => {
+            setSettingConfirm(null);
+            setSettingEdits((prev) => {
+              const next = { ...prev };
+              delete next[settingConfirm.key];
+              return next;
+            });
+          }}
+        >
+          <Card
+            className="w-full max-w-md mx-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Settings className="h-5 w-5 text-primary" />
+                {tAdmin("confirmSettingTitle")}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-sm text-muted-foreground">
+                {tAdmin("confirmSettingDesc", { key: settingConfirm.key })}
+              </p>
+              <div className="grid gap-2 text-sm">
+                <div className="grid grid-cols-2 gap-2 items-center rounded bg-secondary/50 px-3 py-2">
+                  <span className="font-medium">{tAdmin("currentValue")}</span>
+                  <span className="text-muted-foreground truncate" title={settingConfirm.oldValue}>
+                    {settingConfirm.oldValue}
+                  </span>
+                </div>
+                <div className="grid grid-cols-2 gap-2 items-center rounded bg-secondary/50 px-3 py-2">
+                  <span className="font-medium">{tAdmin("newValue")}</span>
+                  <span className="text-primary truncate" title={settingConfirm.newValue}>
+                    {settingConfirm.newValue}
+                  </span>
+                </div>
+              </div>
+              <div className="flex gap-2 justify-end">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setSettingConfirm(null);
+                    setSettingEdits((prev) => {
+                      const next = { ...prev };
+                      delete next[settingConfirm.key];
+                      return next;
+                    });
+                  }}
+                >
+                  {tCommon("cancel")}
+                </Button>
+                <Button
+                  onClick={async () => {
+                    await handleUpdateSetting(settingConfirm.key, settingConfirm.newValue);
+                    setSettingEdits((prev) => {
+                      const next = { ...prev };
+                      delete next[settingConfirm.key];
+                      return next;
+                    });
+                    setSettingConfirm(null);
+                    loadTabData();
+                  }}
+                >
+                  <CheckCircle2 className="mr-1 h-4 w-4" />
+                  {tAdmin("confirmSave")}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       )}
     </div>
   );
