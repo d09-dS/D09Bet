@@ -1,7 +1,7 @@
 import { prisma } from "./prisma";
 import { sendEmail } from "./email";
 
-type NotificationType = "USER_REGISTERED" | "BET_PLACED" | "EVENT_CREATED" | "EVENT_SETTLED" | "SYSTEM";
+type NotificationType = "USER_REGISTERED" | "BET_PLACED" | "EVENT_CREATED" | "EVENT_SETTLED" | "SYSTEM" | "PROFILE_CHANGE_REQUESTED";
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || "http://localhost:3000";
 
@@ -20,6 +20,7 @@ const TAB_MAP: Record<NotificationType, string> = {
   EVENT_CREATED: "events",
   EVENT_SETTLED: "events",
   SYSTEM: "settings",
+  PROFILE_CHANGE_REQUESTED: "settings",
 };
 
 /**

@@ -87,6 +87,13 @@ enum NotificationType {
   EVENT_CREATED
   EVENT_SETTLED
   SYSTEM
+  PROFILE_CHANGE_REQUESTED
+}
+
+enum ProfileChangeStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }
 
 // ─── Models ──────────────────────────────────────────────
@@ -116,6 +123,8 @@ model User {
   oddsHistory         OddsHistory[]
   adminAuditLogs      AdminAuditLog[]
   notifications       Notification[]
+  pendingProfileChanges  PendingProfileChange[] @relation("ProfileChanges")
+  reviewedProfileChanges PendingProfileChange[] @relation("ProfileChangeReviewer")
 
   @@index([username])
   @@index([email])
@@ -315,4 +324,21 @@ model Notification {
   @@index([isRead])
   @@index([createdAt(sort: Desc)])
   @@map("notifications")
+}
+
+model PendingProfileChange {
+  id         String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId     String              @map("user_id") @db.Uuid
+  changes    Json
+  status     ProfileChangeStatus @default(PENDING)
+  reviewedBy String?             @map("reviewed_by") @db.Uuid
+  reviewedAt DateTime?           @map("reviewed_at") @db.Timestamptz()
+  createdAt  DateTime            @default(now()) @map("created_at") @db.Timestamptz()
+
+  user     User  @relation("ProfileChanges", fields: [userId], references: [id])
+  reviewer User? @relation("ProfileChangeReviewer", fields: [reviewedBy], references: [id])
+
+  @@index([status])
+  @@index([userId])
+  @@map("pending_profile_changes")
 }

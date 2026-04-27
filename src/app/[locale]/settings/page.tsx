@@ -10,8 +10,16 @@ import { User } from "@/types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Settings, Loader2 } from "lucide-react";
+import { Settings, Loader2, Clock } from "lucide-react";
 import { toast } from "sonner";
+
+interface ProfileWithPending extends User {
+  pendingChange?: {
+    id: string;
+    changes: Record<string, unknown>;
+    createdAt: string;
+  } | null;
+}
 
 export default function SettingsPage() {
   const t = useTranslations("profile");
@@ -20,7 +28,7 @@ export default function SettingsPage() {
   const router = useRouter();
   const locale = useLocale();
 
-  const [profile, setProfile] = useState<User | null>(null);
+  const [profile, setProfile] = useState<ProfileWithPending | null>(null);
   const [bio, setBio] = useState("");
   const [avatarUrl, setAvatarUrl] = useState("");
   const [selectedLocale, setSelectedLocale] = useState(locale);
@@ -40,7 +48,7 @@ export default function SettingsPage() {
     if (!session?.user?.accessToken) return;
     setLoading(true);
     try {
-      const data = await api.get<User>("/users/me", session.user.accessToken);
+      const data = await api.get<ProfileWithPending>("/users/me", session.user.accessToken);
       setProfile(data);
       setBio(data.bio || "");
       setAvatarUrl(data.avatarUrl || "");
@@ -62,10 +70,7 @@ export default function SettingsPage() {
         locale: selectedLocale,
       }, session.user.accessToken);
       toast.success(t("saved"));
-
-      if (selectedLocale !== locale) {
-        router.replace("/settings", { locale: selectedLocale });
-      }
+      await loadProfile();
     } catch (err) {
       toast.error(err instanceof Error ? err.message : tCommon("error"));
     } finally {
@@ -91,6 +96,18 @@ export default function SettingsPage() {
         </div>
         <p className="text-sm text-muted-foreground">{t("settingsDesc")}</p>
       </div>
+
+      {profile?.pendingChange && (
+        <div className="flex items-start gap-3 rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-4">
+          <Clock className="h-5 w-5 text-yellow-500 shrink-0 mt-0.5" />
+          <div className="text-sm">
+            <p className="font-medium text-yellow-600 dark:text-yellow-400">{t("pendingApproval")}</p>
+            <p className="text-muted-foreground mt-1">
+              {t("pendingChangesLabel")}: {Object.keys(profile.pendingChange.changes).join(", ")}
+            </p>
+          </div>
+        </div>
+      )}
 
       <div className="rounded-lg border border-border bg-card p-6 space-y-5">
         <div className="space-y-2">

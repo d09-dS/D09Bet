@@ -25,7 +25,7 @@ export async function PATCH(
       const data: Record<string, unknown> = { isActive };
 
       if (isFirstActivation) {
-        const initialTokens = await getDecimalSetting("initial_tokens", 10);
+        const initialTokens = await getDecimalSetting("initial_tokens", 1000);
         data.tokenBalance = initialTokens;
 
         await tx.tokenTransaction.create({
