@@ -105,7 +105,7 @@ export async function GET(req: NextRequest) {
 
       updatedMarkets++;
 
-      logAction(null, "AUTO_ADJUST_ODDS", "Market", market.id, {
+      await logAction(null, "AUTO_ADJUST_ODDS", "Market", market.id, {
         marketName: market.name,
         eventId: market.eventId,
         outcomesUpdated: market.outcomes.length,
@@ -121,7 +121,8 @@ export async function GET(req: NextRequest) {
       changePct,
     });
   } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
     console.error("[cron/daily-odds] Error:", err);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error", detail: message }, { status: 500 });
   }
 }

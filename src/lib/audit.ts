@@ -4,16 +4,19 @@ import { Prisma } from "@/generated/prisma/client";
 let cachedSystemAdminId: string | null = null;
 
 /**
- * Returns the ID of the first active admin user.
+ * Returns the ID of the first active admin user, or null if none exists.
  * Used for system/cron actions that have no authenticated user.
  */
-async function getSystemAdminId(): Promise<string> {
+async function getSystemAdminId(): Promise<string | null> {
   if (cachedSystemAdminId) return cachedSystemAdminId;
   const admin = await prisma.user.findFirst({
     where: { role: "ADMIN", isActive: true, deletedAt: null },
     select: { id: true },
   });
-  if (!admin) throw new Error("No active admin found for system audit log");
+  if (!admin) {
+    console.warn("[audit] No active admin found — skipping system audit log");
+    return null;
+  }
   cachedSystemAdminId = admin.id;
   return admin.id;
 }
@@ -38,6 +41,7 @@ export async function logAction(
 ) {
   try {
     const adminId = userId ?? await getSystemAdminId();
+    if (!adminId) return; // no admin available — silently skip
     await prisma.adminAuditLog.create({
       data: {
         adminId,

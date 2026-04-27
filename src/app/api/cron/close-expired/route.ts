@@ -28,7 +28,7 @@ export async function GET(req: NextRequest) {
 
     const expiredEvents = await prisma.event.findMany({
       where: {
-        status: { in: ["OPEN"] },
+        status: "OPEN",
         endTime: { lte: now },
         deletedAt: null,
       },
@@ -60,20 +60,23 @@ export async function GET(req: NextRequest) {
 
     console.log(`[cron/close-expired] Closed ${expiredEvents.length} events: ${expiredEvents.map((e) => e.title).join(", ")}`);
 
-    // Audit log for each closed event
-    for (const event of expiredEvents) {
-      logAction(null, "AUTO_CLOSE_EVENT", "Event", event.id, {
-        title: event.title,
-        reason: "endTime expired",
-      });
-    }
+    // Audit log — fire-and-forget but await to avoid unhandled rejections
+    await Promise.allSettled(
+      expiredEvents.map((event) =>
+        logAction(null, "AUTO_CLOSE_EVENT", "Event", event.id, {
+          title: event.title,
+          reason: "endTime expired",
+        }),
+      ),
+    );
 
     return NextResponse.json({
       closed: expiredEvents.length,
       events: expiredEvents.map((e) => ({ id: e.id, title: e.title })),
     });
   } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
     console.error("[cron/close-expired] Error:", err);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error", detail: message }, { status: 500 });
   }
 }
